@@ -1,5 +1,5 @@
 window.addEventListener('load', (evt) => {
-    $('button').on('click', () => {
+    document.querySelector('button').addEventListener('click', () => {
         document.querySelector('.submit').disabled = true;
         toggleLoader();
         let firstName = document.querySelector('input[name="firstName"]').value;
@@ -11,6 +11,7 @@ window.addEventListener('load', (evt) => {
 
         if(confirm_password != password){
             document.querySelector('.resp').textContent = 'password mismatch, confirm password';
+            toggleLoader();
             return;
         }
         /* fetch(endpoint{
@@ -24,6 +25,7 @@ window.addEventListener('load', (evt) => {
         }); */
         window.setTimeout(()=>{/* API call is digused with setTimer function to view loader.gif and REST response message */
             toggleLoader();
+            document.querySelector('.resp').textContent = 'created account successfully';
             document.querySelector('.submit').disabled = false;
             console.log(firstName, lastName, email, password, phoneNumber);
         }, 3000);
@@ -39,10 +41,14 @@ window.addEventListener('load', (evt) => {
             resp.classList.remove('gone');
         }
     }
-    $('.input-group input').on('focus', (event) => {
-        event.target.parentNode.querySelector('label').classList.add('show');
-    })
-    $('.input-group input').on('blur', (event) => {
-        event.target.parentNode.querySelector('label').classList.remove('show');
+    const inputs = document.querySelectorAll('.input-group input');
+
+    inputs.forEach((input)=>{
+        input.addEventListener('focusin', (evt) => {
+            event.target.parentNode.querySelector('label').classList.add('show');
+        });
+        input.addEventListener('focusout', (evt) => {
+            event.target.parentNode.querySelector('label').classList.remove('show');
+        });
     })
 })
