@@ -166,6 +166,12 @@ button{
   font-size: 1rem;
   border-radius: 0.25rem;
 }
+.reltv{
+    position: relative;
+}
+.abs{
+    position: absolute;
+}
 .center {
     overflow: auto;
     margin: auto;

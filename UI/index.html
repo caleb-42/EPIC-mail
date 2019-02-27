@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Epic mail</title>
+    <link rel="stylesheet" href="./css/indexNav.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/utilities.css"> 
+</head>
+    <body>
+        <div class="wrapper w-100 h-100 reltv text-center">
+            <div class = "leftsidebar">
+                <div class="logo"></div>
+                <ul class="nav navig w-100">
+                    <li  data-index = 'mails' ><h2>Mails<div class="d-arrow float-right anim down" onclick="toggle('d-arrow', 'down'); closeOpen();"></div></h2>
+                        <ul class="mail-types open anim overflo-none w-100">
+                            <li data-index = 'inbox'><p>Inbox</p></li>
+                            <li data-index = 'sent'><p>Sent</p></li>
+                            <li data-index = 'draft'><p>Draft</p></li>
+                        </ul>
+                    </li>
+                    <li data-index = 'contacts'><h2>Contacts</h2></li>
+                    <li data-index = 'groups'><h2>Groups</h2></li>
+                    <li data-index = 'settings'><h2>Settings</h2></li>
+                </ul>
+            </div>
+            <div class="main">
+                <div class="header">
+                        <div class="navicon" onclick="closeOpenTopNav()"></div>
+                </div>
+                <ul class="top-nav navig w-100 anim">
+                    <li data-index = 'mails'><h3 class="reltv">Mails<div class="d-arrow anim down" onclick="toggle('d-arrow', 'down'); closeOpenTopSubNav();"></div></h3>
+                        <ul class="mail-types anim overflo-none w-100">
+                            <li data-index = 'inbox'><p>Inbox</p></li>
+                            <li data-index = 'sent'><p>Sent</p></li>
+                            <li data-index = 'draft'><p>Draft</p></li>
+                        </ul>
+                    </li>
+                    <li data-index = 'contacts'><h3>Contacts</h3></li>
+                    <li data-index = 'groups'><h3>Groups</h3></li>
+                    <li data-index = 'settings'><h3>Settings</h3></li>
+                </ul>
+                <div class="w-100 h-100">
+                    <div class="left-body">
+    a
+                    </div>
+                    <div class="right-body">
+    
+                    </div>
+                    <div class="clr"></div>
+                </div>
+            </div>
+            <div class="clr"></div>
+        </div>
+    </body>
+    <script src="./js/jquery-3.2.1.min.js"></script> 
+    <script src="./js/index.js"></script> 
+</html>
