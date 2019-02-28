@@ -1,0 +1,111 @@
+.navicon{
+    background-image: url('../UI-elements/hambuger.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width:3rem;
+    height:2rem;
+    position: absolute;
+    right:1rem;
+    top:1rem;
+}
+.d-arrow{
+    background-image: url('../UI-elements/arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width:40px;
+    height:50px;
+    margin-top: -.2rem;
+    transform: rotate(-90deg);
+    position: absolute;
+    right: 1rem;
+}
+.d-arrow.down{
+    margin-top: .3rem;
+    transform: rotate(0deg);
+}
+.main .top-nav{
+    height: 0;
+    display: block;
+    background: rgba(0, 0 ,0, .8);
+    overflow: hidden;
+}
+.main.open-nav .top-nav{
+    height: 13rem;
+}
+.main.open-sub-nav.open-nav .top-nav{
+    height: 21rem;
+}
+.main .top-nav > li{
+    border-bottom: 1px rgba(255, 255, 255, .1) solid;
+}
+.main .top-nav h3{
+    position: relative;
+    width: 100%;
+    text-align: center;
+    color: rgba(255, 255 ,255, .8);
+    border-bottom: 1px rgba(255, 255, 255, .1) solid;
+    padding: .9rem 0;
+}
+.main .top-nav h3.active{
+    background: rgba(0, 0 ,0, .7);
+}
+.top-nav .mail-types{
+    height: 0;
+    display: block;
+    background: rgba(0, 0 ,0, .2);
+    overflow: hidden;
+}
+.main .top-nav .mail-types.open{
+    height: 8rem;
+}
+.top-nav .mail-types li{
+    color: rgba(255, 255 ,255, .8);
+    padding: .7em 0;
+}
+.main .top-nav .mail-types li.active{
+    background: rgba(248, 233, 14, 0.7);
+    color: #fff;
+}
+@media(min-width: 992px){
+    .navicon{
+        display: none;
+    }
+    .main .top-nav {
+        display: none;
+    }
+    .side-nav .side-nav > li{
+        border-bottom: .3rem rgba(255, 255, 255, .2) solid;
+    }
+    .side-nav h3{
+        position: relative;
+        text-align: left;
+        padding: 1.5rem 0 1.5rem 3rem;
+        border-top: .3rem rgba(255, 255, 255, .2) solid;
+        background: rgba(0, 0 ,0, .4);
+        color: rgba(255, 255, 255, 0.7)
+    }
+    .side-nav h3.active{
+        background: rgba(0, 0 ,0, .7);
+    }
+    .d-arrow{
+        margin-top: -.5rem;
+        right: .7rem;
+    }
+    .leftsidebar .mail-types{
+        height: 0;
+        overflow:hidden;
+    }
+    .leftsidebar .side-nav .mail-types.open{
+        height: 9.5rem;
+    }
+    .leftsidebar .side-nav .mail-types li{
+        text-align: left;
+        padding: 1.1em 3.5em;
+        background: rgba(0, 0 ,0, .3);
+        color: rgba(255, 255, 255, 0.7)
+    }
+    .leftsidebar .side-nav .mail-types li.active{
+        background: rgba(248, 233, 14, 0.7);
+        color: #fff;
+    }
+}

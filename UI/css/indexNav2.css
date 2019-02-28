@@ -1,0 +1,111 @@
+
+.nav > li{
+    height: 20%;
+    text-align: left;
+    padding: 1.5em 0 0;
+    margin: .4em auto;
+    background: rgba(0, 0 ,0, .2);
+    color: rgba(255, 255, 255, 0.7)
+}
+.nav li h2 {
+    margin-bottom: 1em; 
+}
+.leftsidebar .mail-types{
+    height: 0;
+    overflow:hidden;
+}
+.leftsidebar .mail-types.open{
+    height: 165px;
+}
+.d-arrow{
+    background-image: url('../UI-elements/arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width:40px;
+    height:50px;
+    margin-top: -.2em;
+    transform: rotate(-90deg);
+}
+.d-arrow.down{
+    margin-top: .3em;
+    transform: rotate(0deg);
+}
+.nav li ul li{
+    height: 10%;
+    text-align: left;
+    padding: 1.2em 3.5em;
+    background: rgba(0, 0 ,0, .2);
+    color: rgba(255, 255, 255, 0.7)
+}
+.nav h2{
+    padding: 0 .7em 0 2.2em;
+}
+.top-nav{
+    display: none;
+}
+@media(max-width: 992px){
+    .top-nav{
+        height: 0;
+        display: block;
+        background: rgba(0, 0 ,0, .8);
+        overflow: hidden;
+    }
+    .top-nav.open{
+        height: 15em;
+    }
+    .top-nav.sub.open{
+        height: 23em;
+    }
+    .top-nav > li{
+        width: 100%;
+        text-align: center;
+        color: rgba(255, 255 ,255, .8);
+        border-bottom: 1px #555 solid;
+    }
+    .top-nav h3{
+        padding: 1em 0;
+    }
+    .top-nav .d-arrow{
+        right: 1em;
+        top: .5em;
+        z-index: 20;
+        position: absolute;
+    }
+    .top-nav .mail-types{
+        height: 0;
+        display: block;
+        background: rgba(0, 0 ,0, .2);
+        overflow: hidden;
+    }
+    .top-nav.open .mail-types.open{
+        height: 8em;
+    }
+    .mail-types li{
+        padding: .7em 0;
+    }
+}
+.navig li{
+    transition: all 0.5s ease; 
+}
+.navig > li.active{
+    background: rgba(0, 0 ,0, .7);
+}
+.mail-types > li.active{
+    background: rgba(206, 238, 22, 0.7);
+}
+/* li .ul > li.active{
+    background: rgb(229, 243, 38, .8);
+    color: #fff;
+} */
+@media(max-width: 992px){
+    .navicon{
+        background-image: url('../UI-elements/hambuger.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        width:3em;
+        height:2em;
+        position: absolute;
+        right:1em;
+        top:1em;
+    }
+}
