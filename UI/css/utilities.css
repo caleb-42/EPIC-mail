@@ -90,7 +90,7 @@ button{
   white-space: nowrap;
   vertical-align: middle;
   border: 1px solid transparent;
-  padding: 1rem;
+  padding: .6rem .9rem;
   font-size: 1rem;
   border-radius: 0.25rem;
 }

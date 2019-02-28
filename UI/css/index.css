@@ -32,17 +32,23 @@ body{
 }
 .wrapper .main .left-body{
     width: 100%;
-    float: left;
+    height: 100%;
+    float: none;
 }
 .wrapper .main .tab.selected .left-body{
     width: 0;
     float: left;
     display: none;
 }
+.wrapper .main .tab .tab-content{
+    height: 90%;
+}
 .wrapper .main .tab .tab-content > div{
-    padding: 2em;
+    box-sizing:border-box;
+    overflow-y: auto;
+    padding: 2rem 2rem;
     width:100%;
-    height:100%;
+    height: 100%;
 }
 .wrapper .main .left-body .sub-right{
     width: 100%;
@@ -66,7 +72,7 @@ body{
     background: rgba(255, 255, 255, 1);
     box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2) inset;
     height: 100%;
-    width:0;
+    width:100%;
     display:block;
     float: right;
 }
@@ -95,6 +101,91 @@ body{
     width:100%;
     height:100%;
 }
+.backbtn{
+  position: absolute;
+  left:1rem;
+  top:1rem;
+  font-weight: 600;
+  background: rgb(255, 255, 255, .8);
+}
+.post{
+    padding: 1rem;
+    width: 90%;
+    border-radius: .5rem;
+    background: #fff;
+    display: block;
+    box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2);
+    margin-bottom: 2rem;
+}
+.post.active{
+    transform: scale(1.07);
+}
+.post .dp{
+    background-image: url('../UI-elements/dp.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width:4rem;
+    height:4rem;
+    float: left;
+    width: 30%;
+}
+.post .details{
+    float: right;
+    width: 70%;
+}
+.post h4{
+    text-align: left;
+    color: rgba(0, 0, 0, 0.7);
+    margin-bottom: .6rem; 
+}
+.post p.subject{
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 1rem;
+    margin-bottom: .8rem; 
+    text-align: left;
+}
+.post span.date{
+    color: rgba(185, 35, 115, 0.8);
+    font-size: .8rem;
+    text-align: right;
+    float: right;
+    width:80%;
+}
+.post span.type{
+    color: rgba(185, 35, 115, 0.8);
+    font-size: .8rem;
+    width:20%;
+    float: left;
+    text-align: left;
+}
+.post-bloated p.date{
+    color: rgba(185, 35, 115, 0.8);
+    font-size: .8rem;
+    text-align: right;
+}
+.post-bloated{
+    padding: 1rem;
+    width: 90%;
+    background: #fff;
+    display: block;
+}
+.post-bloated h3{
+    color: rgba(0, 0, 0, 0.7);
+    margin-bottom: 2.5rem; 
+}
+.post-bloated p.subject{
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 1.2rem;
+    margin-bottom: 2rem; 
+    text-align: center;
+    font-style: italic;
+}
+.post-bloated p.msg{
+    color: rgba(0, 0, 0, 0.5);
+    font-size: .95rem;
+    margin-bottom: 1.2rem; 
+    text-align: justify;
+}
 @media(min-width: 992px){
     .wrapper .main{
         width: 80%;
@@ -106,9 +197,17 @@ body{
         display:block;
         float: left;
     }
+    .post .dp{
+        width:4rem;
+        height:4rem;
+        width: 20%;
+    }
+    .post .details{
+        width: 80%;
+    }
 }
 @media(min-width: 768px){
-    .wrapper .main .left-body{
+    .wrapper .main .left-body, .wrapper .main .tab.selected .left-body{
         width: 60%;
         display:flex;
         float: left;
@@ -130,9 +229,38 @@ body{
         float: right;
         box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2) inset;
     }
-    .wrapper .main .right-body{
+    .wrapper .main .right-body, .wrapper .main .tab.selected .right-body{
         width: 40%;
         display:flex;
         float: right;
+    }
+    .wrapper .main .main-body{
+        overflow-y: hidden;
+    }
+    .wrapper .main .tab .tab-content > div{
+        overflow-y: auto;
+        height: 100%;
+    }
+    .wrapper .main .tab .tab-content{
+        height: 90%;
+    }
+    .post .dp{
+        width:4rem;
+        height:4rem;
+        width: 20%;
+    }
+    .post .details{
+        width: 80%;
+    }
+    .post p.subject{
+        font-size: 1.2rem;
+    }
+}
+@media(min-width: 567px){
+    .post .dp{
+        width: 20%;
+    }
+    .post .details{
+        width: 80%;
     }
 }

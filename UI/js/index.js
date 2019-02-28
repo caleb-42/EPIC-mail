@@ -1,8 +1,5 @@
 (function(){
-    const fetchData = (nav) => {
-
-    }
-    const switchClass = (target, toggleClass, type = "toggle")=>{
+    let switchClass = (target, toggleClass, type = "toggle")=>{
         try{
             let navs = document.querySelectorAll(`${target}`);
             navs.forEach((nav)=>{
@@ -29,10 +26,13 @@
             switchClass(`.${nav}.gone`, 'block', 'add');
             switchClass(`.${nav}.gone.block`, 'gone', 'remove');
         }
-        fetchData(nav);
+        /* fetchData(nav); */
     }
     document.querySelector('.side-nav .d-arrow').addEventListener('click', (evt)=>{
         openCloseNav();
+    });
+    document.querySelector('.backbtn').addEventListener('click', (evt)=>{
+        switchClass('.wrapper .main .tab', 'selected', 'toggle');
     });
     document.querySelector('.top-nav .d-arrow').addEventListener('click', (evt)=>{
         openCloseNav();
@@ -50,6 +50,7 @@
 
     navig.forEach((nav)=>{
         nav.addEventListener('click', (evt)=>{
+            switchClass('.wrapper .main .tab', 'selected', 'remove');
             menu = evt.currentTarget.getAttribute('data-nav');
             switchClass('.navig h3.active', 'active');
             switchClass('.mail-types li.active', 'active');
@@ -61,6 +62,7 @@
     const subNavig = document.querySelectorAll('.mail-types li');
     subNavig.forEach((nav)=>{
         nav.addEventListener('click', (evt)=>{
+            switchClass('.wrapper .main .tab', 'selected', 'remove');
             menu = evt.currentTarget.getAttribute('data-nav');
             parentMenu = evt.currentTarget.getAttribute('data-parent-nav');
             switchClass('.navig h3.active', 'active');
@@ -70,6 +72,7 @@
             switchTab(menu, false);
         })
     })
+
 })();
 
 
