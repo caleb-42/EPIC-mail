@@ -7,65 +7,47 @@ body{
     margin: 0;
     overflow: hidden;
     position: absolute;
-    width:100%;
-    height:100%;
+    width:100vw;
+    height:100vh;
     font-family: sans-serif;
 }
 .wrapper .leftsidebar {
     background: rgba(0, 0 ,0, .6);
-    width: 20%;
-    height: 100%;
-    float: left;
-}
-@media(max-width: 992px){
-    .wrapper .leftsidebar {
-        display:none;
-        float: none;
-    }
-}
-.wrapper.min .leftsidebar {
     display:none;
     float: none;
 }
-.main{
-    width: 80%;
-    height: 100%;
+.wrapper .main {
+    width: 100%;
+    height: 100vh;
     background: rgba(246, 246, 233, 0.5);
-    float: right;
+    float: none;
+    overflow-y: hidden;
 }
-
-@media(max-width: 992px){
-    .wrapper .main {
-        width: 100%;
-        float: none;
-    }
+.wrapper .main .main-body{
+    /* overflow-y: auto; */
 }
-.left-body{
-    height: 100%;
-    width: 60%;
-    float: left;
+.wrapper .main .left-body{
+    width: 100%;
+    float: none;
 }
-.right-body{
-    box-shadow: .2em 0em 1em rgba(109, 109, 109, 0.2) inset;
-    height: 100%;
-    width: 40%;
+.wrapper .main .left-body .sub-left{
+    width: 100%;
+    float: none;
+}
+.wrapper .main .left-body .sub-right{
+    width: 100%;
+    float: none;
+}
+.wrapper .main .right-body{
     background: rgba(255, 255, 255, 1);
-    float: right;
-}
-@media(max-width: 768px){
-    .left-body{
-        height: 100%;
-        width: 100%;
-        float: none;
-    }
-    .right-body{
-        display:none;
-        float: none;
-    }
+    box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2) inset;
+    height: 100%;
+    display:none;
+    float: none;
 }
 .header{
     background-image: url('../UI-elements/background.png');
-    height: 12%;
+    height: 4rem;
     position: relative;
 }
 .loader{
@@ -82,5 +64,48 @@ body{
     background-repeat: no-repeat;
     width:100px;
     height:60px;
-    margin:2em 3em;
+    margin:2rem 3rem;
+}
+.tab{
+    width:100%;
+    height:100%;
+}
+@media(min-width: 992px){
+    .wrapper .main{
+        width: 80%;
+        display:block;
+        float: right;
+    }
+    .wrapper .leftsidebar {
+        width: 20%;
+        display:block;
+        float: left;
+    }
+}
+@media(min-width: 768px){
+    .wrapper .main .left-body{
+        width: 60%;
+        display:block;
+        float: left;
+    }
+    .wrapper .main .left-body.inner-float{
+        width: 100%;
+        display:block;
+        float: none;
+    }
+    .wrapper .main .left-body .sub-left{
+        width: 60%;
+        display:block;
+        float: left;
+    }
+    .wrapper .main .left-body .sub-right{
+        width: 40%;
+        display:block;
+        float: right;
+    }
+    .wrapper .main .right-body{
+        width: 40%;
+        display:block;
+        float: right;
+    }
 }

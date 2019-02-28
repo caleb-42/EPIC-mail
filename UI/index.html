@@ -11,50 +11,76 @@
 </head>
     <body>
         <div class="wrapper w-100 h-100 reltv text-center">
-            <div class = "leftsidebar">
+            <aside class = "leftsidebar h-100">
                 <div class="logo"></div>
-                <ul class="nav navig w-100">
-                    <li  data-index = 'mails' ><h2>Mails<div class="d-arrow float-right anim down" onclick="toggle('d-arrow', 'down'); closeOpen();"></div></h2>
-                        <ul class="mail-types open anim overflo-none w-100">
-                            <li data-index = 'inbox'><p>Inbox</p></li>
-                            <li data-index = 'sent'><p>Sent</p></li>
-                            <li data-index = 'draft'><p>Draft</p></li>
+                <ul class="side-nav navig w-100">
+                        <li><h3 data-nav = 'mails' class="active">Mails<span class="d-arrow anim"></span></h3>
+                        <ul class="mail-types anim w-100">
+                            <li data-parent-nav="mails" data-nav = 'inbox'>Inbox</li>
+                            <li data-parent-nav="mails" data-nav = 'sent'>Sent</li>
+                            <li data-parent-nav="mails" data-nav = 'draft'>Draft</li>
                         </ul>
                     </li>
-                    <li data-index = 'contacts'><h2>Contacts</h2></li>
-                    <li data-index = 'groups'><h2>Groups</h2></li>
-                    <li data-index = 'settings'><h2>Settings</h2></li>
+                    <li><h3 data-nav = 'contacts'>Contacts</h3></li>
+                    <li><h3 data-nav = 'groups'>Groups</h3></li>
+                    <li><h3 data-nav = 'settings'>Settings</h3></li>
                 </ul>
-            </div>
+            </aside>
             <div class="main">
                 <div class="header">
-                        <div class="navicon" onclick="closeOpenTopNav()"></div>
+                    <div class="navicon"></div>
                 </div>
                 <ul class="top-nav navig w-100 anim">
-                    <li data-index = 'mails'><h3 class="reltv">Mails<div class="d-arrow anim down" onclick="toggle('d-arrow', 'down'); closeOpenTopSubNav();"></div></h3>
-                        <ul class="mail-types anim overflo-none w-100">
-                            <li data-index = 'inbox'><p>Inbox</p></li>
-                            <li data-index = 'sent'><p>Sent</p></li>
-                            <li data-index = 'draft'><p>Draft</p></li>
+                    <li><h3 data-nav = 'mails' class="active">Mails<span class="d-arrow anim down"></span></h3>
+                        <ul class="mail-types anim w-100">
+                            <li data-parent-nav="mails" data-nav = 'inbox'>Inbox</li>
+                            <li data-parent-nav="mails" data-nav = 'sent'>Sent</li>
+                            <li data-parent-nav="mails" data-nav = 'draft'>Draft</li>
                         </ul>
                     </li>
-                    <li data-index = 'contacts'><h3>Contacts</h3></li>
-                    <li data-index = 'groups'><h3>Groups</h3></li>
-                    <li data-index = 'settings'><h3>Settings</h3></li>
+                    <li><h3 data-nav = 'contacts'>Contacts</h3></li>
+                    <li><h3 data-nav = 'groups'>Groups</h3></li>
+                    <li><h3 data-nav = 'settings'>Settings</h3></li>
                 </ul>
-                <div class="w-100 h-100">
-                    <div class="left-body">
-    a
+                <div class="w-100 h-100 main-body">
+                    <div class="mails tab block flexdiv flex-center">
+                        <div class="left-body h-100">
+                            <h3>Mail displayed with only subject in list layout</h3>
+                        </div>
+                        <div class="right-body h-100">
+                            <h6>Selected mail displayed with subject and message details and any follow up thread messages including sender and delivery date in list layout</h6>
+                        </div>
                     </div>
-                    <div class="right-body">
-    
+                    <div class="contacts tab block flexdiv flex-center">
+                        <div class="left-body h-100">
+                            <h3>Panels displaying details in contacts</h3>
+                        </div>
+                        <div class="right-body h-100">
+                            <h6>Panel showing all messages from the selected contact</h6>
+                        </div>
                     </div>
-                    <div class="clr"></div>
+                    <div class="groups tab block flexdiv flex-center">
+                        <div class="left-body h-100">
+                            <h3>Groups in a list layout</h3>
+                        </div>
+                        <div class="right-body h-100">
+                            <h6>Panel showing all messages from user and to user and their delivery date</h6>
+                        </div>
+                    </div>
+                    <div class="settings tab block flexdiv flex-center">
+                        <div class="left-body inner-float h-100">
+                            <div class="sub-left">
+                                <h3>Area to upload photo here</h3>
+                            </div>
+                            <div class="sub-right">
+                                <h6>list of all users</h6>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="clr"></div>
         </div>
-    </body>
-    <script src="./js/jquery-3.2.1.min.js"></script> 
+    </body> 
     <script src="./js/index.js"></script> 
 </html>

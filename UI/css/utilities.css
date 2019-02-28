@@ -20,7 +20,7 @@ input[type=number] {
     border-radius: 0.25rem;
 }
 input::placeholder {
-    opacity: .5 !important; 
+    opacity: .7 !important; 
 }
 .inline-block{
     display: inline-block;
@@ -37,66 +37,14 @@ input::placeholder {
 .text-center{
     text-align: center;
 }
-.text-right{
-    text-align: right;
-}
 button:focus, li:focus, input:focus {
     outline: none !important; 
-}
-.px-0 {
-    padding-left: 0 !important;
-    padding-right: 0 !important; 
-}  
-.py-0 {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important; 
-}  
-.p-0 {
-    padding: 0 !important; 
-}
-.mx-0 {
-    margin-left: 0 !important;
-    margin-right: 0 !important; 
-}  
-.my-0 {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important; 
-}  
-.m-0 {
-    margin: 0 !important; 
 }
 .w-100{
     width:100%;
 }
-.w-50{
-    width:50%;
-}
-.w-0{
-    width:0;
-}
 .h-100{
     height:100%;
-}
-.h-50{
-    height:50%;
-}
-.h-0{
-    height:0;
-}
-.f-1{
-    font-size: 1rem;
-}
-.f-1-5{
-    font-size: 1.5rem;
-}
-.f-2{
-    font-size: 2rem;
-}
-.f-2-5{
-    font-size: 2.5rem;
-}
-.f-3{
-    font-size: 3rem;
 }
 ul {
     padding: 0 !important;
@@ -107,17 +55,8 @@ li, a {
     list-style-type: none !important;
     cursor: pointer; 
 }
-.excerpt {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden; 
-}
 .gone {
     display: none !important; 
-}
-  
-.notgone {
-    display: block !important; 
 }
 .vanish {
     opacity: 0;
@@ -125,16 +64,12 @@ li, a {
 .appear{
     opacity: 1;
 }
-.opac-50{
-    opacity:.5;
-}
-
 .opac-70{
     opacity:.7;
 }
 .pointer {
-    cursor: pointer; }
-
+    cursor: pointer; 
+}
 .wht {
     color: white !important; 
 }
@@ -147,9 +82,6 @@ li, a {
 .clr {
     clear: both; 
 }
-.blac {
-    color: black !important; 
-}
 button{
   display: inline-block;
   font-weight: normal;
@@ -157,32 +89,10 @@ button{
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  /* -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none; */
   border: 1px solid transparent;
   padding: 1rem;
   font-size: 1rem;
   border-radius: 0.25rem;
-}
-.reltv{
-    position: relative;
-}
-.abs{
-    position: absolute;
-}
-.center {
-    overflow: auto;
-    margin: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0; 
-}  
-.overflo-none{
-    overflow: hidden;
 }
 .flexdiv{
   display: -webkit-box;

@@ -1,24 +1,76 @@
-toggle = (targetClass, toggleClass)=>{
-    document.querySelector(`.${targetClass}`).classList.toggle(toggleClass);
-}
+(function(){
+    const fetchData = (nav) => {
 
-closeOpen = () => {
-    console.log('sdf');
-    document.querySelector('.mail-types').classList.toggle('open');
-}
+    }
+    const switchClass = (target, toggleClass, type = "toggle")=>{
+        try{
+            let navs = document.querySelectorAll(`${target}`);
+            navs.forEach((nav)=>{
+                if(type=='toggle')nav.classList.toggle(toggleClass);
+                if(type=='add')nav.classList.add(toggleClass);
+                if(type=='remove')nav.classList.remove(toggleClass);
+            });
+        }catch(e){
+            console.error(e);
+            return false;
+        }
+        return true;
+    }
+    const openCloseNav = ()=>{
+        switchClass('.side-nav .d-arrow', 'down'); 
+        switchClass('.side-nav .mail-types', 'open');
+        switchClass('.top-nav .mail-types', 'open');
+        switchClass('.main', 'open-sub-nav');
+    }
+    const switchTab = (nav, changeTab=true)=>{
+        if(changeTab) {
+            switchClass(`.tab.block`, 'gone', 'add');
+            switchClass(`.tab.block.gone`, 'block', 'remove');
+            switchClass(`.${nav}.gone`, 'block', 'add');
+            switchClass(`.${nav}.gone.block`, 'gone', 'remove');
+        }
+        fetchData(nav);
+    }
+    document.querySelector('.side-nav .d-arrow').addEventListener('click', (evt)=>{
+        openCloseNav();
+    });
+    document.querySelector('.top-nav .d-arrow').addEventListener('click', (evt)=>{
+        openCloseNav();
+    });
+    document.querySelector('.main .navicon')
+    .addEventListener('click', (evt)=>{
+        switchClass('.main', 'open-nav');
+    });
 
-activate = (node) => {
-    document.querySelector('nav > li').classList.add()
-    node.classList.add('active');
-}
-closeOpenTopNav = () => {
-    $('.top-nav').toggleClass('open');
-}
-closeOpenTopSubNav = () => {
-    $('.top-nav .mail-types').toggleClass('open');
-    $('.top-nav').toggleClass('sub');
-}
-$('.navig > li').on('click', (evt)=>{
+    const navig = document.querySelectorAll('.navig h3');
+
+    navig.forEach((nav)=>{
+        nav.addEventListener('click', (evt)=>{
+            menu = evt.currentTarget.getAttribute('data-nav');
+            switchClass('.navig h3.active', 'active');
+            switchClass('.mail-types li.active', 'active');
+            switchClass(`[data-nav="${menu}"]`, 'active');
+            switchTab(menu);
+        })
+    });
+
+    const subNavig = document.querySelectorAll('.mail-types li');
+    subNavig.forEach((nav)=>{
+        nav.addEventListener('click', (evt)=>{
+            menu = evt.currentTarget.getAttribute('data-nav');
+            parentMenu = evt.currentTarget.getAttribute('data-parent-nav');
+            switchClass('.navig h3.active', 'active');
+            switchClass(`[data-nav = "${parentMenu}"]`, 'active');
+            switchClass('.mail-types li.active', 'active');
+            switchClass(`[data-nav="${menu}"]`, 'active');
+            switchTab(menu, false);
+        })
+    })
+})();
+
+
+/* $('.navig > li').on('click', (evt)=>{
+    document.querySelector('.navig > li.active').classList('data-nav');
     let prevMenu = $('.navig > li.active').attr('data-index');
     let selected = $(evt.currentTarget);
     let menu = selected.attr('data-index');
@@ -35,7 +87,7 @@ $('.mail-types > li').on('click', (evt)=>{
     let menu = selected.attr('data-index');
     $('.mail-types').find(`[data-index='${menu}']`).addClass('active');
     selected.find('li') ? selected.find('li').removeClass('active') : null;
-});
+}); */
 /* $(window).resize(organiseSidebar);
 
 function organiseSidebar(){
