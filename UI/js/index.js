@@ -41,6 +41,10 @@
     .addEventListener('click', (evt)=>{
         switchClass('.main', 'open-nav');
     });
+    document.querySelector('.main-body')
+    .addEventListener('click', (evt)=>{
+        switchClass('.main', 'open-nav', 'remove');
+    });
 
     const navig = document.querySelectorAll('.navig h3');
 

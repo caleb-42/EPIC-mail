@@ -11,6 +11,10 @@ body{
     height:100vh;
     font-family: sans-serif;
 }
+.wrapper {
+    width:100vw;
+    height:100vh;
+}
 .wrapper .leftsidebar {
     background: rgba(0, 0 ,0, .6);
     display:none;
@@ -24,30 +28,51 @@ body{
     overflow-y: hidden;
 }
 .wrapper .main .main-body{
-    /* overflow-y: auto; */
+    overflow-y: auto;
 }
 .wrapper .main .left-body{
     width: 100%;
-    float: none;
+    float: left;
 }
-.wrapper .main .left-body .sub-left{
-    width: 100%;
-    float: none;
+.wrapper .main .tab.selected .left-body{
+    width: 0;
+    float: left;
+    display: none;
+}
+.wrapper .main .tab .tab-content > div{
+    padding: 2em;
+    width:100%;
+    height:100%;
 }
 .wrapper .main .left-body .sub-right{
     width: 100%;
+    background: rgba(255, 255, 255, 1);
     float: none;
+    height: 100%;
+    box-shadow: 0 .2rem 1rem rgba(109, 109, 109, 0.2) inset;
+}
+.wrapper .main .left-body .sub-left{
+    height: 40%;
 }
 .wrapper .main .right-body{
     background: rgba(255, 255, 255, 1);
     box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2) inset;
     height: 100%;
+    width:0;
     display:none;
-    float: none;
+    float: right;
+}
+.wrapper .main .tab.selected .right-body{
+    background: rgba(255, 255, 255, 1);
+    box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2) inset;
+    height: 100%;
+    width:0;
+    display:block;
+    float: right;
 }
 .header{
     background-image: url('../UI-elements/background.png');
-    height: 4rem;
+    height: 10%;
     position: relative;
 }
 .loader{
@@ -85,7 +110,7 @@ body{
 @media(min-width: 768px){
     .wrapper .main .left-body{
         width: 60%;
-        display:block;
+        display:flex;
         float: left;
     }
     .wrapper .main .left-body.inner-float{
@@ -95,17 +120,19 @@ body{
     }
     .wrapper .main .left-body .sub-left{
         width: 60%;
-        display:block;
+        display:flex;
         float: left;
+        height: 100%;
     }
     .wrapper .main .left-body .sub-right{
         width: 40%;
-        display:block;
+        display:flex;
         float: right;
+        box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2) inset;
     }
     .wrapper .main .right-body{
         width: 40%;
-        display:block;
+        display:flex;
         float: right;
     }
 }
