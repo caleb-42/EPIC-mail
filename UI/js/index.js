@@ -32,7 +32,7 @@
         openCloseNav();
     });
     document.querySelector('.backbtn').addEventListener('click', (evt)=>{
-        switchClass('.wrapper .main .tab', 'selected', 'toggle');
+        switchClass('.wrapper .main .tab', 'selected', 'remove');
     });
     document.querySelector('.top-nav .d-arrow').addEventListener('click', (evt)=>{
         openCloseNav();
