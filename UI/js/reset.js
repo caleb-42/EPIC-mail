@@ -3,19 +3,23 @@ window.addEventListener('load', (evt) => {
         document.querySelector('.submit').disabled = true;
         toggleLoader();
         let email = document.querySelector('input[name="email"]').value;
+        let phoneNumber = document.querySelector('input[name="phoneNumber"]').value;
         let password = document.querySelector('input[name="password"]').value;
-        const data = {
-            email,
-            password
+        let confirm_password = document.querySelector('input[name="confirm_password"]').value;
+        console.log('sac');
+        if(confirm_password != password){
+            document.querySelector('.submit').disabled = false;
+            document.querySelector('.resp').textContent = 'password mismatch, confirm password';
+            toggleLoader();
+            return;
         }
-        
         if(password == '') {
             document.querySelector('.submit').disabled = false;
             toggleLoader();
             document.querySelector('.resp').textContent = 'empty password';
             return;
         }
-        /* fetch(endpoint, {
+        /* fetch(endpoint{
             method: "POST",
             headers: {
             "Content-Type": "application/json"
@@ -24,14 +28,13 @@ window.addEventListener('load', (evt) => {
         }).then((res)=>{
             console.log(res);
         }); */
-        
         window.setTimeout(()=>{/* API call is digused with setTimer function to view loader.gif and REST response message */
-            document.querySelector('.submit').disabled = false;
             toggleLoader();
-            document.querySelector('.resp').textContent = 'successfully signed in';
-            console.log(data);
+            document.querySelector('.resp').textContent = 'password reset successfull';
+            document.querySelector('.submit').disabled = false;
+            console.log(firstName, lastName, email, password, phoneNumber);
         }, 3000);
-    });
+    })
     function toggleLoader(){
         const loader= document.querySelector('.loader');
         const resp= document.querySelector('.resp');
