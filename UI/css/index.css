@@ -59,6 +59,7 @@ body{
 }
 .wrapper .main .left-body .sub-left{
     height: 40%;
+    padding-bottom: 1rem;
 }
 .wrapper .main .right-body{
     background: rgba(255, 255, 255, 1);

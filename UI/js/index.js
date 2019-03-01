@@ -45,6 +45,24 @@
     .addEventListener('click', (evt)=>{
         switchClass('.main', 'open-nav', 'remove');
     });
+    document.querySelector('.create-group-btn')
+    .addEventListener('click', (evt)=>{
+        console.log(document.querySelector('.create-group .inputs').value);
+        if(document.querySelector('.create-group .inputs').value == '') {
+            document.querySelector('.group-resp').textContent = 'group name is empty';
+            return;
+        }
+        document.querySelector('.group-resp').textContent = 'new group created';
+    });
+    document.querySelector('.addgroup')
+    .addEventListener('click', (evt)=>{
+        console.log(document.querySelector('#group').value);
+        if(document.querySelector('#group').value == '') {
+            document.querySelector('.add-user-resp').textContent = 'select a user';
+            return;
+        }
+        document.querySelector('.add-user-resp').textContent = 'user added succesfully';
+    });
 
     const navig = document.querySelectorAll('.navig h3');
 
@@ -72,7 +90,7 @@
             switchTab(menu, false);
         })
     })
-    const inputs = document.querySelectorAll('.input-group .inputs');
+    const inputs = document.querySelectorAll('.input-group input.inputs');
 
     inputs.forEach((input)=>{
         input.addEventListener('focusin', (evt) => {
