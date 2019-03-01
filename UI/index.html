@@ -77,7 +77,20 @@
                     <div class="settings tab anim gone">
                         <div class="left-body inner-float">
                             <div class="sub-left tab-content flexdiv flex-center">
-                                <h3>Area to upload photo here</h3>
+                                <div class="content-wrapper">
+                                    <div class="dp-image">
+                                        <h3 class="opac-70">Area to upload photo here</h3>
+                                    </div>
+                                    <div class="create-group">
+                                        <h3 class="opac-70">Create Group</h3>
+                                        <input class="group inputs"/>
+                                        <span>
+                                            <button class="create-group-btn">new group</button>
+                                            <a href="#addUsermodal" class="add-user modalopen">Add User</a>
+                                        </span>
+                                        <p class="group-resp">&nbsp;</p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="sub-right tab-content flexdiv flex-center">
                                 <h6>list of all users</h6>
@@ -89,7 +102,7 @@
             </div>
             <div class="clr"></div>
         </div>
-        <a class="newMail wht" href="#modal">
+        <a class="newMail wht modalopen" href="#modal">
             New
         </a>
         <div class="custom-modal modal anim" id = "modal">
@@ -111,7 +124,37 @@
                             <button type="button" class="actionMail save anim">save</button>
                             <button type="button" class="actionMail cancel anim">cancel</button>
                         </div>
-                        <h4 class="mail-resp opac-70">&nbsp;</h4>
+                        <h4 class="mail-resp res opac-70">&nbsp;</h4>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="custom-modal modal anim" id = "addUsermodal">
+            <div class="modal-content">
+                <a href="#" class="modal_close">&times;</a>
+                <h2 class="modal_heading">Add user to Group</h2>
+                <div class="modal-body">
+                    <form class="form-hd text-center " action="" autocomplete="off">
+                        <div class="input-group">
+                            <!-- <input required type="text" id="group" class="inputs" placeholder = "Group name" name="group" /> -->
+                            <select class="inputs" name="group" id="group">
+                                <option disabled selected value="">Select user</option>
+                                <option value="fred">fred delight</option>
+                                <option value="john">john doe</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <!-- <div class="userlist flexdiv flex-center">****Select a Group from Group List****</div> -->
+                            <select class="inputs" name="group" id="group">
+                                <option disabled selected value="">Select group</option>
+                                <option value="genuis">genuis</option>
+                                <option value="bootcampers">bootcampers</option>
+                            </select>
+                        </div>
+                        <div class="actionbtn w-100">
+                            <button type="button" class="addgroup add anim">add</button>
+                        </div>
+                        <h4 class="add-user-resp res opac-70">&nbsp;</h4>
                     </form>
                 </div>
             </div>

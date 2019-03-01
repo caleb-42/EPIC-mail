@@ -25,6 +25,10 @@
     opacity: 1;
     visibility:visible;
 }
+#addUsermodal:target{
+    opacity: 1;
+    visibility:visible;
+}
 .custom-modal .modal-content{
     background-color: rgb(240, 240, 240);
     width: 70%;
@@ -35,6 +39,15 @@
     transform: translate(-50%, -50%);
     border-radius: .7rem;
     padding: 2rem;
+}
+.custom-modal .userlist{
+    background-color: rgb(251, 251, 251);
+    height: 13rem;
+    border-radius: .5rem;
+}
+.custom-modal select{
+    margin: 4rem auto;
+    width: 70%;
 }
 .custom-modal .modal-content .modal_close{
     font-size: 2rem;
@@ -89,6 +102,35 @@
 }
 .form-hd .actionbtn button:nth-child(3){
     border: 1px rgba(0, 0, 0, .3) solid;
+}
+.create-group{
+    height: 15rem;
+    padding: 1em;
+}
+.dp-image{
+    height: 10rem;
+    padding: 1em;
+}
+.create-group input{
+    margin: 1rem auto;
+    width: 80%;
+    text-align: center;
+}
+.create-group a{
+    background: rgba(185, 35, 115, 0.8);
+    padding: .75rem 1rem;
+    border-radius: .2rem;
+    color:#fff;
+}
+.create-group p{
+    margin-top: 2rem;
+    font-size: 1rem;
+    opacity: .7;
+    font-weight: 600;
+}
+.create-group a, .create-group button{
+    margin: .4rem 1rem;
+    display: inline-block;
 }
 @media(min-width: 768px){
     .custom-modal .modal-content{
