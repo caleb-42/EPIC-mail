@@ -10,8 +10,15 @@ window.addEventListener('load', (evt) => {
         let confirm_password = document.querySelector('input[name="confirm_password"]').value;
 
         if(confirm_password != password){
+            document.querySelector('.submit').disabled = false;
             document.querySelector('.resp').textContent = 'password mismatch, confirm password';
             toggleLoader();
+            return;
+        }
+        if(password == '') {
+            document.querySelector('.submit').disabled = false;
+            toggleLoader();
+            document.querySelector('.resp').textContent = 'empty password';
             return;
         }
         /* fetch(endpoint{
