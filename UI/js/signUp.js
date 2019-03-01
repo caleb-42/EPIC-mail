@@ -33,6 +33,10 @@
         window.setTimeout(()=>{/* API call is digused with setTimer function to view loader.gif and REST response message */
             toggleLoader();
             document.querySelector('.resp').textContent = 'created account successfully';
+            localStorage.setItem('email', email);
+            localStorage.setItem('password', password);
+            localStorage.setItem('signin', true);
+            window.location.href = './index.html';
             document.querySelector('.submit').disabled = false;
             console.log(firstName, lastName, email, password, phoneNumber);
         }, 3000);

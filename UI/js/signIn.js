@@ -29,6 +29,9 @@
             document.querySelector('.submit').disabled = false;
             toggleLoader();
             if(email == 'admin@gmail.com' && password == 'admin123'){
+                localStorage.setItem('email', email);
+                localStorage.setItem('password', password);
+                localStorage.setItem('signin', true);
                 document.querySelector('.resp').textContent = 'successfully signed in';
                 window.location.href = './index.html';
                 return;
