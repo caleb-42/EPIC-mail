@@ -37,7 +37,7 @@ input::placeholder {
 .text-center{
     text-align: center;
 }
-button:focus, li:focus, input:focus {
+button:focus, li:focus, input:focus, textarea:focus {
     outline: none !important; 
 }
 .w-100{

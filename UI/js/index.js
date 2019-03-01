@@ -32,7 +32,7 @@
         openCloseNav();
     });
     document.querySelector('.backbtn').addEventListener('click', (evt)=>{
-        switchClass('.wrapper .main .tab', 'selected', 'toggle');
+        switchClass('.wrapper .main .tab', 'selected', 'remove');
     });
     document.querySelector('.top-nav .d-arrow').addEventListener('click', (evt)=>{
         openCloseNav();
@@ -72,7 +72,38 @@
             switchTab(menu, false);
         })
     })
+    const inputs = document.querySelectorAll('.input-group .inputs');
 
+    inputs.forEach((input)=>{
+        input.addEventListener('focusin', (evt) => {
+            event.target.parentNode.querySelector('label').classList.add('show');
+        });
+        input.addEventListener('focusout', (evt) => {
+            event.target.parentNode.querySelector('label').classList.remove('show');
+        });
+    })
+    const actionMail = document.querySelectorAll('.actionMail');
+
+    actionMail.forEach((btn)=>{
+        btn.addEventListener('click', (evt) => {
+            switchClass('actionbtn', 'vanish');
+            setTimeout(()=>{
+                switch(evt.target.textContent){
+                    case 'save':
+                    document.querySelector('.mail-resp').innerHTML = 'successfully saved';
+                    break;
+                    case 'send':
+                    document.querySelector('.mail-resp').innerHTML =  'successfully sent';
+                    break;
+                    case 'cancel':
+                    document.querySelector('.modal_close').click();
+                    break;
+                }
+                
+                switchClass('actionbtn', 'vanish');
+            })
+        });
+    })
 })();
 
 
