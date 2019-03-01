@@ -28,7 +28,12 @@
         window.setTimeout(()=>{/* API call is digused with setTimer function to view loader.gif and REST response message */
             document.querySelector('.submit').disabled = false;
             toggleLoader();
-            document.querySelector('.resp').textContent = 'successfully signed in';
+            if(email == 'admin@gmail.com' && password == 'admin123'){
+                document.querySelector('.resp').textContent = 'successfully signed in';
+                window.location.href = './index.html';
+                return;
+            }
+            document.querySelector('.resp').textContent = 'failed to signed in';
             console.log(data);
         }, 3000);
     });

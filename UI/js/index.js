@@ -89,7 +89,7 @@
             switchClass(`[data-nav = "${parentMenu}"]`, 'active');
             switchClass('.mail-types li.active', 'active');
             switchClass(`[data-nav="${menu}"]`, 'active');
-            switchTab(menu, false);
+            switchTab(parentMenu);
         })
     })
     const inputs = document.querySelectorAll('.input-group input.inputs');
