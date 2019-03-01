@@ -1,4 +1,4 @@
-window.addEventListener('load', (evt) => {
+(() => {
     document.querySelector('button').addEventListener('click', () => {
         document.querySelector('.submit').disabled = true;
         toggleLoader();
@@ -56,4 +56,4 @@ window.addEventListener('load', (evt) => {
             event.target.parentNode.querySelector('label').classList.remove('show');
         });
     })
-})
+})()
