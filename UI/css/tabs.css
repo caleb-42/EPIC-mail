@@ -46,7 +46,7 @@
     border-radius: .5rem;
 }
 .custom-modal select{
-    margin: 0 auto;
+    margin: 4rem auto;
     width: 70%;
 }
 .custom-modal .modal-content .modal_close{
