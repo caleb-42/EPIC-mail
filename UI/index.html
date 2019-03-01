@@ -7,6 +7,7 @@
     <title>Epic mail</title>
     <link rel="stylesheet" href="./css/indexNav.css">
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/tabs.css">
     <link rel="stylesheet" href="./css/utilities.css"> 
 </head>
     <body>
@@ -87,6 +88,33 @@
                 </div>
             </div>
             <div class="clr"></div>
+        </div>
+        <a class="newMail wht" href="#modal">
+            New
+        </a>
+        <div class="custom-modal modal anim" id = "modal">
+            <div class="modal-content">
+                <a href="#" class="modal_close">&times;</a>
+                <h2 class="modal_heading">New Mail</h2>
+                <div class="modal-body">
+                    <form class="form-hd text-center " action="" autocomplete="off">
+                        <div class="input-group">
+                            <label for="email" class="email anim vanish">Email / Group Name</label>
+                            <input required type="text" id="email" class="inputs" placeholder = "Email / Group Name" name="email" />
+                        </div>
+                        <div class="input-group">
+                            <label for="password" class="password anim vanish">Message</label>
+                            <textarea rows = 11 required type="password" id="password" class="inputs" placeholder = "Message" name="password"></textarea>
+                        </div>
+                        <div class="actionbtn w-100">
+                            <button type="button" class="actionMail send anim">send</button>
+                            <button type="button" class="actionMail save anim">save</button>
+                            <button type="button" class="actionMail cancel anim">cancel</button>
+                        </div>
+                        <h4 class="mail-resp opac-70">&nbsp;</h4>
+                    </form>
+                </div>
+            </div>
         </div>
     </body> 
     <script src="./js/index.js"></script> 

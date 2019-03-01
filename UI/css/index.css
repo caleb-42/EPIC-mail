@@ -255,6 +255,9 @@ body{
     .post p.subject{
         font-size: 1.2rem;
     }
+    .backbtn{
+        display: none;
+    }
 }
 @media(min-width: 567px){
     .post .dp{

@@ -1,0 +1,98 @@
+.newMail{
+    /* background-image: url('../UI-elements/loader.gif'); */
+    background-color: rgba(185, 35, 115, 0.8);
+    /* background-size: cover;
+    background-repeat: no-repeat; */
+    position: absolute;
+    padding: 1rem 2rem;
+    margin:0 auto;
+    border-radius: 3rem;
+    bottom: 1.1rem;
+    right: 1.1rem;
+}
+.custom-modal{
+    background-color: rgba(0, 0, 0, .7);
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top:0;
+    left: 0;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+}
+#modal:target{
+    opacity: 1;
+    visibility:visible;
+}
+.custom-modal .modal-content{
+    background-color: rgb(240, 240, 240);
+    width: 70%;
+    height: 65%;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: .7rem;
+    padding: 2rem;
+}
+.custom-modal .modal-content .modal_close{
+    font-size: 2rem;
+    color: #555;
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+}
+.custom-modal .modal-content .modal_heading{
+    color: rgba(185, 35, 115, 0.8);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem; 
+    border-bottom: 1px rgba(0, 0, 0, .3) solid;
+}
+.form-hd .input-group{
+    margin:0 auto 1.2rem;
+    text-align: center;
+}
+.form-hd .input-group label{
+    font-size: 1.0rem;
+    color: rgba(43, 129, 71, 0.9);
+    display: inline-block;
+    opacity: 0;
+    padding-bottom: -1.5em;
+}
+.form-hd .input-group label.show{
+    padding-bottom: .5em;
+    opacity: .6;
+    font-weight: 600;
+}
+.form-hd .input-group input, .form-hd .input-group textarea{
+    width:100%;
+    text-align:center;
+    font-size: 1rem;
+    border-radius: .5em;
+    border-color: transparent;
+    background: rgba(0,0,0, .1);
+    margin:0 auto;
+}
+.form-hd .input-group textarea{
+    max-width: 100%;
+    max-height: 11rem;
+}
+.form-hd .actionbtn{
+    margin-bottom: 1rem;
+}
+.form-hd .actionbtn button:nth-child(1){
+    border: 1px rgba(0, 0, 0, .3) solid;
+}
+.form-hd .actionbtn button:nth-child(2){
+    border: 1px rgba(0, 0, 0, .3) solid;
+}
+.form-hd .actionbtn button:nth-child(3){
+    border: 1px rgba(0, 0, 0, .3) solid;
+}
+@media(min-width: 768px){
+    .custom-modal .modal-content{
+        width: 50%;
+        height: 65%;
+    }
+}

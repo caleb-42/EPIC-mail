@@ -32,6 +32,38 @@
                 deliveryDate: 'Sun 11th, Aug 2018',
                 type: 'recieved',
             },
+            {
+                firstName: 'fred',
+                lastName: 'delight',
+                subject: "get in the car, you're late",
+                message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+                deliveryDate: 'Sun 11th, Aug 2018',
+                type: 'recieved',
+            },
+            {
+                firstName: 'fred',
+                lastName: 'delight',
+                subject: "get in the car, you're late",
+                message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+                deliveryDate: 'Sun 11th, Aug 2018',
+                type: 'recieved',
+            },
+            {
+                firstName: 'fred',
+                lastName: 'delight',
+                subject: "get in the car, you're late",
+                message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+                deliveryDate: 'Sun 11th, Aug 2018',
+                type: 'recieved',
+            },
+            {
+                firstName: 'fred',
+                lastName: 'delight',
+                subject: "get in the car, you're late",
+                message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+                deliveryDate: 'Sun 11th, Aug 2018',
+                type: 'recieved',
+            },
         ]
     };
     const runDummy = ()=>{
