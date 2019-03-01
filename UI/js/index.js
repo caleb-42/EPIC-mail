@@ -1,4 +1,11 @@
 (function(){
+    const authenticate = ()=>{
+        let email = localStorage.getItem('email');
+        let password = localStorage.getItem('password');
+        let signin = localStorage.getItem('signin');
+        if(!signin) window.location.href = './signUp.html';
+		}
+		authenticate();
     let switchClass = (target, toggleClass, type = "toggle")=>{
         try{
             let navs = document.querySelectorAll(`${target}`);
@@ -40,6 +47,11 @@
     document.querySelector('.main .navicon')
     .addEventListener('click', (evt)=>{
         switchClass('.main', 'open-nav');
+    });
+    document.querySelector('.signout')
+    .addEventListener('click', (evt)=>{
+			localStorage.clear();
+      window.location.href = './signIn.html';
     });
     document.querySelector('.main-body')
     .addEventListener('click', (evt)=>{
