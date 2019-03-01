@@ -3,7 +3,7 @@ Epic mail is an app that will cater for the messaging needs of users who sign up
 
 
 # Template URL
-https://caleb-42.github.io/EPIC-mail/UI/Index.html
+https://caleb-42.github.io/EPIC-mail/UI
 
 # User Access
 
