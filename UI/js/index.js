@@ -47,6 +47,7 @@
     });
     document.querySelector('.create-group-btn')
     .addEventListener('click', (evt)=>{
+        document.querySelector('.group-resp').textContent = '';
         console.log(document.querySelector('.create-group .inputs').value);
         if(document.querySelector('.create-group .inputs').value == '') {
             document.querySelector('.group-resp').textContent = 'group name is empty';
@@ -56,6 +57,7 @@
     });
     document.querySelector('.addgroup')
     .addEventListener('click', (evt)=>{
+        document.querySelector('.add-user-resp').textContent = '';
         console.log(document.querySelector('#group').value);
         if(document.querySelector('#group').value == '') {
             document.querySelector('.add-user-resp').textContent = 'select a user';
@@ -119,6 +121,16 @@
                 }
                 
                 switchClass('actionbtn', 'vanish');
+            })
+        });
+    })
+    const modalopen = document.querySelectorAll('.modalopen');
+    const response = document.querySelectorAll('.res');
+
+    modalopen.forEach((a)=>{
+        a.addEventListener('click', (evt) => {
+            response.forEach((a)=>{
+                a.textContent = '';
             })
         });
     })
