@@ -19,24 +19,16 @@ body{
 .sidebar {
     background-image: url('../UI-elements/background.png');
     background-size: cover;
-    width: 30%;
+    width:0%;
     height: 100%;
+    display: none;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
 .main{
-    width: 70%;
+    width:100%;
     height: 100%;
     background: rgba(246, 246, 233, 0.5);
-}
-@media (max-width: 992px) {
-    .main{
-        width:100%;
-    }
-    .sidebar{
-        width:0%;
-        display: none;
-    }
 }
 .main-body{
     padding:.5em;
@@ -83,23 +75,8 @@ body{
 }
 .form-hd{
     height: 60%;
-    width: 70%;
+    width: 100%;
     margin: 1em auto;
-}
-@media (max-width: 992px) {
-    .form-hd{
-        width:70%;
-    }
-}
-@media (max-width: 768px) {
-    .form-hd{
-        width:90%;
-    }
-}
-@media (max-width: 576px) {
-    .form-hd{
-        width:100%;
-    }
 }
 .form-hd .input-group{
     margin:0 auto 1.8em;
@@ -129,23 +106,13 @@ body{
     background: rgba(0,0,0, .1);
     margin:0 auto;
 }
-@media (max-width: 768px) {
-    .form-hd input, .form-hd button{
-        font-size: 1.1rem;
-    }
-}
 .form-hd button{
     background: rgba(73, 192, 112, 0.9);
     color:rgba(255,255,255,.9);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     border-radius: 1em;
-    width:25%;
+    width:35%;
     padding:.5rem .7em;
-}
-@media (max-width: 576px) {
-    .form-hd button{
-        width:35%;
-    }
 }
 .form-hd button:hover{
     background: rgba(43, 129, 71, 0.9);
@@ -163,4 +130,30 @@ body{
     margin:1.5em auto 1.3em;
     color: rgba(0, 0, 0, .5);
     font-size: 1.1em;
+}
+@media (min-width: 992px) {
+    .main{
+        width:70%;
+    }
+    .sidebar{
+        width: 30%;
+        display: block;
+    }
+    .form-hd{
+        width:70%;
+    }
+}
+@media (min-width: 768px) {
+    .form-hd{
+        width: 70%;
+    }
+}
+@media (min-width: 576px) {
+    .form-hd{
+        width:70%;
+    }
+    .form-hd button{
+        width:25%;
+        font-size: 1.2rem;
+    }
 }
