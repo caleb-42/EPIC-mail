@@ -11,3 +11,10 @@ Admin user
 
 * email: admin@gmail.com
 * password: admin123 (note that the password is case sensitive)
+
+# Built with
+
+1. HTML 
+2. CSS
+3. Javascript
+
