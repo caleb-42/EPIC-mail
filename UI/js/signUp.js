@@ -1,5 +1,5 @@
 (() => {
-  function toggleLoader() {
+  const toggleLoader = () => {
     const loader = document.querySelector('.loader');
     const resp = document.querySelector('.resp');
     if (loader.classList.contains('gone')) {
@@ -9,7 +9,7 @@
       loader.classList.add('gone');
       resp.classList.remove('gone');
     }
-  }
+  };
   document.querySelector('button').addEventListener('click', () => {
     document.querySelector('.submit').disabled = true;
     toggleLoader();
@@ -41,30 +41,19 @@
         }).then((res)=>{
             console.log(res);
         }); */
-        window.setTimeout(()=>{/* API call is digused with setTimer
+    window.setTimeout(() => { /* API call is digused with setTimer
         function to view loader.gif and REST response message */
-            toggleLoader();
-            document.querySelector('.resp').textContent = 'created account successfully';
-            localStorage.setItem('email', email);
-            localStorage.setItem('password', password);
-            localStorage.setItem('signin', true);
-            window.location.href = './index.html';
-            document.querySelector('.submit').disabled = false;
-            console.log(firstName, lastName, email, password, phoneNumber);
-        }, 3000);
-    })
-    function toggleLoader(){
-        const loader= document.querySelector('.loader');
-        const resp= document.querySelector('.resp');
-        if(loader.classList.contains('gone')){
-            loader.classList.remove('gone');
-            resp.classList.add('gone');
-        }else{
-            loader.classList.add('gone');
-            resp.classList.remove('gone');
-        }
-    }
-    const inputs = document.querySelectorAll('.input-group input');
+      toggleLoader();
+      document.querySelector('.resp').textContent = 'created account successfully';
+      localStorage.setItem('email', email);
+      localStorage.setItem('password', password);
+      localStorage.setItem('signin', true);
+      window.location.href = './index.html';
+      document.querySelector('.submit').disabled = false;
+      console.log(firstName, lastName, email, password, phoneNumber);
+    }, 3000);
+  });
+  const inputs = document.querySelectorAll('.input-group input');
 
   inputs.forEach((input) => {
     input.addEventListener('focusin', (event) => {
