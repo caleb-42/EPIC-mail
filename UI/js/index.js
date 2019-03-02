@@ -1,15 +1,30 @@
-(function () {
-  const switchClass = (target, toggleClass, type = 'toggle') => {
-    try {
-      const navs = document.querySelectorAll(`${target}`);
-      navs.forEach((nav) => {
-        if (type === 'toggle')nav.classList.toggle(toggleClass);
-        if (type === 'add')nav.classList.add(toggleClass);
-        if (type === 'remove')nav.classList.remove(toggleClass);
-      });
-    } catch (e) {
-      console.error(e);
-      return false;
+(function(){
+    const authenticate = ()=>{
+        let email = localStorage.getItem('email');
+        let password = localStorage.getItem('password');
+        let signin = localStorage.getItem('signin');
+        if(!signin) window.location.href = './signUp.html';
+		}
+		authenticate();
+    let switchClass = (target, toggleClass, type = "toggle")=>{
+        try{
+            let navs = document.querySelectorAll(`${target}`);
+            navs.forEach((nav)=>{
+                if(type=='toggle')nav.classList.toggle(toggleClass);
+                if(type=='add')nav.classList.add(toggleClass);
+                if(type=='remove')nav.classList.remove(toggleClass);
+            });
+        }catch(e){
+            console.error(e);
+            return false;
+        }
+        return true;
+    }
+    const openCloseNav = ()=>{
+        switchClass('.side-nav .d-arrow', 'down'); 
+        switchClass('.side-nav .mail-types', 'open');
+        switchClass('.top-nav .mail-types', 'open');
+        switchClass('.main', 'open-sub-nav');
     }
     return true;
   };
@@ -55,15 +70,35 @@
       }
       document.querySelector('.group-resp').textContent = 'new group created';
     });
-  document.querySelector('.addgroup')
-    .addEventListener('click', () => {
-      document.querySelector('.add-user-resp').textContent = '';
-      console.log(document.querySelector('#group').value);
-      if (document.querySelector('#group').value === '') {
-        document.querySelector('.add-user-resp').textContent = 'select a user';
-        return;
-      }
-      document.querySelector('.add-user-resp').textContent = 'user added succesfully';
+
+    document.querySelector('.signout')
+    .addEventListener('click', (evt)=>{
+			localStorage.clear();
+      window.location.href = './signIn.html';
+    });
+    document.querySelector('.main-body')
+    .addEventListener('click', (evt)=>{
+        switchClass('.main', 'open-nav', 'remove');
+    });
+    document.querySelector('.create-group-btn')
+    .addEventListener('click', (evt)=>{
+        document.querySelector('.group-resp').textContent = '';
+        console.log(document.querySelector('.create-group .inputs').value);
+        if(document.querySelector('.create-group .inputs').value == '') {
+            document.querySelector('.group-resp').textContent = 'group name is empty';
+            return;
+        }
+        document.querySelector('.group-resp').textContent = 'new group created';
+    });
+    document.querySelector('.addgroup')
+    .addEventListener('click', (evt)=>{
+        document.querySelector('.add-user-resp').textContent = '';
+        console.log(document.querySelector('#group').value);
+        if(document.querySelector('#group').value == '') {
+            document.querySelector('.add-user-resp').textContent = 'select a user';
+            return;
+        }
+        document.querySelector('.add-user-resp').textContent = 'user added succesfully';
     });
 
   const navig = document.querySelectorAll('.navig h3');
@@ -79,20 +114,53 @@
     });
   });
 
-  const subNavig = document.querySelectorAll('.mail-types li');
-  subNavig.forEach((nav) => {
-    nav.addEventListener('click', (evt) => {
-      switchClass('.wrapper .main .tab', 'selected', 'remove');
-      const menu = evt.currentTarget.getAttribute('data-nav');
-      const parentMenu = evt.currentTarget.getAttribute('data-parent-nav');
-      switchClass('.navig h3.active', 'active');
-      switchClass(`[data-nav = "${parentMenu}"]`, 'active');
-      switchClass('.mail-types li.active', 'active');
-      switchClass(`[data-nav="${menu}"]`, 'active');
-      switchTab(menu, false);
-    });
-  });
-  const inputs = document.querySelectorAll('.input-group input.inputs');
+    const subNavig = document.querySelectorAll('.mail-types li');
+    subNavig.forEach((nav)=>{
+        nav.addEventListener('click', (evt)=>{
+            switchClass('.wrapper .main .tab', 'selected', 'remove');
+            menu = evt.currentTarget.getAttribute('data-nav');
+            parentMenu = evt.currentTarget.getAttribute('data-parent-nav');
+            switchClass('.navig h3.active', 'active');
+            switchClass(`[data-nav = "${parentMenu}"]`, 'active');
+            switchClass('.mail-types li.active', 'active');
+            switchClass(`[data-nav="${menu}"]`, 'active');
+            switchTab(parentMenu);
+        })
+    })
+    const inputs = document.querySelectorAll('.input-group input.inputs');
+
+    inputs.forEach((input)=>{
+        input.addEventListener('focusin', (evt) => {
+            event.target.parentNode.querySelector('label').classList.add('show');
+        });
+        input.addEventListener('focusout', (evt) => {
+            event.target.parentNode.querySelector('label').classList.remove('show');
+        });
+    })
+    const actionMail = document.querySelectorAll('.actionMail');
+
+    actionMail.forEach((btn)=>{
+        btn.addEventListener('click', (evt) => {
+            switchClass('actionbtn', 'vanish');
+            setTimeout(()=>{
+                switch(evt.target.textContent){
+                    case 'save':
+                    document.querySelector('.mail-resp').innerHTML = 'successfully saved';
+                    break;
+                    case 'send':
+                    document.querySelector('.mail-resp').innerHTML =  'successfully sent';
+                    break;
+                    case 'cancel':
+                    document.querySelector('.modal_close').click();
+                    break;
+                }
+                
+                switchClass('actionbtn', 'vanish');
+            })
+        });
+    })
+    const modalopen = document.querySelectorAll('.modalopen');
+    const response = document.querySelectorAll('.res');
 
   inputs.forEach((input) => {
     input.addEventListener('focusin', (event) => {

@@ -109,6 +109,16 @@ body{
   font-weight: 600;
   background: rgb(255, 255, 255, .8);
 }
+.signout{
+    background: rgba(185, 35, 115, 0.8);
+    padding: .75rem 1rem;
+    border-radius: .2rem;
+    color:#fff;
+    position: absolute;
+    left:7rem;
+    top:1rem;
+    font-weight: 600;
+}
 .post{
     padding: 1rem;
     width: 90%;
@@ -206,6 +216,9 @@ body{
     .post .details{
         width: 80%;
     }
+    .signout{
+        left:1rem;
+    }
 }
 @media(min-width: 768px){
     .wrapper .main .left-body, .wrapper .main .tab.selected .left-body{
@@ -258,6 +271,9 @@ body{
     }
     .backbtn{
         display: none;
+    }
+    .signout{
+        left:1rem;
     }
 }
 @media(min-width: 567px){

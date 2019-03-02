@@ -12,6 +12,7 @@
       console.error(e);
       return false;
     }
+
     return true;
   };
   const dummyData = {
@@ -73,6 +74,7 @@
       counter += 1;
       strHtml += `
             <div class="post anim" data-index = "${counter}">
+
                 <div class="dp"></div>
                 <div class="details">
                     <h4>${msg.firstName} ${msg.lastName}</h4>
