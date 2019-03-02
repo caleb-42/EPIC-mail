@@ -58,7 +58,7 @@ body{
     box-shadow: 0 .2rem 1rem rgba(109, 109, 109, 0.2) inset;
 }
 .wrapper .main .left-body .sub-left{
-    height: 40%;
+    height: fit-content;
     padding-bottom: 1rem;
 }
 .wrapper .main .right-body{
