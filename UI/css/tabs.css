@@ -4,8 +4,9 @@
     /* background-size: cover;
     background-repeat: no-repeat; */
     position: absolute;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem;
     margin:0 auto;
+    font-weight: 600;
     border-radius: 3rem;
     bottom: 1.1rem;
     right: 1.1rem;
@@ -105,7 +106,7 @@
 }
 .create-group{
     height: 15rem;
-    padding: 1em;
+    padding: auto 1em;
 }
 .dp-image{
     height: 10rem;
@@ -118,7 +119,7 @@
 }
 .create-group a{
     background: rgba(185, 35, 115, 0.8);
-    padding: .75rem 1rem;
+    padding: .7rem .4rem;
     border-radius: .2rem;
     color:#fff;
 }
@@ -129,12 +130,32 @@
     font-weight: 600;
 }
 .create-group a, .create-group button{
-    margin: .4rem 1rem;
+    margin: .4rem .4rem;
+    width: 30%;
+    font-size: .8rem;
     display: inline-block;
+}
+.create-group span {
+    width: 100%;
+}
+@media(min-width: 992px){
+    .create-group a, .create-group button{
+        font-size: 1.1rem;
+        width: 25%;
+    }
+    .create-group a{
+        padding: .75rem .8rem;
+    }
 }
 @media(min-width: 768px){
     .custom-modal .modal-content{
         width: 50%;
         height: 65%;
+    }
+    .create-group a, .create-group button{
+        font-size: 1rem;
+    }
+    .create-group a{
+        padding: .75rem 1rem;
     }
 }
