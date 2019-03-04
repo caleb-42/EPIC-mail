@@ -47,19 +47,21 @@
         password,
       }),
     })
-      .then(response => response.clone().json().catch(() => response.text()))
-      .then((data) => {
+      .then(response => response.json())
+      .then((res) => {
         toggleLoader();
-        if (typeof data === 'string') {
-          resp.textContent = data;
-        } else {
+        try {
+          const { token } = res.data[0];
           resp.textContent = 'created account successfully';
-          window.location.href = './index.html';
-          localStorage.setItem('token', data[0].token);
+          localStorage.setItem('token', token);
           localStorage.setItem('name', `${firstName} ${lastName}`);
           localStorage.setItem('email', email);
+          window.location.href = './index.html';
+        } catch (e) {
+          resp.textContent = res.error;
         }
       }).catch(() => {
+        resp.textContent = 'Something went wrong';
         toggleLoader();
       });
   });

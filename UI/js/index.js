@@ -2,8 +2,8 @@
   const authenticate = () => {
     /* const email = localStorage.getItem('email');
     const password = localStorage.getItem('password'); */
-    const signin = localStorage.getItem('signin');
-    if (!signin) window.location.href = './signUp.html';
+    /* const signin = localStorage.getItem('signin');
+    if (!signin) window.location.href = './signUp.html'; */
   };
   authenticate();
   const switchClass = (target, toggleClass, type = 'toggle') => {
