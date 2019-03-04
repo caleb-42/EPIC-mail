@@ -1,17 +1,19 @@
 (() => {
+  const loader = document.querySelector('.loader');
+  const resp = document.querySelector('.resp');
   const toggleLoader = () => {
-    const loader = document.querySelector('.loader');
-    const resp = document.querySelector('.resp');
+    resp.textContent = '';
     if (loader.classList.contains('gone')) {
       loader.classList.remove('gone');
       resp.classList.add('gone');
+      document.querySelector('.submit').disabled = true;
     } else {
       loader.classList.add('gone');
       resp.classList.remove('gone');
+      document.querySelector('.submit').disabled = false;
     }
   };
   document.querySelector('button').addEventListener('click', () => {
-    document.querySelector('.submit').disabled = true;
     toggleLoader();
     const firstName = document.querySelector('input[name="firstName"]').value;
     const lastName = document.querySelector('input[name="lastName"]').value;
@@ -21,37 +23,45 @@
     const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
 
     if (confirmPassword !== password) {
-      document.querySelector('.submit').disabled = false;
-      document.querySelector('.resp').textContent = 'password mismatch, confirm password';
+      resp.textContent = 'password mismatch, confirm password';
       toggleLoader();
       return;
     }
     if (password === '') {
-      document.querySelector('.submit').disabled = false;
+      resp.textContent = 'empty password';
       toggleLoader();
-      document.querySelector('.resp').textContent = 'empty password';
       return;
     }
-    /* fetch(endpoint{
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json"
-            },
-          body: JSON.stringify(data)
-        }).then((res)=>{
-            console.log(res);
-        }); */
-    window.setTimeout(() => { /* API call is digused with setTimer
-        function to view loader.gif and REST response message */
-      toggleLoader();
-      document.querySelector('.resp').textContent = 'created account successfully';
-      localStorage.setItem('email', email);
-      localStorage.setItem('password', password);
-      localStorage.setItem('signin', true);
-      window.location.href = './index.html';
-      document.querySelector('.submit').disabled = false;
-      console.log(firstName, lastName, email, password, phoneNumber);
-    }, 3000);
+    /* testing locally */
+    const endpoint = 'http://localhost:3000/api/v1/users';
+    fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        password,
+      }),
+    })
+      .then(response => response.clone().json().catch(() => response.text()))
+      .then((data) => {
+        toggleLoader();
+        if (typeof data === 'string') {
+          resp.textContent = data;
+        } else {
+          resp.textContent = 'created account successfully';
+          window.location.href = './index.html';
+          localStorage.setItem('token', data[0].token);
+          localStorage.setItem('name', `${firstName} ${lastName}`);
+          localStorage.setItem('email', email);
+        }
+      }).catch(() => {
+        toggleLoader();
+      });
   });
   const inputs = document.querySelectorAll('.input-group input');
 

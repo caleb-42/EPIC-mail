@@ -4,8 +4,8 @@
   "description": "web app to handle messaging",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha ./test --recursive",
-    "test-mocha": "mocha ./test --recursive",
+    "test": "nyc mocha --timeout 10000 ./test --recursive",
+    "test-mocha": "mocha --timeout 10000 ./test --recursive",
     "coverage": "npm test && npm run generate-lcov",
     "generate-lcov": "nyc report --reporter=text-lcov > lcov.info"
   },

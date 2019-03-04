@@ -6,14 +6,14 @@ const request = require('supertest');
 
 let server;
 
-describe('/', () => {
+describe('APP START', () => {
   beforeEach(() => {
     server = require('../index'); // eslint-disable-line global-require
   });
   afterEach(() => {
     server.close();
   });
-  describe('GET /', () => {
+  describe('app localhost', () => {
     it('should return status code of 200', async () => {
       const res = await request(server).get('/');
       expect(res.status).to.be.equal(200);
@@ -24,7 +24,7 @@ describe('/', () => {
     });
     it('should return Welcome to EPIC-mail', async () => {
       const res = await request(server).get('/');
-      expect(res.text).to.equal('Welcome to EPIC-mail');
+      expect(res.text).to.include('Welcome to EPIC-mail');
     });
   });
 });
