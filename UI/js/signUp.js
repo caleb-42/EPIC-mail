@@ -54,8 +54,7 @@
           const { token } = res.data[0];
           resp.textContent = 'created account successfully';
           localStorage.setItem('token', token);
-          localStorage.setItem('name', `${firstName} ${lastName}`);
-          localStorage.setItem('email', email);
+          localStorage.setItem('name', firstName);
           window.location.href = './index.html';
         } catch (e) {
           resp.textContent = res.error;
