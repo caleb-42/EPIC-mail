@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const router = require('express').Router();
-const db = require('../db');
+const { db } = require('../db');
 
 
 const validate = (user) => {

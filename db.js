@@ -1,4 +1,4 @@
-module.exports = {
+const db = {
   users: [
     {
       id: 0,
@@ -47,3 +47,21 @@ module.exports = {
     }, */
   ],
 };
+const reset = () => {
+  db.users = [
+    {
+      id: 0,
+      email: 'admin@gmail.com',
+      firstName: 'admin',
+      lastName: 'user',
+      password: 'admin123',
+      phoneNumber: '2348130439102',
+      isAdmin: true,
+    },
+  ];
+  db.contacts = [];
+  db.messages = [];
+  db.groups = [];
+  db.groupMembers = [];
+};
+module.exports = { db, reset };

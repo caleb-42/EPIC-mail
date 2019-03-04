@@ -3,6 +3,7 @@ const {
 } = require('mocha');
 const { expect } = require('chai');
 const request = require('supertest');
+const { reset } = require('../../db');
 
 let server;
 let user;
@@ -19,6 +20,7 @@ describe('USER API ENDPOINTS', () => {
     };
   });
   afterEach(() => {
+    reset();
     server.close();
   });
   describe('Sign Up', () => {
