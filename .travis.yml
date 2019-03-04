@@ -7,5 +7,9 @@ cache:
   directories:
   - node_modules
 
+env:
+  global:
+    - epic_jwtPrivateKey=EPIC-mail
+
 script: "npm test && nyc report --reporter=text-lcov | coveralls"
 
