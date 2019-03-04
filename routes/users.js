@@ -22,11 +22,19 @@ const validate = (user) => {
 router.post('/', async (req, res) => {
   /* console.log(req.body); */
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
+  if (error) {
+    return res.send({
+      status: 400,
+      error: error.details[0].message,
+    });
+  }
   let user = db.users.find(usr => usr.email === req.body.email);
-  if (user) return res.status(400).send('User already registered');
-
+  if (user) {
+    return res.send({
+      status: 400,
+      error: 'User already registered',
+    });
+  }
   const id = (db.users).length + 1;
   user = _.pick(req.body, ['firstName', 'lastName', 'email', 'phoneNumber', 'isAdmin', 'password']);
   user.id = id;
@@ -37,7 +45,10 @@ router.post('/', async (req, res) => {
   const token = jwt.sign({ id: user.id }, config.get('jwtPrivateKey'));
   /* const resp = _.pick(user, ['id', 'firstName', 'lastName', 'email', 'isAdmin']); */
   const resp = [{ token }];
-  return res.status(201).send(resp);
+  return res.send({
+    status: 201,
+    data: resp,
+  });
 });
 
 module.exports = router;

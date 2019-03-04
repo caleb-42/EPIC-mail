@@ -25,16 +25,22 @@ describe('USER API ENDPOINTS', () => {
     it('should create user with valid request', async () => {
       const res = await request(server).post('/api/v1/users').send(user);
       /* console.log(res); */
-      expect(res.status).to.be.equal(201);
-      expect(res.body).to.be.an('array');
-      expect(res.body[0]).to.have.property('token');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.be.equal(201);
+      expect(res.body).to.have.property('data');
+      expect(res.body).to.not.have.property('error');
+      expect(res.body.data).to.be.an('array');
+      expect(res.body.data[0]).to.have.property('token');
     });
     it('should not create user that already exist', async () => {
       let res = await request(server).post('/api/v1/users').send(user);
       res = await request(server).post('/api/v1/users').send(user);
-      expect(res.status).to.be.equal(400);
-      expect(res.text).to.be.a('string');
-      expect(res.text).to.include('User already registered');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.be.equal(400);
+      expect(res.body).to.have.property('error');
+      expect(res.body).to.not.have.property('data');
+      expect(res.body.error).to.be.a('string');
+      expect(res.body.error).to.include('User already registered');
     });
   });
 });
