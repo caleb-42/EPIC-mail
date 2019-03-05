@@ -1,16 +1,16 @@
-const {
+import { expect } from 'chai';
+import request from 'supertest';
+import {
   describe, it, beforeEach, afterEach,
-} = require('mocha');
-const { expect } = require('chai');
-const request = require('supertest');
-const { reset } = require('../../db');
+} from 'mocha';
+import { reset } from '../../src/db';
 
 let server;
 let user;
 
 describe('USER API ENDPOINTS', () => {
   beforeEach(() => {
-    server = require('../../index');
+    server = require('../../src/index');
     user = {
       email: 'ewere@gmail.com',
       firstName: 'admin',

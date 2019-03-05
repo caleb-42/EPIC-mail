@@ -4,8 +4,11 @@
   "description": "web app to handle messaging",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha --timeout 10000 ./test --recursive",
-    "test-mocha": "mocha --timeout 10000 ./test --recursive",
+    "test": "nyc mocha --require @babel/register --timeout 10000 --recursive",
+    "start": "nodemon --exec babel-node src/index.js",
+    "build": "babel src --out-dir dist",
+    "serve": "node dist/index.js",
+    "test-mocha": "mocha --require @babel/register --timeout 10000 --recursive",
     "coverage": "npm test && npm run generate-lcov",
     "generate-lcov": "nyc report --reporter=text-lcov > lcov.info"
   },
@@ -20,6 +23,12 @@
   },
   "homepage": "https://github.com/caleb-42/EPIC-mail#readme",
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/register": "^7.0.0",
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
     "eslint": "^5.14.1",
@@ -32,6 +41,7 @@
     "supertest": "^3.4.2"
   },
   "dependencies": {
+    "@babel/runtime": "^7.3.4",
     "bcrypt": "^3.0.4",
     "config": "^3.0.1",
     "express": "^4.16.4",
