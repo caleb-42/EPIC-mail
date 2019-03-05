@@ -1,9 +1,9 @@
-const {
+import { expect } from 'chai';
+import request from 'supertest';
+import {
   describe, it, beforeEach, afterEach, after,
-} = require('mocha');
-const { expect } = require('chai');
-const request = require('supertest');
-const { reset } = require('../../db');
+} from 'mocha';
+import { reset } from '../../src/db';
 
 let server;
 let user;
@@ -17,7 +17,7 @@ const register = {
 
 describe('AUTH API ENDPOINTS', () => {
   beforeEach(() => {
-    server = require('../../index');
+    server = require('../../src/index');
     user = {
       email: 'ewere@gmail.com',
       password: 'admin123',

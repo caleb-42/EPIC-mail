@@ -1,14 +1,14 @@
-const {
+import { expect } from 'chai';
+import request from 'supertest';
+import {
   describe, it, beforeEach, afterEach,
-} = require('mocha');
-const { expect } = require('chai');
-const request = require('supertest');
+} from 'mocha';
 
 let server;
 
 describe('APP START', () => {
   beforeEach(() => {
-    server = require('../index'); // eslint-disable-line global-require
+    server = require('../src/index'); // eslint-disable-line global-require
   });
   afterEach(() => {
     server.close();
