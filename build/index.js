@@ -1,26 +1,31 @@
 "use strict";
 
-var express = require('express');
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var config = require('config');
+var _express = _interopRequireDefault(require("express"));
 
-var winston = require('winston');
+var _config = _interopRequireDefault(require("config"));
 
-var users = require('./routes/users');
+var _winston = _interopRequireDefault(require("winston"));
 
-var auth = require('./routes/auth');
+var _users = _interopRequireDefault(require("./routes/users"));
 
-var app = express();
-app.use(express.json());
-/* app.use(express.static('UI')); */
+var _mails = _interopRequireDefault(require("./routes/mails"));
 
+var _auth = _interopRequireDefault(require("./routes/auth"));
+
+var app = (0, _express.default)();
+app.use(_express.default.json());
+app.use(_express.default.static('UI'));
 /* testing locally */
 
-app.use('/api/v1/users', users);
-app.use('/api/v1/auth', auth);
+app.use('/api/v1/users', _users.default);
+app.use('/api/v1/mails', _mails.default);
+app.use('/api/v1/auth', _auth.default);
 
-if (!config.get('jwtPrivateKey')) {
-  winston.error('Fatal ERROR : jwtPrivateKey is not defined');
+if (!_config.default.get('jwtPrivateKey')) {
+  _winston.default.error('Fatal ERROR : jwtPrivateKey is not defined');
+
   process.exit(1);
 }
 

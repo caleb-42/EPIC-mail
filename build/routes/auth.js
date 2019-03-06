@@ -1,40 +1,37 @@
 "use strict";
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var joi = require('joi');
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var bcrypt = require('bcrypt');
+var _joi = _interopRequireDefault(require("joi"));
 
-var jwt = require('jsonwebtoken');
+var _express = _interopRequireDefault(require("express"));
 
-var config = require('config');
+var _dbHandler = _interopRequireDefault(require("../dbHandler"));
 
-var router = require('express').Router();
-
-var _require = require('../db'),
-    db = _require.db;
+var router = _express.default.Router();
 
 var validate = function validate(user) {
   var schema = {
     /* id: joi.number().equal(0), */
-    email: joi.string().email().required(),
-    password: joi.string().min(5).max(255).required()
+    email: _joi.default.string().email().required(),
+    password: _joi.default.string().min(5).max(255).required()
   };
-  return joi.validate(user, schema);
+  return _joi.default.validate(user, schema);
 };
 
 router.post('/',
 /*#__PURE__*/
 function () {
-  var _ref = _asyncToGenerator(
+  var _ref = (0, _asyncToGenerator2.default)(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(req, res) {
-    var _validate, error, user, validPassword, token, resp;
+  _regenerator.default.mark(function _callee(req, res) {
+    var _validate, error, user, token;
 
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+    return _regenerator.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -52,9 +49,7 @@ function () {
             }));
 
           case 3:
-            user = db.users.find(function (usr) {
-              return usr.email === req.body.email;
-            });
+            user = _dbHandler.default.find('users', req.body, 'email');
 
             if (user) {
               _context.next = 6;
@@ -68,12 +63,12 @@ function () {
 
           case 6:
             _context.next = 8;
-            return bcrypt.compare(req.body.password, user.password);
+            return _dbHandler.default.validateUser(req.body, user);
 
           case 8:
-            validPassword = _context.sent;
+            token = _context.sent;
 
-            if (validPassword) {
+            if (token) {
               _context.next = 11;
               break;
             }
@@ -84,19 +79,15 @@ function () {
             }));
 
           case 11:
-            token = jwt.sign({
-              id: user.id
-            }, config.get('jwtPrivateKey'));
-            resp = [{
-              token: token,
-              firstName: user.firstName
-            }];
             return _context.abrupt("return", res.send({
               status: 200,
-              data: resp
+              data: {
+                token: token,
+                firstName: user.firstName
+              }
             }));
 
-          case 14:
+          case 12:
           case "end":
             return _context.stop();
         }

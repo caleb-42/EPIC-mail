@@ -5,6 +5,7 @@
     /* const signin = localStorage.getItem('signin');
     if (!signin) window.location.href = './signUp.html'; */
   };
+  const dummyData = { messages: [], filtered: [] };
   authenticate();
   const switchClass = (target, toggleClass, type = 'toggle') => {
     try {
@@ -93,6 +94,47 @@
       document.querySelector('.add-user-resp').textContent = 'user added succesfully';
     });
 
+  const runDummy = () => {
+    let strHtml = '';
+    let counter = 0;
+    dummyData.filtered.forEach((msg) => {
+      strHtml += `
+              <div class="post anim" data-index = "${counter}">
+  
+                  <div class="dp"></div>
+                  <div class="details">
+                      <h4>${msg.status !== 'sent' || msg.status !== 'draft' ? msg.senderName : msg.recieverName}</h4>
+                      <p class="subject">${msg.subject}</p>
+                      <div><span class="type">${msg.status}</span><span class="date">${msg.createdOn}</span></div>
+                  </div>
+                  <div class="clr"></div>
+              </div>
+              `;
+      counter += 1;
+    });
+    document.querySelector('.content-wrapper').innerHTML = strHtml;
+    const posts = document.querySelectorAll('.post');
+    posts.forEach((post) => {
+      post.addEventListener('click', (evt) => {
+        switchClass('.wrapper .main .tab', 'selected', 'toggle');
+        switchClass('.mails .post', 'active', 'remove');
+        switchClass('.mails .post', 'opac-70', 'add');
+        evt.currentTarget.classList.add('active');
+        switchClass('.mails .post.active', 'opac-70', 'remove');
+        const index = evt.currentTarget.getAttribute('data-index');
+        const msg = dummyData.filtered[index];
+        console.log(index, msg, evt.target);
+        document.querySelector('.content-wrapper-bloated').innerHTML = `
+                <div class="post-bloated">
+                    <h3>${msg.status !== 'sent' || msg.status !== 'draft' ? msg.senderName : msg.recieverName}</h3>
+                    <p class="subject">${msg.subject}</p>
+                    <p class="msg">${msg.message}</p>
+                    <p class="date">${msg.createdOn}</p>
+                </div>
+                `;
+      });
+    });
+  };
   const navig = document.querySelectorAll('.navig h3');
 
   navig.forEach((nav) => {
@@ -102,6 +144,8 @@
       switchClass('.navig h3.active', 'active');
       switchClass('.mail-types li.active', 'active');
       switchClass(`[data-nav="${menu}"]`, 'active');
+      dummyData.filtered = dummyData.messages;
+      runDummy();
       switchTab(menu);
     });
   });
@@ -117,6 +161,13 @@
       switchClass('.mail-types li.active', 'active');
       switchClass(`[data-nav="${menu}"]`, 'active');
       switchTab(parentMenu);
+      dummyData.filtered = dummyData.messages.filter((msg) => {
+        if (menu === 'inbox') {
+          return msg.status === 'read' || msg.status === 'unread';
+        }
+        return msg.status === menu;
+      });
+      runDummy();
     });
   });
   const inputs = document.querySelectorAll('.input-group input.inputs');
@@ -164,4 +215,22 @@
       });
     });
   });
+
+  /* testing locally */
+  const endpoint = 'http://localhost:3000/api/v1/mails';
+  fetch(endpoint, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-auth-token': localStorage.getItem('token'),
+    },
+  })
+    .then(resp => resp.json())
+    .then((res) => {
+      dummyData.messages = res.data;
+      dummyData.filtered = res.data;
+      runDummy();
+    }).catch(() => {
+
+    });
 })();

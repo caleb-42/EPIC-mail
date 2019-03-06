@@ -6,8 +6,8 @@
   "scripts": {
     "test": "nyc mocha --require @babel/register --timeout 10000 --recursive",
     "start": "nodemon --exec babel-node src/index.js",
-    "build": "babel src --out-dir dist",
-    "serve": "node dist/index.js",
+    "build": "babel src --out-dir build",
+    "serve": "node build/index.js",
     "test-mocha": "mocha --require @babel/register --timeout 10000 --recursive",
     "coverage": "npm test && npm run generate-lcov",
     "generate-lcov": "nyc report --reporter=text-lcov > lcov.info"

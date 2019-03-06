@@ -3,7 +3,7 @@ import request from 'supertest';
 import {
   describe, it, beforeEach, afterEach,
 } from 'mocha';
-import { reset } from '../../src/db';
+import dbHandler from '../../src/dbHandler';
 
 let server;
 let user;
@@ -20,7 +20,7 @@ describe('USER API ENDPOINTS', () => {
     };
   });
   afterEach(() => {
-    reset();
+    dbHandler.resetDb();
     server.close();
   });
   describe('Sign Up', () => {

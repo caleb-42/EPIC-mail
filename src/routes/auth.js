@@ -1,10 +1,8 @@
-const joi = require('joi');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const router = require('express').Router();
-const { db } = require('../db');
+import joi from 'joi';
+import express from 'express';
+import dbHandler from '../dbHandler';
 
+const router = express.Router();
 
 const validate = (user) => {
   const schema = {
@@ -24,25 +22,28 @@ router.post('/', async (req, res) => {
       error: error.details[0].message,
     });
   }
-  const user = db.users.find(usr => usr.email === req.body.email);
+  const user = dbHandler.find('users', req.body, 'email');
   if (!user) {
     return res.send({
       status: 400,
       error: 'Invalid email or password',
     });
   }
-  const validPassword = await bcrypt.compare(req.body.password, user.password);
-  if (!validPassword) {
+  const token = await dbHandler.validateUser(req.body, user);
+  if (!token) {
     return res.send({
       status: 400,
       error: 'Invalid email or password',
     });
   }
-  const token = jwt.sign({ id: user.id }, config.get('jwtPrivateKey'));
-  const resp = [{ token, firstName: user.firstName }];
   return res.send({
     status: 200,
-    data: resp,
+    data: [
+      {
+        token,
+        firstName: user.firstName,
+      },
+    ],
   });
 });
 
