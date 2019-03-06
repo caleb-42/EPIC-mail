@@ -1,11 +1,8 @@
-const _ = require('lodash');
-const joi = require('joi');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const router = require('express').Router();
-const { db } = require('../db');
+import joi from 'joi';
+import express from 'express';
+import dbHandler from '../dbHandler';
 
+const router = express.Router();
 
 const validate = (user) => {
   const schema = {
@@ -20,7 +17,6 @@ const validate = (user) => {
 };
 
 router.post('/', async (req, res) => {
-  /* console.log(req.body); */
   const { error } = validate(req.body);
   if (error) {
     return res.send({
@@ -28,26 +24,17 @@ router.post('/', async (req, res) => {
       error: error.details[0].message,
     });
   }
-  let user = db.users.find(usr => usr.email === req.body.email);
-  if (user) {
+  const userPresent = dbHandler.find('users', req.body, 'email');
+  if (userPresent) {
     return res.send({
       status: 400,
       error: 'User already registered',
     });
   }
-  const id = (db.users).length + 1;
-  user = _.pick(req.body, ['firstName', 'lastName', 'email', 'phoneNumber', 'isAdmin', 'password']);
-  user.id = id;
-  user.isAdmin = id === 1;
-  const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(user.password, salt);
-  db.users.push(user);
-  const token = jwt.sign({ id: user.id }, config.get('jwtPrivateKey'));
-  /* const resp = _.pick(user, ['id', 'firstName', 'lastName', 'email', 'isAdmin']); */
-  const resp = [{ token }];
+  const token = await dbHandler.createUser(req.body);
   return res.send({
     status: 201,
-    data: resp,
+    data: [{ token }],
   });
 });
 

@@ -1,14 +1,16 @@
-const express = require('express');
-const config = require('config');
-const winston = require('winston');
-const users = require('./routes/users');
-const auth = require('./routes/auth');
+import express from 'express';
+import config from 'config';
+import winston from 'winston';
+import users from './routes/users';
+import mails from './routes/mails';
+import auth from './routes/auth';
 
 const app = express();
 
 app.use(express.json());
-/* app.use(express.static('UI')); */ /* testing locally */
+/* app.use(express.static('build')); */ /* testing locally */
 app.use('/api/v1/users', users);
+app.use('/api/v1/mails', mails);
 app.use('/api/v1/auth', auth);
 
 if (!config.get('jwtPrivateKey')) {

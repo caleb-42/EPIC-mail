@@ -3,7 +3,7 @@ import request from 'supertest';
 import {
   describe, it, beforeEach, afterEach, after,
 } from 'mocha';
-import { reset } from '../../src/db';
+import dbHandler from '../../src/dbHandler';
 
 let server;
 let user;
@@ -27,7 +27,7 @@ describe('AUTH API ENDPOINTS', () => {
     server.close();
   });
   after(() => {
-    reset();
+    dbHandler.resetDb();
   });
   describe('Sign In', () => {
     const invalidSignIn = (res) => {
