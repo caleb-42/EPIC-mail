@@ -23,6 +23,9 @@ describe('USER API ENDPOINTS', () => {
     dbHandler.resetDb();
     server.close();
   });
+  /* before(() => {
+    dbHandler.resetDb();
+  }); */
   describe('Sign Up', () => {
     it('should create user with valid request', async () => {
       const res = await request(server).post('/api/v1/users').send(user);

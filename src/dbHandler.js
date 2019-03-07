@@ -2,7 +2,8 @@ import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-import { db } from './db';
+import db from './db';
+
 
 class DbHandler {
   constructor() {
@@ -34,9 +35,40 @@ class DbHandler {
   }
 
   getMessages(id) {
-    const messages = this.db.messages
-      .filter(message => message.senderId === id
-     || message.receiverId === id);
+    const sent = this.db.sent
+      .filter(message => message.receiverId === id);
+    const draft = this.db.draft
+      .filter(message => message.receiverId === id);
+    const inbox = this.db.inbox
+      .filter(message => message.senderId === id);
+    return [...inbox, ...sent, ...draft];
+  }
+
+  getMessageById(msgId) {
+    const msg = this.db.messages
+      .find(message => message.id === msgId);
+    return msg;
+  }
+
+  getReceivedMessages(id, type = 'all') {
+    const messages = this.db.inbox
+      .filter((message) => {
+        if (type === 'all') return message.receiverId === id;
+        if (type === 'read') return message.receiverId === id && message.status === 'read';
+        return message.receiverId === id && message.status === 'unread';
+      });
+    return messages;
+  }
+
+  getSentMessages(id) {
+    const messages = this.db.sent
+      .filter(message => message.senderId === id);
+    return messages;
+  }
+
+  getDraftMessages(id) {
+    const messages = this.db.draft
+      .filter(message => message.senderId === id);
     return messages;
   }
 

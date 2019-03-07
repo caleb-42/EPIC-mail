@@ -10,6 +10,7 @@ cache:
 env:
   global:
     - epic_jwtPrivateKey=EPIC-mail
+    - NODE_ENV=testing
 
 script: "npm test && nyc report --reporter=text-lcov | coveralls"
 
