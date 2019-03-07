@@ -16,6 +16,35 @@ const register = {
 };
 
 describe('MAILS API ENDPOINTS', () => {
+  const validToken = async (endpoint) => {
+    let res = await request(server).post('/api/v1/users').send(register);
+    res = await request(server).post('/api/v1/auth').send(user);
+    const { token } = res.body.data[0];
+    const messages = await request(server).get(endpoint).set('x-auth-token', token);
+    expect(messages.body).to.have.property('status');
+    expect(messages.body.status).to.be.equal(200);
+    expect(messages.body).to.have.property('data');
+    expect(messages.body).to.not.have.property('error');
+    expect(messages.body.data).to.be.an('array');
+  };
+  const noToken = async (endpoint) => {
+    const res = await request(server).get(endpoint);
+    expect(res.body).to.have.property('status');
+    expect(res.body.status).to.be.equal(401);
+    expect(res.body).to.have.property('error');
+    expect(res.body).to.not.have.property('data');
+    expect(res.body.error).to.be.a('string');
+    expect(res.body.error).to.include('Access denied, no token provided');
+  };
+  const invalidToken = async (endpoint) => {
+    const res = await request(server).get(endpoint).set('x-auth-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNTUxODQ2MTcxfQ.ZvbKiQ7n4cX7_9PxEVfZCGyA-361nxagjkcw0XMqFsCa');
+    expect(res.body).to.have.property('status');
+    expect(res.body.status).to.be.equal(400);
+    expect(res.body).to.have.property('error');
+    expect(res.body).to.not.have.property('data');
+    expect(res.body.error).to.be.a('string');
+    expect(res.body.error).to.include('Invalid token');
+  };
   beforeEach(() => {
     server = require('../../src/index');
     user = {
@@ -24,41 +53,76 @@ describe('MAILS API ENDPOINTS', () => {
     };
   });
   afterEach(() => {
+    dbHandler.resetDb();
     server.close();
   });
   after(() => {
     dbHandler.resetDb();
   });
-  describe('Get All Mails', () => {
+  describe('Get All Mails api/v1/messages/all', () => {
     it('should release mails for valid user', async () => {
-      let res = await request(server).post('/api/v1/users').send(register);
-      res = await request(server).post('/api/v1/auth').send(user);
-      const { token } = res.body.data[0];
-      const messages = await request(server).get('/api/v1/mails').set('x-auth-token', token);
-      /* console.log(res); */
-      expect(messages.body).to.have.property('status');
-      expect(messages.body.status).to.be.equal(200);
-      expect(messages.body).to.have.property('data');
-      expect(messages.body).to.not.have.property('error');
-      expect(messages.body.data).to.be.an('array');
+      await validToken('/api/v1/messages/all');
     });
     it('should not release mails to user with no token', async () => {
-      const res = await request(server).get('/api/v1/mails');
-      expect(res.body).to.have.property('status');
-      expect(res.body.status).to.be.equal(401);
-      expect(res.body).to.have.property('error');
-      expect(res.body).to.not.have.property('data');
-      expect(res.body.error).to.be.a('string');
-      expect(res.body.error).to.include('Access denied, no token provided');
+      await noToken('/api/v1/messages/all');
     });
     it('should not realease mail to user with invalid token', async () => {
-      const res = await request(server).get('/api/v1/mails').set('x-auth-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNTUxODQ2MTcxfQ.ZvbKiQ7n4cX7_9PxEVfZCGyA-361nxagjkcw0XMqFsCa');
-      expect(res.body).to.have.property('status');
-      expect(res.body.status).to.be.equal(400);
-      expect(res.body).to.have.property('error');
-      expect(res.body).to.not.have.property('data');
-      expect(res.body.error).to.be.a('string');
-      expect(res.body.error).to.include('Invalid token');
+      await invalidToken('/api/v1/messages/all');
+    });
+  });
+  describe('Get Received Mails api/v1/messages', () => {
+    it('should release received mails for valid user', async () => {
+      await validToken('/api/v1/messages');
+    });
+    it('should not release received mails to user with no token', async () => {
+      await noToken('/api/v1/messages');
+    });
+    it('should not realease received mail to user with invalid token', async () => {
+      await invalidToken('/api/v1/messages');
+    });
+  });
+  describe('Get Unread Mails api/v1/messages/unread', () => {
+    it('should release unread mails for valid user', async () => {
+      await validToken('/api/v1/messages/unread');
+    });
+    it('should not release unread mails to user with no token', async () => {
+      await noToken('/api/v1/messages/unread');
+    });
+    it('should not realease unread mail to user with invalid token', async () => {
+      await invalidToken('/api/v1/messages/unread');
+    });
+  });
+  describe('Get Read Mails api/v1/messages/read', () => {
+    it('should realease read mails for valid user', async () => {
+      await validToken('/api/v1/messages/read');
+    });
+    it('should not realease read mails to user with no token', async () => {
+      await noToken('/api/v1/messages/read');
+    });
+    it('should not realease read mail to user with invalid token', async () => {
+      await invalidToken('/api/v1/messages/read');
+    });
+  });
+  describe('Get Sent Mails api/v1/messages/sent', () => {
+    it('should realease sent mails for valid user', async () => {
+      await validToken('/api/v1/messages/sent');
+    });
+    it('should not realease sent mails to user with no token', async () => {
+      await noToken('/api/v1/messages/sent');
+    });
+    it('should not realease sent mail to user with invalid token', async () => {
+      await invalidToken('/api/v1/messages/sent');
+    });
+  });
+  describe('Get Draft Mails api/v1/messages/draft', () => {
+    it('should release draft mails for valid user', async () => {
+      await validToken('/api/v1/messages/draft');
+    });
+    it('should not release draft mails to user with no token', async () => {
+      await noToken('/api/v1/messages/draft');
+    });
+    it('should not realease draft mail to user with invalid token', async () => {
+      await invalidToken('/api/v1/messages/draft');
     });
   });
 });

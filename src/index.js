@@ -8,9 +8,9 @@ import auth from './routes/auth';
 const app = express();
 
 app.use(express.json());
-/* app.use(express.static('build')); */ /* testing locally */
+/* app.use(express.static('UI')); */ /* testing locally */
 app.use('/api/v1/users', users);
-app.use('/api/v1/mails', mails);
+app.use('/api/v1/messages', mails);
 app.use('/api/v1/auth', auth);
 
 if (!config.get('jwtPrivateKey')) {

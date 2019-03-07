@@ -30,10 +30,10 @@
     overflow: hidden;
 }
 .main.open-nav .top-nav{
-    height: 13rem;
+    height: 21rem;
 }
 .main.open-sub-nav.open-nav .top-nav{
-    height: 21rem;
+    height: 13rem;
 }
 .main .top-nav > li{
     border-bottom: 1px rgba(255, 255, 255, .1) solid;

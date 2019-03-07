@@ -35,7 +35,7 @@ body{
     height: 100%;
     float: none;
 }
-.wrapper .main .tab.selected .left-body{
+.wrapper .main.selected .tab .left-body{
     width: 0;
     float: left;
     display: none;
@@ -69,7 +69,7 @@ body{
     display:none;
     float: right;
 }
-.wrapper .main .tab.selected .right-body{
+.wrapper .main.selected .tab .right-body{
     background: rgba(255, 255, 255, 1);
     box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2) inset;
     height: 100%;
@@ -102,22 +102,29 @@ body{
     width:100%;
     height:100%;
 }
-.backbtn{
-  position: absolute;
-  left:1rem;
-  top:1rem;
-  font-weight: 600;
-  background: rgb(255, 255, 255, .8);
+.main .backbtn{
+    display: none;
 }
-.signout{
+.main.selected .backbtn{
+    display: inline-block;
+    position: absolute;
+    left:1rem;
+    top:1rem;
+    font-weight: 600;
+    background: rgb(255, 255, 255, .8);
+}
+.main .signout{
     background: rgba(185, 35, 115, 0.8);
     padding: .75rem 1rem;
     border-radius: .2rem;
     color:#fff;
     position: absolute;
-    left:7rem;
+    left:2rem;
     top:1rem;
     font-weight: 600;
+}
+.main.selected .signout{
+    left:6rem;
 }
 .post{
     padding: 1rem;
@@ -172,7 +179,7 @@ body{
 .post-bloated p.date{
     color: rgba(185, 35, 115, 0.8);
     font-size: .8rem;
-    text-align: right;
+    text-align: center;
 }
 .post-bloated{
     padding: 1rem;
@@ -221,7 +228,7 @@ body{
     }
 }
 @media(min-width: 768px){
-    .wrapper .main .left-body, .wrapper .main .tab.selected .left-body{
+    .wrapper .main .left-body, .wrapper .main.selected .tab .left-body{
         width: 60%;
         display:flex;
         float: left;
@@ -243,7 +250,7 @@ body{
         float: right;
         box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2) inset;
     }
-    .wrapper .main .right-body, .wrapper .main .tab.selected .right-body{
+    .wrapper .main .right-body, .wrapper .main.selected .tab .right-body{
         width: 40%;
         display:flex;
         float: right;
@@ -269,8 +276,11 @@ body{
     .post p.subject{
         font-size: 1.2rem;
     }
-    .backbtn{
+    .main .backbtn, .main.selected .backbtn{
         display: none;
+    }
+    .main.selected .signout{
+        left:2rem;
     }
     .signout{
         left:1rem;

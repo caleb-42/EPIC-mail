@@ -4,13 +4,14 @@
   "description": "web app to handle messaging",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha --require @babel/register --timeout 10000 --recursive",
-    "start": "nodemon --exec babel-node src/index.js",
+    "test": "cross-env NODE_ENV=testing && nyc mocha --require @babel/register --timeout 10000 --recursive",
+    "start": "cross-env NODE_ENV=production && nodemon --exec babel-node src/index.js",
+    "dev": "cross-env NODE_ENV=development && nodemon --exec babel-node src/index.js",
     "build": "babel src --out-dir build",
     "serve": "node build/index.js",
-    "test-mocha": "mocha --require @babel/register --timeout 10000 --recursive",
-    "coverage": "npm test && npm run generate-lcov",
-    "generate-lcov": "nyc report --reporter=text-lcov > lcov.info"
+    "test-mocha": "cross-env NODE_ENV=testing && mocha --require @babel/register --timeout 10000 --recursive",
+    "coverage": "cross-env NODE_ENV=testing && npm test && npm run generate-lcov",
+    "generate-lcov": "cross-env NODE_ENV=testing && nyc report --reporter=text-lcov > lcov.info"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "@babel/runtime": "^7.3.4",
     "bcrypt": "^3.0.4",
     "config": "^3.0.1",
+    "cross-env": "^5.2.0",
     "express": "^4.16.4",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.0",
