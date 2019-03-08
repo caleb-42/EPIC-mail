@@ -120,12 +120,6 @@
     width: 80%;
     text-align: center;
 }
-.create-group a{
-    background: rgba(185, 35, 115, 0.8);
-    padding: .7rem .4rem;
-    border-radius: .2rem;
-    color:#fff;
-}
 .create-group p{
     margin-top: 2rem;
     font-size: 1rem;
@@ -134,9 +128,17 @@
 }
 .create-group a, .create-group button{
     margin: .4rem .4rem;
+    font-weight:600;
     width: 30%;
+    color:rgba(0, 0, 0, 0.7);
     font-size: .8rem;
     display: inline-block;
+}
+.create-group a{
+    background: rgb(199, 187, 15);
+    padding: .7rem .4rem;
+    border-radius: .2rem;
+    color:#fff;
 }
 .create-group span {
     width: 100%;

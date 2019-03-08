@@ -202,6 +202,8 @@
       switchClass('.navig h3.active', 'active');
       switchClass('.mail-types li.active', 'active');
       switchClass(`[data-nav="${menu}"]`, 'active');
+      document.querySelector('#tabname').textContent = menu;
+      document.querySelector('.content-wrapper-bloated').innerHTML = '';
       dummyData.filtered = dummyData.messages;
       runDummy();
       /* testing locally */
@@ -225,10 +227,12 @@
       switchClass('.mail-types li.active', 'active');
       switchClass(`[data-nav="${menu}"]`, 'active');
       switchTab(parentMenu);
+      document.querySelector('#tabname').textContent = menu;
       dummyData.filtered = dummyData.messages.filter((msg) => {
         if (menu === 'inbox') return msg.status === 'read' || msg.status === 'unread';
         return msg.status === menu;
       });
+      document.querySelector('.content-wrapper-bloated').innerHTML = '';
       runDummy();
       /* testing locally */
       /* endpoint = (menu === 'inbox') ? 'http://localhost:3000/api/v1/messages' : `http://localhost:3000/api/v1/messages/${menu}`;
