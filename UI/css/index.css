@@ -9,7 +9,7 @@ body{
     position: absolute;
     width:100vw;
     height:100vh;
-    font-family: sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 .wrapper {
     width:100vw;
