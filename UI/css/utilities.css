@@ -114,4 +114,10 @@ button{
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease; 
 }
+.anim-ease {
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease-in; 
+}
 

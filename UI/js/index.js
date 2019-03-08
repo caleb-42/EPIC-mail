@@ -95,10 +95,24 @@
         switchClass(arg[0], arg[1], arg[2]);
       });
   };
-  switchEvents('.backbtn', ['.wrapper .main', 'selected', 'remove']);
   switchEvents('.main .navicon', ['.main', 'open-nav', 'toggle']);
   switchEvents('.main-body', ['.main', 'open-nav', 'remove']);
 
+  const resetTab = () => {
+    switchClass('.wrapper .main', 'selected', 'remove');
+    setTimeout(() => {
+      switchClass('.tab.block .left-body.tab-content', 'display', 'remove');
+      switchClass('.tab.block .right-body.tab-content', 'display', 'add');
+    }, 500);
+  };
+  document.querySelector('.backbtn').addEventListener('click', () => {
+    resetTab();
+  });
+  document.querySelectorAll('.custom-modal').forEach((elem) => {
+    elem.addEventListener('click', (evt) => {
+      if (evt.target.classList.contains('modal'))window.location.href = './index.html#';
+    });
+  });
   document.querySelector('.create-group-btn')
     .addEventListener('click', () => {
       document.querySelector('.group-resp').textContent = '';
@@ -129,11 +143,15 @@
     });
 
   const selectPost = (evt) => {
-    switchClass('.wrapper .main', 'selected', 'toggle');
+    switchClass('.wrapper .main', 'selected', 'add');
     switchClass('.mails .post', 'active', 'remove');
     switchClass('.mails .post', 'opac-70', 'add');
     evt.currentTarget.classList.add('active');
     switchClass('.mails .post.active', 'opac-70', 'remove');
+    setTimeout(() => {
+      switchClass('.tab.block .left-body.tab-content', 'display', 'add');
+      switchClass('.tab.block .right-body.tab-content', 'display', 'remove');
+    }, 500);
   };
   /* const server = async (url = '', method = '', resolve = () => {}, headers = {
     'Content-Type': 'application/json',
@@ -197,7 +215,7 @@
 
   navig.forEach((nav) => {
     nav.addEventListener('click', (evt) => {
-      switchClass('.wrapper .main', 'selected', 'remove');
+      resetTab();
       const menu = evt.currentTarget.getAttribute('data-nav');
       switchClass('.navig h3.active', 'active');
       switchClass('.mail-types li.active', 'active');
