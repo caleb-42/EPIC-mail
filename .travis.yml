@@ -1,16 +1,15 @@
 sudo: false
 language: node_js
 node_js:
- - "node"
-
+- node
 cache:
   directories:
   - node_modules
-
 env:
   global:
-    - epic_jwtPrivateKey=EPIC-mail
-    - NODE_ENV=testing
-
-script: "npm test && nyc report --reporter=text-lcov | coveralls"
-
+  - epic_jwtPrivateKey=EPIC-mail
+  - NODE_ENV=testing
+script: npm test && nyc report --reporter=text-lcov | coveralls
+deploy:
+  api_key:
+    secure: EVXS6oIAjA4RywUB2V/+vv+JjNSN9b/YK4/yh8FamNqTKxB159vJ6GuFrPGevRaTghiV9k7z2duEqgw/jTRnCRHBeLp704NrKIKIhOlL/bTuE9Wn4jFdbQiZ9N2uB6qeITu+RK8qPalvOFu9mfJBX9tiDFGjWIEhuWFXe2DYAehxO/thNs88ocYx0qY7xLNEE8BvMaZstgr3iCCEYN6hXtEGYYucxnawkC0vNWoAFrZ50CfNdCHwSEsC37IdqaH1ZAEtKnB0nK4fjfcaggE55BP7G0IEh8jz08RvbRP22Rp66S7GHHV8cJu1qrbyKkIhnVw7nChqIpvVjhhFt/xm75jVMsBPLuJCvqwnrQ71ibgQ7smuP8D9dahfrw/q4hhDpFOzFSQ/Apv4+3jkgA0kjk3C4LMhflvBp/Iu5jppF5UxXnKuOuyYgLDI78YhwXkJK+zMYgxtUWCLFgTNo7c4kWzJPg8ds6XF093IjQKKZb0fPJ4AAd/vSFzeXPkRVuVXvSf7foP9EK8W8UY+B9Lrv2zM7T5DY+filcdM5F7iSNVFLCaA5GYKXioxz8MZ20HNMp7PqgNz8gUhfLp44OnPQ4/U2FCG4ZrYJfoaVOkUg3QhG/sLw+grXWHy5DgLKN7S6QesBPO22jH/cd0KxauUftv2xpjS4lXjdht7DpUkRpM=
