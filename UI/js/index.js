@@ -110,12 +110,13 @@
       document.querySelector('.group-resp').textContent = 'new group created';
     });
 
-  document.querySelector('.signout')
-    .addEventListener('click', () => {
+  const signOut = document.querySelectorAll('[data-nav="signOut"]');
+  signOut.forEach((elem) => {
+    elem.addEventListener('click', () => {
       localStorage.clear();
       window.location.href = './signIn.html';
     });
-
+  });
   document.querySelector('.addgroup')
     .addEventListener('click', () => {
       document.querySelector('.add-user-resp').textContent = '';
@@ -288,5 +289,5 @@
     dummyData.messages = res.data;
     runDummy();
   }); */
-    runDummy();
+  runDummy();
 })();
