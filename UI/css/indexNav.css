@@ -7,7 +7,7 @@
     position: absolute;
     right:1rem;
     top:1rem;
-    z-index: 20;
+    z-index: 9;
 }
 .d-arrow{
     background-image: url('../UI-elements/arrow.png');
@@ -97,7 +97,7 @@
         overflow:hidden;
     }
     .leftsidebar .side-nav .mail-types.open{
-        height: 9.5rem;
+        height: 10rem;
     }
     .leftsidebar .side-nav .mail-types li{
         text-align: left;

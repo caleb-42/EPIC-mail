@@ -237,6 +237,7 @@
   const subNavig = document.querySelectorAll('.mail-types li');
   subNavig.forEach((nav) => {
     nav.addEventListener('click', (evt) => {
+      resetTab();
       switchClass('.wrapper .main', 'selected', 'remove');
       const menu = evt.currentTarget.getAttribute('data-nav');
       const parentMenu = evt.currentTarget.getAttribute('data-parent-nav');

@@ -34,7 +34,7 @@
     visibility:visible;
 }
 .custom-modal .modal-content{
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(246, 246, 246);
     width: 70%;
     height: 65%;
     position: absolute;
@@ -110,11 +110,25 @@
 }
 .create-group{
     height: 15rem;
-    padding: auto 1em;
+    padding: 1em 0;
+    margin: 0 auto;
 }
-.dp-image{
+.dp-image {
     height: 10rem;
     padding: 1em;
+    margin: 0 0 3rem;
+}
+.dp-image .dp{
+    margin: 0 auto;
+    background-image: url('../UI-elements/dp.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width:100px;
+    height:100px;
+}
+
+.dp-image button{
+    margin: 1rem auto;
 }
 .create-group input{
     margin: 1rem auto;
@@ -130,7 +144,7 @@
 .create-group a, .create-group button{
     margin: .4rem .4rem;
     font-weight:600;
-    width: 30%;
+    width: 35%;
     color:rgba(0, 0, 0, 0.7);
     font-size: .8rem;
     display: inline-block;
@@ -160,6 +174,9 @@
     }
     .create-group a, .create-group button{
         font-size: 1rem;
+    }
+    .create-group{
+        width: 60% !important;
     }
     .create-group a{
         padding: .75rem 1rem;
