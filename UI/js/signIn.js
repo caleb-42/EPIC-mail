@@ -22,7 +22,7 @@
       return;
     }
     /* testing locally */
-    const endpoint = 'http://localhost:3000/api/v1/auth';
+    /* const endpoint = 'http://localhost:3000/api/v1/auth';
     fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -48,19 +48,17 @@
       }).catch(() => {
         resp.textContent = 'Something went wrong';
         toggleLoader();
-      });
-    /* window.setTimeout(() => {
+      }); */
+    window.setTimeout(() => {
       toggleLoader();
       if (email === 'admin@gmail.com' && password === 'admin123') {
         localStorage.setItem('email', email);
-        localStorage.setItem('password', password);
-        localStorage.setItem('signin', true);
         document.querySelector('.resp').textContent = 'successfully signed in';
         window.location.href = './index.html';
         return;
       }
       document.querySelector('.resp').textContent = 'failed to signed in';
-    }, 3000); */
+    }, 3000);
   });
   const inputs = document.querySelectorAll('.input-group input');
 

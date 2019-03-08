@@ -2,11 +2,60 @@
   const authenticate = () => {
     /* const email = localStorage.getItem('email');
     const password = localStorage.getItem('password'); */
-    /* const signin = localStorage.getItem('signin');
-    if (!signin) window.location.href = './signUp.html'; */
+    const signin = localStorage.getItem('email');
+    if (!signin) window.location.href = './signUp.html';
   };
-  const dummyData = { messages: [] };
-  let endpoint = 'http://localhost:3000/api/v1/messages';
+  const dummyData = {
+    messages: [
+      {
+        id: 1,
+        createdOn: 'Sat 18th, Mar 2011',
+        subject: 'i just registered',
+        receiverId: 2,
+        senderId: 1,
+        mailerName: 'paul jekande',
+        message: 'its so wonderful to be part of this app',
+        parentMessageId: undefined,
+        status: 'unread',
+      },
+      {
+        id: 3,
+        createdOn: 'Sun 11th, Aug 2018',
+        receiverId: 1,
+        senderId: 2,
+        mailerName: 'fred delight',
+        subject: "get in the car, you're late",
+        message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+        parentMessageId: undefined,
+        status: 'sent',
+      },
+      {
+        id: 4,
+        createdOn: 'Thu 23rd, Jan 2019',
+        receiverId: 2,
+        senderId: 1,
+        mailerName: 'fred delight',
+        subject: 'hello, missed your call',
+        message: "I'm so sorry, i was at the inn when you called martins, Lorem Ipsum is simply dummy text",
+        parentMessageId: undefined,
+        status: 'read',
+      },
+      {
+        id: 6,
+        createdOn: 'Sat 23rd, Jun 2015',
+        receiverId: 1,
+        senderId: 2,
+        mailerName: 'kunle sambo',
+        subject: 'the staff meeting',
+        message: 'dont let the board members get on your nerves they have terrible manners',
+        parentMessageId: undefined,
+        status: 'draft',
+      },
+    ],
+    filtered: [],
+  };
+  dummyData.filtered = dummyData.messages;
+  /* let endpoint = 'http://localhost:3000/api/v1/messages'; */
   authenticate();
   const switchClass = (target, toggleClass, type = 'toggle') => {
     try {
@@ -85,7 +134,7 @@
     evt.currentTarget.classList.add('active');
     switchClass('.mails .post.active', 'opac-70', 'remove');
   };
-  const server = async (url = '', method = '', resolve = () => {}, headers = {
+  /* const server = async (url = '', method = '', resolve = () => {}, headers = {
     'Content-Type': 'application/json',
     'x-auth-token': localStorage.getItem('token'),
   }, reject = () => {}) => {
@@ -99,10 +148,10 @@
       }).catch(() => {
         reject();
       });
-  };
+  }; */
   const runDummy = () => {
     document.querySelector('.content-wrapper').innerHTML = '';
-    dummyData.messages.forEach((msg, index) => {
+    dummyData.filtered.forEach((msg, index) => {
       const strHtml = `
               <div id = 'post-${index}' class="post pointer anim" data-id = "${msg.messageId}">
   
@@ -118,8 +167,17 @@
       document.querySelector('.content-wrapper').insertAdjacentHTML('beforeend', strHtml);
       document.querySelector(`#post-${index}`).addEventListener('click', async (evt) => {
         selectPost(evt);
-        const id = evt.currentTarget.getAttribute('data-id');
-        endpoint = `http://localhost:3000/api/v1/messages/${id}`;
+        /* const id = evt.currentTarget.getAttribute('data-id'); */
+        const message = msg;
+        document.querySelector('.content-wrapper-bloated').innerHTML = `
+        <div class="post-bloated">
+            <h3>${message.mailerName}</h3>
+            <p class="subject">${message.subject}</p>
+            <p class="msg">${message.message}</p>
+            <p class="date">${message.createdOn}</p>
+        </div>
+        `;
+        /* endpoint = `http://localhost:3000/api/v1/messages/${id}`;
         await server(endpoint, 'GET', (res) => {
           const message = res.data[0];
           document.querySelector('.content-wrapper-bloated').innerHTML = `
@@ -130,7 +188,7 @@
                     <p class="date">${message.createdOn}</p>
                 </div>
                 `;
-        });
+        }); */
       });
     });
   };
@@ -143,12 +201,14 @@
       switchClass('.navig h3.active', 'active');
       switchClass('.mail-types li.active', 'active');
       switchClass(`[data-nav="${menu}"]`, 'active');
+      dummyData.filtered = dummyData.messages;
+      runDummy();
       /* testing locally */
-      if (menu === 'mails') endpoint = 'http://localhost:3000/api/v1/messages/all';
+      /* if (menu === 'mails') endpoint = 'http://localhost:3000/api/v1/messages/all';
       server(endpoint, 'GET', (res) => {
         dummyData.messages = res.data;
         runDummy();
-      });
+      }); */
       switchTab(menu);
     });
   });
@@ -164,12 +224,17 @@
       switchClass('.mail-types li.active', 'active');
       switchClass(`[data-nav="${menu}"]`, 'active');
       switchTab(parentMenu);
+      dummyData.filtered = dummyData.messages.filter((msg) => {
+        if (menu === 'inbox') return msg.status === 'read' || msg.status === 'unread';
+        return msg.status === menu;
+      });
+      runDummy();
       /* testing locally */
-      endpoint = (menu === 'inbox') ? 'http://localhost:3000/api/v1/messages' : `http://localhost:3000/api/v1/messages/${menu}`;
+      /* endpoint = (menu === 'inbox') ? 'http://localhost:3000/api/v1/messages' : `http://localhost:3000/api/v1/messages/${menu}`;
       server(endpoint, 'GET', (res) => {
         dummyData.messages = res.data;
         runDummy();
-      });
+      }); */
     });
   });
   const inputs = document.querySelectorAll('.input-group input.inputs');
@@ -219,8 +284,9 @@
   });
 
   /* testing locally */
-  server(endpoint, 'GET', (res) => {
+  /* server(endpoint, 'GET', (res) => {
     dummyData.messages = res.data;
     runDummy();
-  });
+  }); */
+    runDummy();
 })();
