@@ -34,12 +34,13 @@
     visibility:visible;
 }
 .custom-modal .modal-content{
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(246, 246, 246);
     width: 70%;
     height: 65%;
     position: absolute;
     top:50%;
     left: 50%;
+    z-index: 40;
     transform: translate(-50%, -50%);
     border-radius: .7rem;
     padding: 2rem;
@@ -61,7 +62,7 @@
     right: 2rem;
 }
 .custom-modal .modal-content .modal_heading{
-    color: rgba(185, 35, 115, 0.8);
+    color: rgba(55, 174, 111, 0.8);
     margin-bottom: 1rem;
     padding-bottom: 1rem; 
     border-bottom: 1px rgba(0, 0, 0, .3) solid;
@@ -109,22 +110,30 @@
 }
 .create-group{
     height: 15rem;
-    padding: auto 1em;
+    padding: 1em 0;
+    margin: 0 auto;
 }
-.dp-image{
+.dp-image {
     height: 10rem;
     padding: 1em;
+    margin: 0 0 3rem;
+}
+.dp-image .dp{
+    margin: 0 auto;
+    background-image: url('../UI-elements/dp.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width:100px;
+    height:100px;
+}
+
+.dp-image button{
+    margin: 1rem auto;
 }
 .create-group input{
     margin: 1rem auto;
     width: 80%;
     text-align: center;
-}
-.create-group a{
-    background: rgba(185, 35, 115, 0.8);
-    padding: .7rem .4rem;
-    border-radius: .2rem;
-    color:#fff;
 }
 .create-group p{
     margin-top: 2rem;
@@ -134,9 +143,17 @@
 }
 .create-group a, .create-group button{
     margin: .4rem .4rem;
-    width: 30%;
+    font-weight:600;
+    width: 35%;
+    color:rgba(0, 0, 0, 0.7);
     font-size: .8rem;
     display: inline-block;
+}
+.create-group a{
+    background: rgb(199, 187, 15);
+    padding: .7rem .4rem;
+    border-radius: .2rem;
+    color:#fff;
 }
 .create-group span {
     width: 100%;
@@ -157,6 +174,9 @@
     }
     .create-group a, .create-group button{
         font-size: 1rem;
+    }
+    .create-group{
+        width: 60% !important;
     }
     .create-group a{
         padding: .75rem 1rem;

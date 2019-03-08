@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Epic mail</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato|Nunito" rel="stylesheet">
     <link rel="stylesheet" href="./css/indexNav.css">
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/tabs.css">
@@ -25,12 +26,14 @@
                     <li><h3 data-nav = 'contacts'>Contacts</h3></li>
                     <li><h3 data-nav = 'groups'>Groups</h3></li>
                     <li><h3 data-nav = 'settings'>Settings</h3></li>
+                    <li><h3 data-nav = 'signOut'>Sign Out</h3></li>
                 </ul>
             </aside>
             <div class="main">
                 <div class="header">
-                    <button class="backbtn">Back</button>
-                    <a class="signout">sign out</a>
+                    <div class="backbtn"></div>
+                    <h1 id = "tabname">Inbox</h1>
+                    <a class="signout anim" data-nav = 'signOut'>sign out</a>
                     <div class="navicon"></div>
                 </div>
                 <ul class="top-nav navig w-100 anim">
@@ -44,57 +47,55 @@
                     <li><h3 data-nav = 'contacts'>Contacts</h3></li>
                     <li><h3 data-nav = 'groups'>Groups</h3></li>
                     <li><h3 data-nav = 'settings'>Settings</h3></li>
+                    <li><h3 data-nav = 'signOut'>Sign Out</h3></li>
                 </ul>
                 <div class="w-100 h-100 main-body">
                     <div class="mails tab anim block">
-                        <div class="left-body tab-content flexdiv flex-center">
+                        <div class="left-body anim-ease tab-content flexdiv flex-center">
                             <div class="content-wrapper">
                                 
                             </div>
                         </div>
-                        <div class="right-body tab-content flexdiv flex-center">
+                        <div class="right-body anim-ease tab-content display flexdiv flex-center">
                             <div class="content-wrapper-bloated"></div>
                         </div>
                         <div class="clr"></div>
                     </div>
                     <div class="contacts tab anim gone">
-                        <div class="left-body tab-content flexdiv flex-center">
+                        <div class="left-body anim-ease tab-content flexdiv flex-center">
                             <h3>Panels displaying details in contacts</h3>
                         </div>
-                        <div class="right-body tab-content flexdiv flex-center">
+                        <div class="right-body anim-ease tab-content display flexdiv flex-center">
                             <h6>Panel showing all messages from the selected contact</h6>
                         </div>
                         <div class="clr"></div>
                     </div>
                     <div class="groups tab anim gone">
-                        <div class="left-body tab-content flexdiv flex-center">
+                        <div class="left-body anim-ease tab-content flexdiv flex-center">
                             <h3>Groups in a list layout</h3>
                         </div>
-                        <div class="right-body tab-content flexdiv flex-center">
+                        <div class="right-body anim-ease tab-content display flexdiv flex-center">
                             <h6>Panel showing all messages from user and to user and their delivery date</h6>
                         </div>
                         <div class="clr"></div>
                     </div>
                     <div class="settings tab anim gone">
-                        <div class="left-body inner-float">
-                            <div class="sub-left tab-content flexdiv flex-center">
-                                <div class="content-wrapper">
-                                    <div class="dp-image">
-                                        <h3 class="opac-70">Area to upload photo here</h3>
-                                    </div>
-                                    <div class="create-group">
-                                        <h3 class="opac-70">Create Group</h3>
-                                        <input class="group inputs"/>
-                                        <span>
-                                            <button class="create-group-btn">new group</button>
-                                            <a href="#addUsermodal" class="add-user modalopen">Add User</a>
-                                        </span>
-                                        <p class="group-resp">&nbsp;</p>
-                                    </div>
+                        <div class="left-body anim-ease tab-content w-100 flexdiv flex-center">
+                            <div class="content-wrapper">
+                                <div class="dp-image">
+                                    <div class="dp"></div>
+                                    <button class="btn">Upload</button>
+                                    <p class="opac-70">Upload photo here</p>
                                 </div>
-                            </div>
-                            <div class="sub-right tab-content flexdiv flex-center">
-                                <h4 class="opac-70">list of all users and thier authorization</h4>
+                                <div class="create-group">
+                                    <h3 class="opac-70">Create Group</h3>
+                                    <input class="group inputs"/>
+                                    <span>
+                                        <button class="create-group-btn">New group</button>
+                                        <a href="#addUsermodal" class="add-user modalopen">Add User</a>
+                                    </span>
+                                    <p class="group-resp">&nbsp;</p>
+                                </div>
                             </div>
                         </div>
                         <div class="clr"></div>

@@ -1,12 +1,13 @@
 .navicon{
     background-image: url('../UI-elements/hambuger.png');
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
     width:3rem;
     height:2rem;
     position: absolute;
     right:1rem;
     top:1rem;
+    z-index: 9;
 }
 .d-arrow{
     background-image: url('../UI-elements/arrow.png');
@@ -30,7 +31,7 @@
     overflow: hidden;
 }
 .main.open-nav .top-nav{
-    height: 21rem;
+    height: 24.5rem;
 }
 .main.open-sub-nav.open-nav .top-nav{
     height: 13rem;
@@ -96,7 +97,7 @@
         overflow:hidden;
     }
     .leftsidebar .side-nav .mail-types.open{
-        height: 9.5rem;
+        height: 10rem;
     }
     .leftsidebar .side-nav .mail-types li{
         text-align: left;
