@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "web app to handle messaging",
   "main": "index.js",
+  "engines":{
+    "node":"10.x"
+  },
   "scripts": {
     "test": "cross-env NODE_ENV=testing && nyc mocha --require @babel/register --timeout 10000 --recursive",
-    "start": "cross-env NODE_ENV=production && nodemon --exec babel-node src/index.js",
+    "start": "node build/index.js",
+    "start-local": "cross-env NODE_ENV=production && nodemon --exec babel-node src/index.js",
     "dev": "cross-env NODE_ENV=development && nodemon --exec babel-node src/index.js",
     "build": "babel src --out-dir build",
     "serve": "node build/index.js",

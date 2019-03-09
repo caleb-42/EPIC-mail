@@ -2,6 +2,8 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
@@ -18,14 +20,14 @@ var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 
 var _config = _interopRequireDefault(require("config"));
 
-var _db = require("./db");
+var _db = _interopRequireDefault(require("./db"));
 
 var DbHandler =
 /*#__PURE__*/
 function () {
   function DbHandler() {
     (0, _classCallCheck2.default)(this, DbHandler);
-    this.db = _db.db;
+    this.db = _lodash.default.cloneDeep(_db.default);
   }
 
   (0, _createClass2.default)(DbHandler, [{
@@ -126,10 +128,56 @@ function () {
   }, {
     key: "getMessages",
     value: function getMessages(id) {
-      var messages = this.db.messages.filter(function (message) {
-        return message.senderId === id || message.receiverId === id;
+      var sent = this.db.sent.filter(function (message) {
+        return message.receiverId === id;
+      });
+      var draft = this.db.draft.filter(function (message) {
+        return message.receiverId === id;
+      });
+      var inbox = this.db.inbox.filter(function (message) {
+        return message.senderId === id;
+      });
+      return [].concat((0, _toConsumableArray2.default)(inbox), (0, _toConsumableArray2.default)(sent), (0, _toConsumableArray2.default)(draft));
+    }
+  }, {
+    key: "getMessageById",
+    value: function getMessageById(msgId) {
+      var msg = this.db.messages.find(function (message) {
+        return message.id === msgId;
+      });
+      return msg;
+    }
+  }, {
+    key: "getReceivedMessages",
+    value: function getReceivedMessages(id) {
+      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'all';
+      var messages = this.db.inbox.filter(function (message) {
+        if (type === 'all') return message.receiverId === id;
+        if (type === 'read') return message.receiverId === id && message.status === 'read';
+        return message.receiverId === id && message.status === 'unread';
       });
       return messages;
+    }
+  }, {
+    key: "getSentMessages",
+    value: function getSentMessages(id) {
+      var messages = this.db.sent.filter(function (message) {
+        return message.senderId === id;
+      });
+      return messages;
+    }
+  }, {
+    key: "getDraftMessages",
+    value: function getDraftMessages(id) {
+      var messages = this.db.draft.filter(function (message) {
+        return message.senderId === id;
+      });
+      return messages;
+    }
+  }, {
+    key: "resetDb",
+    value: function resetDb() {
+      this.db = _lodash.default.cloneDeep(_db.default);
     }
   }]);
   return DbHandler;

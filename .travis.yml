@@ -10,9 +10,3 @@ env:
   - epic_jwtPrivateKey=EPIC-mail
   - NODE_ENV=testing
 script: npm test && nyc report --reporter=text-lcov | coveralls
-deploy:
-  provider: heroku
-  api_key:
-    secure: APPACjKdccIMyg9fL7ydD0p1voFEGx19Hd6xbxRrIJe39j9EQMazESm/yDBHs4msvRy9Qj2/xrVR5L5BWXoRQMNNHjHB+CGkux6Ndl7NyNV2/ZucgpGtBoxRtPZjiA6uTaO5E/2SeN9YB7nsCg+G/3/sjlRFOnSIFacJfDozfZ8PMbwgq0b7nSzPjgkKTicDkHV27ne23OjA4IcRtmbKGO9qtxmJdSJADg72AVWfZrPbPTLQcx0UQrv9uNeo2TThBIF/S8KFdEm7JQB8LwHZ77HAr5voyOfyrVKqVo8A5LMmq+jJtRxl2Vhu1mr6E2nheLfkRZPuyIm7ESLYy7Nc3REcfzAcCoHsjvve5QFEoalZW3msex+uCf2eiBmpHk/64++XwWw2aXORrO2fjzneqAhH83fJr2XtU1+3e3gvf406yRy5tzfb2Xq1QcoEydsNus3fwXOHv1YT615iUP4hiE7gFDqHRAR4VEF2eBpmi9BbMWbn8m3+A2maZBAcp+/FNMdYr8ZDnUVFWqNKZ2TYaOuWjGXSF0TJdbG/RB2sDYJZT0gnygXVV9WgftF6qVvf0RJIm0zWHU4XlKE14LjAx+vpuhwqPoKCUywlaHO578xqhOAvwfyB9fwjUPkqRm/Qh5Eyx5kauO5EyvMu6Ryf5xD7zHCKz9lM/m1f+cOtbx8=
-  app: epic-mail-app
-  on: develop

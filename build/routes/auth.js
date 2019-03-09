@@ -81,10 +81,10 @@ function () {
           case 11:
             return _context.abrupt("return", res.send({
               status: 200,
-              data: {
+              data: [{
                 token: token,
                 firstName: user.firstName
-              }
+              }]
             }));
 
           case 12:

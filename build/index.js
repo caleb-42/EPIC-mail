@@ -16,11 +16,12 @@ var _auth = _interopRequireDefault(require("./routes/auth"));
 
 var app = (0, _express.default)();
 app.use(_express.default.json());
-app.use(_express.default.static('UI'));
+/* app.use(express.static('UI')); */
+
 /* testing locally */
 
 app.use('/api/v1/users', _users.default);
-app.use('/api/v1/mails', _mails.default);
+app.use('/api/v1/messages', _mails.default);
 app.use('/api/v1/auth', _auth.default);
 
 if (!_config.default.get('jwtPrivateKey')) {
