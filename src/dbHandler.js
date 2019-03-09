@@ -46,6 +46,16 @@ class DbHandler {
     return [...inbox, ...sent, ...draft];
   }
 
+  getReceivedMessages(id, type = 'all') {
+    const messages = this.db.inbox
+      .filter((message) => {
+        if (type === 'all') return message.receiverId === id;
+        if (type === 'read') return message.receiverId === id && message.status === 'read';
+        return message.receiverId === id && message.status === 'unread';
+      });
+    return messages;
+  }
+
   resetDb() {
     this.db = _.cloneDeep(db);
   }

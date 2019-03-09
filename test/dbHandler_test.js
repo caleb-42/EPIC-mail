@@ -65,4 +65,12 @@ describe('DATABASE METHODS', () => {
       expect(res).to.be.an('array');
     });
   });
+  describe('Get Recieved Messages', () => {
+    it('should return all Recieved messages if user id is valid and type is not set', async () => {
+      const { db } = dbHandler;
+      const user = db.users[0];
+      const res = await dbHandler.getReceivedMessages(user.id);
+      expect(res).to.be.an('array');
+    });
+  });
 });
