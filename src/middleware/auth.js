@@ -4,7 +4,7 @@ import config from 'config';
 const auth = (req, res, next) => {
   const token = req.header('x-auth-token');
   if (!token) {
-    return res.send({
+    return res.status(401).send({
       status: 401,
       error: 'Access denied, no token provided',
     });
@@ -14,7 +14,7 @@ const auth = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (e) {
-    return res.send({
+    return res.status(400).send({
       status: 400,
       error: 'Invalid token',
     });

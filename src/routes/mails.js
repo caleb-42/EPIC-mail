@@ -1,5 +1,5 @@
 import express from 'express';
-import auth from '../middleware';
+import auth from '../middleware/auth';
 import dbHandler from '../dbHandler';
 
 const router = express.Router();
