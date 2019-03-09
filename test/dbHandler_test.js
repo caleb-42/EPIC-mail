@@ -9,6 +9,7 @@ import dbHandler from '../src/dbHandler';
 
 
 let register;
+let sentMsg;
 
 describe('DATABASE METHODS', () => {
   beforeEach(() => {
@@ -18,6 +19,14 @@ describe('DATABASE METHODS', () => {
       lastName: 'user',
       password: 'admin123',
       phoneNumber: '2348130439102',
+    };
+    sentMsg = {
+      receiverId: 1,
+      senderId: 2,
+      mailerName: 'fred delight',
+      subject: "get in the car, you're late",
+      message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+      parentMessageId: undefined,
     };
   });
   after(() => {
@@ -87,6 +96,20 @@ describe('DATABASE METHODS', () => {
       const user = db.users[0];
       const res = await dbHandler.getDraftMessages(user.id);
       expect(res).to.be.an('array');
+    });
+  });
+  describe('Send Message', () => {
+    it('should add new message to Database for valid message', async () => {
+      await dbHandler.sendMessage(sentMsg);
+      const { db } = dbHandler;
+      const allMessageArray = db.messages;
+      const sentmessageArray = db.sent;
+      const message = allMessageArray[0];
+      const sentMessage = sentmessageArray[0];
+      expect(allMessageArray).to.have.lengthOf(1);
+      expect(sentmessageArray).to.have.lengthOf(1);
+      expect(message).to.include(sentMsg);
+      expect(sentMessage).to.have.any.keys('messageId');
     });
   });
 });
