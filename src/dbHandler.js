@@ -30,6 +30,12 @@ class DbHandler {
     return token;
   }
 
+  async validateUser(guest, user) {
+    const validPassword = await bcrypt.compare(guest.password, user.password);
+    if (!validPassword) return false;
+    return this.generateJWT(user);
+  }
+
   resetDb() {
     this.db = _.cloneDeep(db);
   }

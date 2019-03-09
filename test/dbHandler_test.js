@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import config from 'config';
 import jwt from 'jsonwebtoken';
@@ -32,7 +33,24 @@ describe('DATABASE METHODS', () => {
       expect(userArray).to.have.lengthOf(1);
       const user = db.users[0];
       expect(user).to.have.any.keys('id', 'email', 'firstName', 'lastName', 'password', 'phoneNumber');
-      dbHandler.resetDb();
+    });
+  });
+  describe('Validate User', () => {
+    it('should return valid token if user password is correct', async () => {
+      const { db } = dbHandler;
+      const user = db.users[0];
+      const res = await dbHandler.validateUser(register, user);
+      expect(res).to.be.a('string');
+      const decoded = jwt.verify(res, config.get('jwtPrivateKey'));
+      expect(decoded).to.be.an('object');
+      expect(decoded).to.have.property('id');
+    });
+    it('should return false if user password is incorrect', async () => {
+      register.password = 'wrong';
+      const { db } = dbHandler;
+      const user = db.users[0];
+      const res = await dbHandler.validateUser(register, user);
+      expect(res).to.be.false;
     });
   });
 });
