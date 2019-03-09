@@ -73,4 +73,12 @@ describe('DATABASE METHODS', () => {
       expect(res).to.be.an('array');
     });
   });
+  describe('Get Sent Messages', () => {
+    it('should return Sent messages if user id is valid', async () => {
+      const { db } = dbHandler;
+      const user = db.users[0];
+      const res = await dbHandler.getSentMessages(user.id);
+      expect(res).to.be.an('array');
+    });
+  });
 });

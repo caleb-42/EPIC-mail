@@ -56,6 +56,12 @@ class DbHandler {
     return messages;
   }
 
+  getSentMessages(id) {
+    const messages = this.db.sent
+      .filter(message => message.senderId === id);
+    return messages;
+  }
+
   resetDb() {
     this.db = _.cloneDeep(db);
   }
