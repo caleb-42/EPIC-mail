@@ -62,6 +62,12 @@ class DbHandler {
     return messages;
   }
 
+  getDraftMessages(id) {
+    const messages = this.db.draft
+      .filter(message => message.senderId === id);
+    return messages;
+  }
+
   resetDb() {
     this.db = _.cloneDeep(db);
   }

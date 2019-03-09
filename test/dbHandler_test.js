@@ -81,4 +81,12 @@ describe('DATABASE METHODS', () => {
       expect(res).to.be.an('array');
     });
   });
+  describe('Get Draft Messages', () => {
+    it('should return Draft messages if user id is valid', async () => {
+      const { db } = dbHandler;
+      const user = db.users[0];
+      const res = await dbHandler.getDraftMessages(user.id);
+      expect(res).to.be.an('array');
+    });
+  });
 });
