@@ -23,13 +23,9 @@ describe('USER API ENDPOINTS', () => {
     dbHandler.resetDb();
     server.close();
   });
-  /* before(() => {
-    dbHandler.resetDb();
-  }); */
   describe('Sign Up', () => {
     it('should create user with valid request', async () => {
       const res = await request(server).post('/api/v1/users').send(user);
-      /* console.log(res); */
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(201);
       expect(res.body).to.have.property('data');

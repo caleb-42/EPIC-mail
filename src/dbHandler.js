@@ -14,6 +14,10 @@ class DbHandler {
     return this.db[table].find(tab => tab[query] === body[query]);
   }
 
+  generateJWT(user) {
+    return jwt.sign({ id: user.id }, config.get('jwtPrivateKey'));
+  }
+
   async createUser(newUser) {
     const id = (this.db.users).length + 1;
     const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'isAdmin', 'password']);
@@ -22,12 +26,8 @@ class DbHandler {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     this.db.users.push(user);
-    const token = jwt.sign({ id: user.id }, config.get('jwtPrivateKey'));
+    const token = this.generateJWT(user);
     return token;
-  }
-
-  generateJWT(user) {
-    return jwt.sign({ id: user.id }, config.get('jwtPrivateKey'));
   }
 
   async validateUser(guest, user) {
@@ -35,7 +35,6 @@ class DbHandler {
     if (!validPassword) return false;
     return this.generateJWT(user);
   }
-
 
   getMessages(id) {
     const sent = this.db.sent
@@ -45,12 +44,6 @@ class DbHandler {
     const inbox = this.db.inbox
       .filter(message => message.senderId === id);
     return [...inbox, ...sent, ...draft];
-  }
-
-  getMessageById(msgId) {
-    const msg = this.db.messages
-      .find(message => message.id === msgId);
-    return msg;
   }
 
   getReceivedMessages(id, type = 'all') {
