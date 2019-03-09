@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { expect } from 'chai';
+/* import { expect } from 'chai';
 import sinon from 'sinon';
 import {
   describe, it,
@@ -38,4 +38,4 @@ describe('AUTH MIDDLEWARE UNIT TEST', () => {
     auth(req, res, next);
     expect(next.calledOnce).to.be.true;
   });
-});
+}); */

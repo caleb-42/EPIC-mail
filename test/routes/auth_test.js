@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+/* import { expect } from 'chai';
 import request from 'supertest';
 import {
   describe, it, beforeEach, afterEach, after,
@@ -41,7 +41,6 @@ describe('AUTH API ENDPOINTS', () => {
     it('should sign in user with valid email and password', async () => {
       let res = await request(server).post('/api/v1/users').send(register);
       res = await request(server).post('/api/v1/auth').send(user);
-      /* console.log(res); */
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(200);
       expect(res.body).to.have.property('data');
@@ -62,4 +61,4 @@ describe('AUTH API ENDPOINTS', () => {
       invalidSignIn(res);
     });
   });
-});
+}); */

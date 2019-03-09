@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import request from 'supertest';
+/* import request from 'supertest';
 import { expect } from 'chai';
 import {
   describe, it, beforeEach, afterEach,
@@ -40,4 +40,4 @@ describe('AUTH MIDDLEWARE INTEGRATION TEST', () => {
     const res = await exec(token);
     expect(res.status).to.be.equal(200);
   });
-});
+}); */
