@@ -1,8 +1,5 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import {
-  describe, it, beforeEach, afterEach,
-} from 'mocha';
 
 let server;
 

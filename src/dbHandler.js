@@ -2,6 +2,7 @@ import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from 'config';
+import date from 'date-and-time';
 import db from './db';
 
 
@@ -66,6 +67,27 @@ class DbHandler {
     const messages = this.db.draft
       .filter(message => message.senderId === id);
     return messages;
+  }
+
+  sendMessage(msg) {
+    const now = new Date();
+    const createdOn = date.format(now, 'ddd MMM DD YYYY');
+    msg.createdOn = createdOn;
+    msg.status = 'sent';
+    const id = (this.db.messages).length + 1;
+    msg.id = id;
+    this.db.messages.push(msg);
+
+    const sentmsg = {
+      messageId: id.toString(),
+      createdOn,
+      receiverId: msg,
+      senderId: msg,
+      mailerName: msg,
+      subject: msg,
+      status: 'sent',
+    };
+    this.db.sent.push(sentmsg);
   }
 
   resetDb() {

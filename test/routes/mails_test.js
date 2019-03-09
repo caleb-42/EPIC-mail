@@ -1,8 +1,5 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import {
-  describe, it, beforeEach, afterEach, after,
-} from 'mocha';
 import dbHandler from '../../src/dbHandler';
 
 let server;

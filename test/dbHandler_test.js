@@ -2,9 +2,6 @@
 import { expect } from 'chai';
 import config from 'config';
 import jwt from 'jsonwebtoken';
-import {
-  describe, it, after, beforeEach,
-} from 'mocha';
 import dbHandler from '../src/dbHandler';
 
 
@@ -67,40 +64,40 @@ describe('DATABASE METHODS', () => {
     });
   });
   describe('Get all Messages', () => {
-    it('should return all messages if user id is valid', async () => {
+    it('should return all messages if user id is valid', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.getMessages(user.id);
+      const res = dbHandler.getMessages(user.id);
       expect(res).to.be.an('array');
     });
   });
   describe('Get Recieved Messages', () => {
-    it('should return all Recieved messages if user id is valid and type is not set', async () => {
+    it('should return all Recieved messages if user id is valid and type is not set', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.getReceivedMessages(user.id);
+      const res = dbHandler.getReceivedMessages(user.id);
       expect(res).to.be.an('array');
     });
   });
   describe('Get Sent Messages', () => {
-    it('should return Sent messages if user id is valid', async () => {
+    it('should return Sent messages if user id is valid', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.getSentMessages(user.id);
+      const res = dbHandler.getSentMessages(user.id);
       expect(res).to.be.an('array');
     });
   });
   describe('Get Draft Messages', () => {
-    it('should return Draft messages if user id is valid', async () => {
+    it('should return Draft messages if user id is valid', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.getDraftMessages(user.id);
+      const res = dbHandler.getDraftMessages(user.id);
       expect(res).to.be.an('array');
     });
   });
   describe('Send Message', () => {
-    it('should add new message to Database for valid message', async () => {
-      await dbHandler.sendMessage(sentMsg);
+    it('should add new message to Database for valid message', () => {
+      dbHandler.sendMessage(sentMsg);
       const { db } = dbHandler;
       const allMessageArray = db.messages;
       const sentmessageArray = db.sent;
