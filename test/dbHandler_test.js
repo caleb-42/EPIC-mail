@@ -3,19 +3,23 @@ import { expect } from 'chai';
 import config from 'config';
 import jwt from 'jsonwebtoken';
 import {
-  describe, it, after,
+  describe, it, after, beforeEach,
 } from 'mocha';
 import dbHandler from '../src/dbHandler';
 
-const register = {
-  email: 'ewere@gmail.com',
-  firstName: 'admin',
-  lastName: 'user',
-  password: 'admin123',
-  phoneNumber: '2348130439102',
-};
+
+let register;
 
 describe('DATABASE METHODS', () => {
+  beforeEach(() => {
+    register = {
+      email: 'ewere@gmail.com',
+      firstName: 'admin',
+      lastName: 'user',
+      password: 'admin123',
+      phoneNumber: '2348130439102',
+    };
+  });
   after(() => {
     dbHandler.resetDb();
   });
@@ -51,6 +55,14 @@ describe('DATABASE METHODS', () => {
       const user = db.users[0];
       const res = await dbHandler.validateUser(register, user);
       expect(res).to.be.false;
+    });
+  });
+  describe('Get all Messages', () => {
+    it('should return all messages if user id is valid', async () => {
+      const { db } = dbHandler;
+      const user = db.users[0];
+      const res = await dbHandler.getMessages(user.id);
+      expect(res).to.be.an('array');
     });
   });
 });

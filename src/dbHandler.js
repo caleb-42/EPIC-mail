@@ -36,6 +36,16 @@ class DbHandler {
     return this.generateJWT(user);
   }
 
+  getMessages(id) {
+    const sent = this.db.sent
+      .filter(message => message.receiverId === id);
+    const draft = this.db.draft
+      .filter(message => message.receiverId === id);
+    const inbox = this.db.inbox
+      .filter(message => message.senderId === id);
+    return [...inbox, ...sent, ...draft];
+  }
+
   resetDb() {
     this.db = _.cloneDeep(db);
   }
