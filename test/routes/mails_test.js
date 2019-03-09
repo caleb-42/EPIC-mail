@@ -1,4 +1,4 @@
-/* import { expect } from 'chai';
+import { expect } from 'chai';
 import request from 'supertest';
 import {
   describe, it, beforeEach, afterEach, after,
@@ -99,4 +99,4 @@ describe('MAILS API ENDPOINTS', () => {
       await validToken('/api/v1/messages/draft');
     });
   });
-}); */
+});

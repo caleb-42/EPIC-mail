@@ -1,4 +1,4 @@
-/* import { expect } from 'chai';
+import { expect } from 'chai';
 import request from 'supertest';
 import {
   describe, it, beforeEach, afterEach,
@@ -44,4 +44,4 @@ describe('USER API ENDPOINTS', () => {
       expect(res.body.error).to.include('User already registered');
     });
   });
-}); */
+});
