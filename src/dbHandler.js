@@ -26,13 +26,16 @@ class DbHandler {
     return token;
   }
 
-  async validateUser(guest, user) {
-    const validPassword = await bcrypt.compare(guest.password, user.password);
-    if (!validPassword) {
-      return false;
-    }
+  generateJWT(user) {
     return jwt.sign({ id: user.id }, config.get('jwtPrivateKey'));
   }
+
+  async validateUser(guest, user) {
+    const validPassword = await bcrypt.compare(guest.password, user.password);
+    if (!validPassword) return false;
+    return this.generateJWT(user);
+  }
+
 
   getMessages(id) {
     const sent = this.db.sent

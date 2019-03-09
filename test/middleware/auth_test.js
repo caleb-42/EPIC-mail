@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import request from 'supertest';
 import { expect } from 'chai';
 import {
@@ -8,7 +9,7 @@ import dbHandler from '../../src/dbHandler';
 let server;
 let user;
 
-describe('AUTH MIDDLEWARE', () => {
+describe('AUTH MIDDLEWARE INTEGRATION TEST', () => {
   beforeEach(() => {
     server = require('../../src/index');
     user = {
@@ -23,7 +24,6 @@ describe('AUTH MIDDLEWARE', () => {
     server.close();
     dbHandler.resetDb();
   });
-
   const exec = token => request(server)
     .get('/api/v1/messages')
     .set('x-auth-token', token);
