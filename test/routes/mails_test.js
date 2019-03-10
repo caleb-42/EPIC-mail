@@ -11,6 +11,16 @@ const register = {
   password: 'admin123',
   phoneNumber: '2348130439102',
 };
+const delMsg = {
+  subject: 'i just registered',
+  receiverId: 2,
+  mailerName: 'paul jekande',
+  message: 'its so wonderful to be part of this app',
+  senderId: 1,
+  createdOn: 'Sun Mar 10 2019',
+  status: 'sent',
+  id: 1,
+};
 const sentMsg = {
   subject: 'i just registered',
   receiverId: 2,
@@ -31,7 +41,10 @@ describe('MAILS API ENDPOINTS', () => {
   };
   const noToken = async (endpoint, method = 'get') => {
     const token = '';
-    const res = method === 'get' ? await request(server).get(endpoint).set('x-auth-token', token) : await request(server).post(endpoint).send(sentMsg).set('x-auth-token', token);
+    let res;
+    if (method === 'get') res = await request(server).get(endpoint).set('x-auth-token', token);
+    if (method === 'post') res = await request(server).post(endpoint).send(sentMsg).set('x-auth-token', token);
+    if (method === 'delete') res = await request(server).delete(endpoint).send(delMsg).set('x-auth-token', token);
     expect(res.body).to.have.property('status');
     expect(res.body.status).to.be.equal(401);
     expect(res.body).to.have.property('error');

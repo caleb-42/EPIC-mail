@@ -118,9 +118,9 @@ describe('DATABASE METHODS', () => {
       msg.id = 1;
       msg.status = 'sent';
       const res = dbHandler.deleteMessage(msg);
-      expect(res).to.be.an('object');
-      expect(res).to.have.any.keys('message');
-      expect(msg).to.include(res);
+      expect(res).to.be.an('array');
+      expect(res[0]).to.have.any.keys('message');
+      expect(msg).to.include(res[0]);
     });
     it('should remove message from Database after message delete', () => {
       const { db } = dbHandler;

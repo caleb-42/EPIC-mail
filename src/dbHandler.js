@@ -87,6 +87,21 @@ class DbHandler {
     return [msg];
   }
 
+  deleteMessage(delMsg) {
+    const msgType = (delMsg.status === 'read' || delMsg.status === 'unread') ? 'inbox' : delMsg.status;
+
+    const newMsgArray = this.db.messages.filter(msg => msg.id !== delMsg.id);
+    const messageId = String(delMsg.id);
+    const newTypeMsgArray = this.db[msgType]
+      .filter(msg => msg.messageId !== messageId);
+
+    this.db.messages = newMsgArray;
+    this.db[msgType] = newTypeMsgArray;
+    return [{
+      message: delMsg.message,
+    }];
+  }
+
   resetDb() {
     this.db = _.cloneDeep(db);
   }
