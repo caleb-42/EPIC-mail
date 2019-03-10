@@ -65,6 +65,13 @@ class DbHandler {
     return messages;
   }
 
+  getMessageById(id) {
+    const message = this.db.messages
+      .find(msg => msg.id === id);
+    if (!message) return false;
+    return [message];
+  }
+
   sendMessage(msg) {
     const now = new Date();
     const createdOn = date.format(now, 'ddd MMM DD YYYY');
@@ -88,8 +95,7 @@ class DbHandler {
   }
 
   deleteMessage(id) {
-    const message = this.db.messages.filter(msg => msg.id === id);
-    const deleteMsg = message[0];
+    const deleteMsg = this.db.messages.find(msg => msg.id === id);
     if (!deleteMsg) return false;
     const msgType = (deleteMsg.status === 'read' || deleteMsg.status === 'unread') ? 'inbox' : deleteMsg.status;
     const newMsgArray = this.db.messages.filter(msg => msg.id !== deleteMsg.id);
