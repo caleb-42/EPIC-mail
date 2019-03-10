@@ -11,16 +11,6 @@ const register = {
   password: 'admin123',
   phoneNumber: '2348130439102',
 };
-const delMsg = {
-  subject: 'i just registered',
-  receiverId: 2,
-  mailerName: 'paul jekande',
-  message: 'its so wonderful to be part of this app',
-  senderId: 1,
-  createdOn: 'Sun Mar 10 2019',
-  status: 'sent',
-  id: 1,
-};
 const sentMsg = {
   subject: 'i just registered',
   receiverId: 2,
@@ -44,7 +34,7 @@ describe('MAILS API ENDPOINTS', () => {
     let res;
     if (method === 'get') res = await request(server).get(endpoint).set('x-auth-token', token);
     if (method === 'post') res = await request(server).post(endpoint).send(sentMsg).set('x-auth-token', token);
-    if (method === 'delete') res = await request(server).delete(endpoint).send(delMsg).set('x-auth-token', token);
+    if (method === 'delete') res = await request(server).delete(endpoint).set('x-auth-token', token);
     expect(res.body).to.have.property('status');
     expect(res.body.status).to.be.equal(401);
     expect(res.body).to.have.property('error');
@@ -133,19 +123,21 @@ describe('MAILS API ENDPOINTS', () => {
   });
   describe('Delete mail api/v1/messages', () => {
     it('should not delete mail if user has no token', async () => {
-      await noToken('/api/v1/messages/', 'delete');
+      await noToken('/api/v1/messages/1', 'delete');
     });
     it('should delete mail if user has valid token', async () => {
       let res = await request(server).post('/api/v1/users').send(register);
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
-      const messages = await request(server).delete('/api/v1/messages/').send(delMsg).set('x-auth-token', token);
-      expect(messages.body).to.have.property('status');
-      expect(messages.body.status).to.be.equal(200);
-      expect(messages.body).to.have.property('data');
-      expect(messages.body).to.not.have.property('error');
-      expect(messages.body.data).to.be.an('array');
-      expect(delMsg).to.include(messages.body.data[0]);
+      const sentMessages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
+      const delMessage = sentMessages.body.data[0];
+      const deleteMessages = await request(server).delete(`/api/v1/messages/${delMessage.id}`).set('x-auth-token', token);
+      expect(deleteMessages.body).to.have.property('status');
+      expect(deleteMessages.body.status).to.be.equal(200);
+      expect(deleteMessages.body).to.have.property('data');
+      expect(deleteMessages.body).to.not.have.property('error');
+      expect(deleteMessages.body.data).to.be.an('array');
+      expect(sentMsg).to.include(deleteMessages.body.data[0]);
     });
   });
 });

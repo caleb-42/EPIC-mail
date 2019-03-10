@@ -115,9 +115,7 @@ describe('DATABASE METHODS', () => {
   });
   describe('Delete Message', () => {
     it('should delete mail for valid user', () => {
-      msg.id = 1;
-      msg.status = 'sent';
-      const res = dbHandler.deleteMessage(msg);
+      const res = dbHandler.deleteMessage(1);
       expect(res).to.be.an('array');
       expect(res[0]).to.have.any.keys('message');
       expect(msg).to.include(res[0]);
