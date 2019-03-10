@@ -114,6 +114,10 @@ describe('DATABASE METHODS', () => {
     });
   });
   describe('Delete Message', () => {
+    it('should not delete mail with invalid id', () => {
+      const res = dbHandler.deleteMessage(7);
+      expect(res).to.be.false;
+    });
     it('should delete mail for valid user', () => {
       const res = dbHandler.deleteMessage(1);
       expect(res).to.be.an('array');

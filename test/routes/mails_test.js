@@ -139,5 +139,17 @@ describe('MAILS API ENDPOINTS', () => {
       expect(deleteMessages.body.data).to.be.an('array');
       expect(sentMsg).to.include(deleteMessages.body.data[0]);
     });
+    it('should not delete mail if message id is invalid', async () => {
+      let res = await request(server).post('/api/v1/users').send(register);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      const deleteMessages = await request(server)
+        .delete('/api/v1/messages/4').set('x-auth-token', token);
+      expect(deleteMessages.body).to.have.property('status');
+      expect(deleteMessages.body.status).to.be.equal(400);
+      expect(deleteMessages.body).to.have.property('error');
+      expect(deleteMessages.body.error).to.be.a('string');
+      expect(deleteMessages.body.error).to.include('Invalid message ID');
+    });
   });
 });

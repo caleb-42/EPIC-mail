@@ -90,6 +90,7 @@ class DbHandler {
   deleteMessage(id) {
     const message = this.db.messages.filter(msg => msg.id === id);
     const deleteMsg = message[0];
+    if (!deleteMsg) return false;
     const msgType = (deleteMsg.status === 'read' || deleteMsg.status === 'unread') ? 'inbox' : deleteMsg.status;
     const newMsgArray = this.db.messages.filter(msg => msg.id !== deleteMsg.id);
     const messageId = String(deleteMsg.id);
