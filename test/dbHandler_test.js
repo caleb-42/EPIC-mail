@@ -6,7 +6,7 @@ import dbHandler from '../src/dbHandler';
 
 
 let register;
-let sentMsg;
+let msg;
 
 describe('DATABASE METHODS', () => {
   beforeEach(() => {
@@ -17,7 +17,7 @@ describe('DATABASE METHODS', () => {
       password: 'admin123',
       phoneNumber: '2348130439102',
     };
-    sentMsg = {
+    msg = {
       senderId: 2,
       mailerName: 'fred delight',
       subject: "get in the car, you're late",
@@ -96,10 +96,10 @@ describe('DATABASE METHODS', () => {
   });
   describe('Send Message', () => {
     it('should return mail sent if message is valid', () => {
-      const res = dbHandler.sendMessage(sentMsg);
+      const res = dbHandler.sendMessage(msg);
       expect(res).to.be.an('array');
       expect(res[0]).to.have.any.keys('messageId', 'id', 'receiverId', 'status');
-      expect(res[0]).to.include(sentMsg);
+      expect(res[0]).to.include(msg);
     });
     it('should add new message to Database for valid message', () => {
       const { db } = dbHandler;
@@ -109,8 +109,25 @@ describe('DATABASE METHODS', () => {
       const sentMessage = sentmessageArray[0];
       expect(allMessageArray).to.have.lengthOf(1);
       expect(sentmessageArray).to.have.lengthOf(1);
-      expect(message).to.include(sentMsg);
+      expect(message).to.include(msg);
       expect(sentMessage).to.have.any.keys('messageId');
+    });
+  });
+  describe('Delete Message', () => {
+    it('should delete mail for valid user', () => {
+      msg.id = 1;
+      msg.status = 'sent';
+      const res = dbHandler.deleteMessage(msg);
+      expect(res).to.be.an('array');
+      expect(res[0]).to.have.any.keys('message');
+      expect(msg).to.include(res[0]);
+    });
+    it('should remove message from Database after message delete', () => {
+      const { db } = dbHandler;
+      const allMessageArray = db.messages;
+      const sentmessageArray = db.sent;
+      expect(allMessageArray).to.have.lengthOf(0);
+      expect(sentmessageArray).to.have.lengthOf(0);
     });
   });
 });

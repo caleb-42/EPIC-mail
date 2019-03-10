@@ -83,5 +83,12 @@ router.post('/', auth, async (req, res) => {
     data: msg,
   });
 });
+router.delete('/', auth, async (req, res) => {
+  const msg = dbHandler.deleteMessage(req.body);
+  return res.send({
+    status: 200,
+    data: msg,
+  });
+});
 
 module.exports = router;
