@@ -38,13 +38,9 @@ class DbHandler {
   }
 
   getMessages(id) {
-    const sent = this.db.sent
-      .filter(message => message.receiverId === id);
-    const draft = this.db.draft
-      .filter(message => message.receiverId === id);
-    const inbox = this.db.inbox
-      .filter(message => message.senderId === id);
-    return [...inbox, ...sent, ...draft];
+    const messages = this.db.messages
+      .filter(message => message.senderId === id || message.receiverId === id);
+    return messages;
   }
 
   getReceivedMessages(id, type = 'all') {
@@ -81,13 +77,14 @@ class DbHandler {
     const sentmsg = {
       messageId: id.toString(),
       createdOn,
-      receiverId: msg,
-      senderId: msg,
-      mailerName: msg,
-      subject: msg,
+      receiverId: msg.receiverId,
+      senderId: msg.senderId,
+      mailerName: msg.mailerName,
+      subject: msg.subject,
       status: 'sent',
     };
     this.db.sent.push(sentmsg);
+    return [msg];
   }
 
   resetDb() {

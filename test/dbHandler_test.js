@@ -18,7 +18,6 @@ describe('DATABASE METHODS', () => {
       phoneNumber: '2348130439102',
     };
     sentMsg = {
-      receiverId: 1,
       senderId: 2,
       mailerName: 'fred delight',
       subject: "get in the car, you're late",
@@ -96,8 +95,13 @@ describe('DATABASE METHODS', () => {
     });
   });
   describe('Send Message', () => {
+    it('should return mail sent if message is valid', () => {
+      const res = dbHandler.sendMessage(sentMsg);
+      expect(res).to.be.an('array');
+      expect(res[0]).to.have.any.keys('messageId', 'id', 'receiverId', 'status');
+      expect(res[0]).to.include(sentMsg);
+    });
     it('should add new message to Database for valid message', () => {
-      dbHandler.sendMessage(sentMsg);
       const { db } = dbHandler;
       const allMessageArray = db.messages;
       const sentmessageArray = db.sent;

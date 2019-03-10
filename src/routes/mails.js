@@ -15,7 +15,7 @@ router.get('/all', auth, async (req, res) => {
   const { id } = req.user;
   return res.send({
     status: 200,
-    data: dbHandler.getReceivedMessages(id),
+    data: dbHandler.getMessages(id),
   });
 });
 router.get('/unread', auth, async (req, res) => {
