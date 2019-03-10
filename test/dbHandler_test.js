@@ -113,6 +113,18 @@ describe('DATABASE METHODS', () => {
       expect(sentMessage).to.have.any.keys('messageId');
     });
   });
+  describe('Single Message', () => {
+    it('should return single mail with invalid id', () => {
+      const res = dbHandler.getMessageById(7);
+      expect(res).to.be.false;
+    });
+    it('should return single mail for valid user', () => {
+      const res = dbHandler.getMessageById(1);
+      expect(res).to.be.an('array');
+      expect(res[0]).to.have.any.keys('message', 'id');
+      expect(res[0]).to.include(msg);
+    });
+  });
   describe('Delete Message', () => {
     it('should not delete mail with invalid id', () => {
       const res = dbHandler.deleteMessage(7);

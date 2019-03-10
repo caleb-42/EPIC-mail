@@ -60,13 +60,6 @@ router.get('/draft', auth, async (req, res) => {
     data: dbHandler.getDraftMessages(id),
   });
 });
-router.get('/:id', auth, async (req, res) => {
-  const msgId = parseInt(req.params.id, 10);
-  return res.send({
-    status: 200,
-    data: [dbHandler.getMessageById(msgId)],
-  });
-});
 router.post('/', auth, async (req, res) => {
   const { id } = req.user;
   req.body.senderId = id;
