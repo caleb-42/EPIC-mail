@@ -2,13 +2,11 @@
 import { expect } from 'chai';
 import config from 'config';
 import jwt from 'jsonwebtoken';
-import {
-  describe, it, after, beforeEach,
-} from 'mocha';
 import dbHandler from '../src/dbHandler';
 
 
 let register;
+let sentMsg;
 
 describe('DATABASE METHODS', () => {
   beforeEach(() => {
@@ -18,6 +16,13 @@ describe('DATABASE METHODS', () => {
       lastName: 'user',
       password: 'admin123',
       phoneNumber: '2348130439102',
+    };
+    sentMsg = {
+      senderId: 2,
+      mailerName: 'fred delight',
+      subject: "get in the car, you're late",
+      message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+      parentMessageId: undefined,
     };
   });
   after(() => {
@@ -58,35 +63,54 @@ describe('DATABASE METHODS', () => {
     });
   });
   describe('Get all Messages', () => {
-    it('should return all messages if user id is valid', async () => {
+    it('should return all messages if user id is valid', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.getMessages(user.id);
+      const res = dbHandler.getMessages(user.id);
       expect(res).to.be.an('array');
     });
   });
   describe('Get Recieved Messages', () => {
-    it('should return all Recieved messages if user id is valid and type is not set', async () => {
+    it('should return all Recieved messages if user id is valid and type is not set', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.getReceivedMessages(user.id);
+      const res = dbHandler.getReceivedMessages(user.id);
       expect(res).to.be.an('array');
     });
   });
   describe('Get Sent Messages', () => {
-    it('should return Sent messages if user id is valid', async () => {
+    it('should return Sent messages if user id is valid', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.getSentMessages(user.id);
+      const res = dbHandler.getSentMessages(user.id);
       expect(res).to.be.an('array');
     });
   });
   describe('Get Draft Messages', () => {
-    it('should return Draft messages if user id is valid', async () => {
+    it('should return Draft messages if user id is valid', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.getDraftMessages(user.id);
+      const res = dbHandler.getDraftMessages(user.id);
       expect(res).to.be.an('array');
+    });
+  });
+  describe('Send Message', () => {
+    it('should return mail sent if message is valid', () => {
+      const res = dbHandler.sendMessage(sentMsg);
+      expect(res).to.be.an('array');
+      expect(res[0]).to.have.any.keys('messageId', 'id', 'receiverId', 'status');
+      expect(res[0]).to.include(sentMsg);
+    });
+    it('should add new message to Database for valid message', () => {
+      const { db } = dbHandler;
+      const allMessageArray = db.messages;
+      const sentmessageArray = db.sent;
+      const message = allMessageArray[0];
+      const sentMessage = sentmessageArray[0];
+      expect(allMessageArray).to.have.lengthOf(1);
+      expect(sentmessageArray).to.have.lengthOf(1);
+      expect(message).to.include(sentMsg);
+      expect(sentMessage).to.have.any.keys('messageId');
     });
   });
 });

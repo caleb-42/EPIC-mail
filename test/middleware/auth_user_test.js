@@ -1,9 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import {
-  describe, it,
-} from 'mocha';
 import dbHandler from '../../src/dbHandler';
 import auth from '../../src/middleware/auth';
 

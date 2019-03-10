@@ -1,8 +1,22 @@
 import express from 'express';
+import joi from 'joi';
 import auth from '../middleware/auth';
 import dbHandler from '../dbHandler';
 
 const router = express.Router();
+
+const validate = (msg) => {
+  const schema = {
+    /* id: joi.number().equal(0), */
+    receiverId: joi.number().required(),
+    senderId: joi.number().required(),
+    mailerName: joi.string().required(),
+    subject: joi.string().max(32).required(),
+    message: joi.string().required(),
+    parentMessageId: joi.number().optional(),
+  };
+  return joi.validate(msg, schema);
+};
 
 router.get('/', auth, async (req, res) => {
   const { id } = req.user;
@@ -15,7 +29,7 @@ router.get('/all', auth, async (req, res) => {
   const { id } = req.user;
   return res.send({
     status: 200,
-    data: dbHandler.getReceivedMessages(id),
+    data: dbHandler.getMessages(id),
   });
 });
 router.get('/unread', auth, async (req, res) => {
@@ -51,6 +65,22 @@ router.get('/:id', auth, async (req, res) => {
   return res.send({
     status: 200,
     data: [dbHandler.getMessageById(msgId)],
+  });
+});
+router.post('/', auth, async (req, res) => {
+  const { id } = req.user;
+  req.body.senderId = id;
+  const { error } = validate(req.body);
+  if (error) {
+    return res.send({
+      status: 400,
+      error: error.details[0].message,
+    });
+  }
+  const msg = dbHandler.sendMessage(req.body);
+  return res.send({
+    status: 201,
+    data: msg,
   });
 });
 

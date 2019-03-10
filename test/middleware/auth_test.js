@@ -1,9 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import request from 'supertest';
 import { expect } from 'chai';
-import {
-  describe, it, beforeEach, afterEach,
-} from 'mocha';
 import dbHandler from '../../src/dbHandler';
 
 let server;
