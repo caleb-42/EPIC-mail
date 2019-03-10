@@ -87,18 +87,20 @@ class DbHandler {
     return [msg];
   }
 
-  deleteMessage(delMsg) {
-    const msgType = (delMsg.status === 'read' || delMsg.status === 'unread') ? 'inbox' : delMsg.status;
-
-    const newMsgArray = this.db.messages.filter(msg => msg.id !== delMsg.id);
-    const messageId = String(delMsg.id);
+  deleteMessage(id) {
+    const message = this.db.messages.filter(msg => msg.id === id);
+    const deleteMsg = message[0];
+    if (!deleteMsg) return false;
+    const msgType = (deleteMsg.status === 'read' || deleteMsg.status === 'unread') ? 'inbox' : deleteMsg.status;
+    const newMsgArray = this.db.messages.filter(msg => msg.id !== deleteMsg.id);
+    const messageId = String(deleteMsg.id);
     const newTypeMsgArray = this.db[msgType]
       .filter(msg => msg.messageId !== messageId);
 
     this.db.messages = newMsgArray;
     this.db[msgType] = newTypeMsgArray;
     return [{
-      message: delMsg.message,
+      message: deleteMsg.message,
     }];
   }
 

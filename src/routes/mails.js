@@ -83,8 +83,15 @@ router.post('/', auth, async (req, res) => {
     data: msg,
   });
 });
-router.delete('/', auth, async (req, res) => {
-  const msg = dbHandler.deleteMessage(req.body);
+router.delete('/:id', auth, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const msg = dbHandler.deleteMessage(id);
+  if (!msg) {
+    return res.send({
+      status: 400,
+      error: 'Invalid message ID',
+    });
+  }
   return res.send({
     status: 200,
     data: msg,
