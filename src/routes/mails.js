@@ -60,6 +60,20 @@ router.get('/draft', auth, async (req, res) => {
     data: dbHandler.getDraftMessages(id),
   });
 });
+router.get('/:id', auth, async (req, res) => {
+  const msgId = parseInt(req.params.id, 10);
+  const msg = dbHandler.getMessageById(msgId);
+  if (!msg) {
+    return res.send({
+      status: 400,
+      error: 'Invalid message ID',
+    });
+  }
+  return res.send({
+    status: 200,
+    data: msg,
+  });
+});
 router.post('/', auth, async (req, res) => {
   const { id } = req.user;
   req.body.senderId = id;

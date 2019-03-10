@@ -104,6 +104,25 @@ describe('MAILS API ENDPOINTS', () => {
       await validToken('/api/v1/messages/draft');
     });
   });
+  describe('Get Single Mails by ID api/v1/messages/id', () => {
+    it('should not release single mails to user with no token', async () => {
+      await noToken('/api/v1/messages/1');
+    });
+    it('should release single mails for valid user', async () => {
+      let res = await request(server).post('/api/v1/users').send(register);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
+      const mgs = sentMessage.body.data[0];
+      const singleMessage = await request(server).get(`/api/v1/messages/${mgs.id}`).set('x-auth-token', token);
+      expect(singleMessage.body).to.have.property('status');
+      expect(singleMessage.body.status).to.be.equal(200);
+      expect(singleMessage.body).to.have.property('data');
+      expect(singleMessage.body).to.not.have.property('error');
+      expect(singleMessage.body.data).to.be.an('array');
+      expect(singleMessage.body.data[0]).to.include(sentMsg);
+    });
+  });
   describe('Send mail api/v1/messages', () => {
     it('should not send mail if user has no token', async () => {
       await noToken('/api/v1/messages/', 'post');
