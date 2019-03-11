@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import dbHandler from '../../src/dbHandler';
-import auth from '../../src/middleware/auth';
+import dbHandler from '../../../src/database/dbHandler';
+import auth from '../../../src/middleware/auth';
 
 describe('AUTH MIDDLEWARE UNIT TEST', () => {
   it('should populate req.user with the payload of a valid json web token', async () => {

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import dbHandler from '../../src/dbHandler';
+import dbHandler from '../../../src/database/dbHandler';
 
 let server;
 let user;
@@ -14,7 +14,7 @@ const register = {
 
 describe('AUTH API ENDPOINTS', () => {
   beforeEach(() => {
-    server = require('../../src/index');
+    server = require('../../../src/index');
     user = {
       email: 'ewere@gmail.com',
       password: 'admin123',
