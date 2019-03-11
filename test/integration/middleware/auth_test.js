@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-expressions */
 import request from 'supertest';
 import { expect } from 'chai';
-import dbHandler from '../../src/dbHandler';
+import dbHandler from '../../../src/database/dbHandler';
 
 let server;
 let user;
 
 describe('AUTH MIDDLEWARE INTEGRATION TEST', () => {
   beforeEach(() => {
-    server = require('../../src/index');
+    server = require('../../../src/index');
     user = {
       email: 'ewere@gmail.com',
       firstName: 'admin',
