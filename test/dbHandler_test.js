@@ -132,7 +132,7 @@ describe('DATABASE METHODS', () => {
       const res = dbHandler.updateMessageById(7, {});
       expect(res).to.be.false;
     });
-    it('should return udated mail for valid user', () => {
+    it('should return updated mail for valid user', () => {
       sentMsg.subject = 'I have Changed';
       const res = dbHandler.updateMessageById(1, sentMsg);
       expect(res).to.be.an('array');

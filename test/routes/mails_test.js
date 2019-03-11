@@ -17,6 +17,10 @@ const sentMsg = {
   mailerName: 'paul jekande',
   message: 'its so wonderful to be part of this app',
 };
+const updateMsg = {
+  subject: 'i just changed again',
+  message: 'its so exiting to be part of this app',
+};
 describe('MAILS API ENDPOINTS', () => {
   const validToken = async (endpoint) => {
     let res = await request(server).post('/api/v1/users').send(register);
@@ -35,6 +39,7 @@ describe('MAILS API ENDPOINTS', () => {
     if (method === 'get') res = await request(server).get(endpoint).set('x-auth-token', token);
     if (method === 'post') res = await request(server).post(endpoint).send(sentMsg).set('x-auth-token', token);
     if (method === 'delete') res = await request(server).delete(endpoint).set('x-auth-token', token);
+    if (method === 'update') res = await request(server).put(endpoint).send(updateMsg).set('x-auth-token', token);
     expect(res.body).to.have.property('status');
     expect(res.body.status).to.be.equal(401);
     expect(res.body).to.have.property('error');
@@ -138,6 +143,36 @@ describe('MAILS API ENDPOINTS', () => {
       expect(messages.body).to.not.have.property('error');
       expect(messages.body.data).to.be.an('array');
       expect(messages.body.data[0]).to.include(sentMsg);
+    });
+  });
+  describe('Update Single Mails by ID api/v1/messages/id', () => {
+    it('should not update single mails for user with no token', async () => {
+      await noToken('/api/v1/messages/1', 'update');
+    });
+    it('should not update single mails for invalid id', async () => {
+      let res = await request(server).post('/api/v1/users').send(register);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      const updatedMessage = await request(server).put('/api/v1/messages/3').send(updateMsg).set('x-auth-token', token);
+      expect(updatedMessage.body).to.have.property('status');
+      expect(updatedMessage.body.status).to.be.equal(404);
+      expect(updatedMessage.body).to.have.property('error');
+      expect(updatedMessage.body.error).to.be.a('string');
+      expect(updatedMessage.body.error).to.include('Invalid message ID');
+    });
+    it('should update single mails for valid user', async () => {
+      let res = await request(server).post('/api/v1/users').send(register);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
+      const mgs = sentMessage.body.data[0];
+      const updatedMessage = await request(server).put(`/api/v1/messages/${mgs.id}`).send(updateMsg).set('x-auth-token', token);
+      expect(updatedMessage.body).to.have.property('status');
+      expect(updatedMessage.body.status).to.be.equal(200);
+      expect(updatedMessage.body).to.have.property('data');
+      expect(updatedMessage.body).to.not.have.property('error');
+      expect(updatedMessage.body.data).to.be.an('array');
+      expect(updatedMessage.body.data[0]).to.include(updateMsg);
     });
   });
   describe('Delete mail api/v1/messages', () => {
