@@ -24,19 +24,19 @@ router.post('/', async (req, res) => {
   }
   const user = dbHandler.find('users', req.body, 'email');
   if (!user) {
-    return res.send({
+    return res.status(400).send({
       status: 400,
       error: 'Invalid email or password',
     });
   }
   const token = await dbHandler.validateUser(req.body, user);
   if (!token) {
-    return res.send({
+    return res.status(400).send({
       status: 400,
       error: 'Invalid email or password',
     });
   }
-  return res.send({
+  return res.status(200).send({
     status: 200,
     data: [
       {
