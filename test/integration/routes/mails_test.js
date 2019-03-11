@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import dbHandler from '../../src/dbHandler';
+import dbHandler from '../../../src/database/dbHandler';
 
 let server;
 let user;
@@ -48,7 +48,7 @@ describe('MAILS API ENDPOINTS', () => {
     expect(res.body.error).to.include('Access denied, no token provided');
   };
   beforeEach(() => {
-    server = require('../../src/index');
+    server = require('../../../src/index');
     user = {
       email: 'ewere@gmail.com',
       password: 'admin123',

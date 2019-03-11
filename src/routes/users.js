@@ -1,6 +1,6 @@
 import joi from 'joi';
 import express from 'express';
-import dbHandler from '../dbHandler';
+import dbHandler from '../database/dbHandler';
 import auth from '../middleware/auth';
 
 const router = express.Router();

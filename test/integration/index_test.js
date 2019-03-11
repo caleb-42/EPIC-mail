@@ -5,7 +5,7 @@ let server;
 
 describe('APP START', () => {
   beforeEach(() => {
-    server = require('../src/index'); // eslint-disable-line global-require
+    server = require('../../src/index'); // eslint-disable-line global-require
   });
   afterEach(() => {
     server.close();
