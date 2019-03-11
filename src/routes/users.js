@@ -1,6 +1,7 @@
 import joi from 'joi';
 import express from 'express';
 import dbHandler from '../dbHandler';
+import auth from '../middleware/auth';
 
 const router = express.Router();
 
@@ -17,6 +18,28 @@ const validate = (user) => {
 };
 
 router.post('/', async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) {
+    return res.send({
+      status: 400,
+      error: error.details[0].message,
+    });
+  }
+  const userPresent = dbHandler.find('users', req.body, 'email');
+  if (userPresent) {
+    return res.send({
+      status: 400,
+      error: 'User already registered',
+    });
+  }
+  const token = await dbHandler.createUser(req.body);
+  return res.send({
+    status: 201,
+    data: [{ token }],
+  });
+});
+
+router.put('/', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) {
     return res.send({

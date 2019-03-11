@@ -72,6 +72,16 @@ class DbHandler {
     return [message];
   }
 
+  updateMessageById(id, body) {
+    const message = this.db.messages
+      .find(msg => msg.id === id);
+    if (!message) return false;
+    message.subject = body.subject || message.subject;
+    message.receiverId = body.receiverId || message.receiverId;
+    message.message = body.message || message.message;
+    return [message];
+  }
+
   sendMessage(msg) {
     const now = new Date();
     const createdOn = date.format(now, 'ddd MMM DD YYYY');

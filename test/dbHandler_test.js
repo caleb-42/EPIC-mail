@@ -7,6 +7,7 @@ import dbHandler from '../src/dbHandler';
 
 let register;
 let msg;
+let sentMsg;
 
 describe('DATABASE METHODS', () => {
   beforeEach(() => {
@@ -98,8 +99,9 @@ describe('DATABASE METHODS', () => {
     it('should return mail sent if message is valid', () => {
       const res = dbHandler.sendMessage(msg);
       expect(res).to.be.an('array');
-      expect(res[0]).to.have.any.keys('messageId', 'id', 'receiverId', 'status');
-      expect(res[0]).to.include(msg);
+      [sentMsg] = res;
+      expect(sentMsg).to.have.any.keys('messageId', 'id', 'receiverId', 'status');
+      expect(sentMsg).to.include(msg);
     });
     it('should add new message to Database for valid message', () => {
       const { db } = dbHandler;
@@ -114,7 +116,7 @@ describe('DATABASE METHODS', () => {
     });
   });
   describe('Single Message', () => {
-    it('should return single mail with invalid id', () => {
+    it('should not return single mail with invalid id', () => {
       const res = dbHandler.getMessageById(7);
       expect(res).to.be.false;
     });
@@ -123,6 +125,18 @@ describe('DATABASE METHODS', () => {
       expect(res).to.be.an('array');
       expect(res[0]).to.have.any.keys('message', 'id');
       expect(res[0]).to.include(msg);
+    });
+  });
+  describe('Update Message by Id', () => {
+    it('should not update message with invalid id', () => {
+      const res = dbHandler.updateMessageById(7, {});
+      expect(res).to.be.false;
+    });
+    it('should return updated mail for valid user', () => {
+      sentMsg.subject = 'I have Changed';
+      const res = dbHandler.updateMessageById(1, sentMsg);
+      expect(res).to.be.an('array');
+      expect(res[0]).to.have.any.keys('message', 'id', 'subject');
     });
   });
   describe('Delete Message', () => {
