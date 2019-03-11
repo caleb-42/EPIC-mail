@@ -20,20 +20,20 @@ const validate = (user) => {
 router.post('/', async (req, res) => {
   const { error } = validate(req.body);
   if (error) {
-    return res.send({
+    return res.status(400).send({
       status: 400,
       error: error.details[0].message,
     });
   }
   const userPresent = dbHandler.find('users', req.body, 'email');
   if (userPresent) {
-    return res.send({
+    return res.status(400).send({
       status: 400,
       error: 'User already registered',
     });
   }
   const token = await dbHandler.createUser(req.body);
-  return res.send({
+  return res.status(201).send({
     status: 201,
     data: [{ token }],
   });
@@ -42,20 +42,20 @@ router.post('/', async (req, res) => {
 router.put('/', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) {
-    return res.send({
+    return res.status(400).send({
       status: 400,
       error: error.details[0].message,
     });
   }
   const userPresent = dbHandler.find('users', req.body, 'email');
   if (userPresent) {
-    return res.send({
+    return res.status(400).send({
       status: 400,
       error: 'User already registered',
     });
   }
   const token = await dbHandler.createUser(req.body);
-  return res.send({
+  return res.status(201).send({
     status: 201,
     data: [{ token }],
   });

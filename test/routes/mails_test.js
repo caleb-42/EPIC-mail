@@ -120,12 +120,25 @@ describe('MAILS API ENDPOINTS', () => {
       const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       const mgs = sentMessage.body.data[0];
       const singleMessage = await request(server).get(`/api/v1/messages/${mgs.id}`).set('x-auth-token', token);
+      expect(singleMessage.status).to.be.equal(200);
       expect(singleMessage.body).to.have.property('status');
       expect(singleMessage.body.status).to.be.equal(200);
       expect(singleMessage.body).to.have.property('data');
       expect(singleMessage.body).to.not.have.property('error');
       expect(singleMessage.body.data).to.be.an('array');
       expect(singleMessage.body.data[0]).to.include(sentMsg);
+    });
+    it('should not get single mail with invalid id', async () => {
+      let res = await request(server).post('/api/v1/users').send(register);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      const singleMessage = await request(server).get('/api/v1/messages/6').set('x-auth-token', token);
+      expect(singleMessage.status).to.be.equal(404);
+      expect(singleMessage.body).to.have.property('status');
+      expect(singleMessage.body.status).to.be.equal(404);
+      expect(singleMessage.body).to.have.property('error');
+      expect(singleMessage.body.error).to.be.a('string');
+      expect(singleMessage.body.error).to.include('message ID does not exist');
     });
   });
   describe('Send mail api/v1/messages', () => {
@@ -137,6 +150,7 @@ describe('MAILS API ENDPOINTS', () => {
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
       const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
+      expect(messages.status).to.be.equal(201);
       expect(messages.body).to.have.property('status');
       expect(messages.body.status).to.be.equal(201);
       expect(messages.body).to.have.property('data');
@@ -154,11 +168,12 @@ describe('MAILS API ENDPOINTS', () => {
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
       const updatedMessage = await request(server).put('/api/v1/messages/3').send(updateMsg).set('x-auth-token', token);
+      expect(updatedMessage.status).to.be.equal(404);
       expect(updatedMessage.body).to.have.property('status');
       expect(updatedMessage.body.status).to.be.equal(404);
       expect(updatedMessage.body).to.have.property('error');
       expect(updatedMessage.body.error).to.be.a('string');
-      expect(updatedMessage.body.error).to.include('Invalid message ID');
+      expect(updatedMessage.body.error).to.include('message ID does not exist');
     });
     it('should update single mails for valid user', async () => {
       let res = await request(server).post('/api/v1/users').send(register);
@@ -167,6 +182,7 @@ describe('MAILS API ENDPOINTS', () => {
       const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       const mgs = sentMessage.body.data[0];
       const updatedMessage = await request(server).put(`/api/v1/messages/${mgs.id}`).send(updateMsg).set('x-auth-token', token);
+      expect(updatedMessage.status).to.be.equal(200);
       expect(updatedMessage.body).to.have.property('status');
       expect(updatedMessage.body.status).to.be.equal(200);
       expect(updatedMessage.body).to.have.property('data');
@@ -186,6 +202,7 @@ describe('MAILS API ENDPOINTS', () => {
       const sentMessages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       const delMessage = sentMessages.body.data[0];
       const deleteMessages = await request(server).delete(`/api/v1/messages/${delMessage.id}`).set('x-auth-token', token);
+      expect(deleteMessages.status).to.be.equal(200);
       expect(deleteMessages.body).to.have.property('status');
       expect(deleteMessages.body.status).to.be.equal(200);
       expect(deleteMessages.body).to.have.property('data');
@@ -199,11 +216,12 @@ describe('MAILS API ENDPOINTS', () => {
       const { token } = res.body.data[0];
       const deleteMessages = await request(server)
         .delete('/api/v1/messages/4').set('x-auth-token', token);
+      expect(deleteMessages.status).to.be.equal(404);
       expect(deleteMessages.body).to.have.property('status');
-      expect(deleteMessages.body.status).to.be.equal(400);
+      expect(deleteMessages.body.status).to.be.equal(404);
       expect(deleteMessages.body).to.have.property('error');
       expect(deleteMessages.body.error).to.be.a('string');
-      expect(deleteMessages.body.error).to.include('Invalid message ID');
+      expect(deleteMessages.body.error).to.include('message ID does not exist');
     });
   });
 });
