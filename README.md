@@ -22,3 +22,39 @@ Admin user
 2. CSS
 3. Javascript
 
+# Api URL
+
+- https://epic-mail-application.herokuapp.com/
+
+# Api Documentation
+
+- https://epic-mail-application.herokuapp.com/api-docs
+
+# How to get a local copy
+
+##### Clone repository
+- Copy repository link
+- Create a folder location in your computer eg my/path/
+- cd my/path/
+- git clone repositorylink.git
+- cd EPIC-mail
+- run the commands:
+- npm install
+- set NODE_ENV=development (for windows users) / $export NODE_ENV=development (for Mac users)
+- npm run dev
+- open index.html file
+- Sign-up with any dummy info within the inputs listed
+
+# Routes
+
+- POST https://epic-mail-application.herokuapp.com/api/v1/users - Create a new user / Signs up a new user
+- POST https://epic-mail-application.herokuapp.com/api/v1/auth - Signs in a user
+- GET https://epic-mail-application.herokuapp.com/api/v1/messages/all - List all all messages
+- GET https://epic-mail-application.herokuapp.com/api/v1/messages - List all received messages
+- GET https://epic-mail-application.herokuapp.com/api/v1/messages/read - List all read messages
+- GET https://epic-mail-application.herokuapp.com/api/v1/messages/unread - List all unread messages
+- GET https://epic-mail-application.herokuapp.com/api/v1/messages/sent - List all sent messages
+- GET https://epic-mail-application.herokuapp.com/api/v1/messages/draft - List all draft messages
+- GET https://epic-mail-application.herokuapp.com/api/v1/messages/:id - Gets message by id
+- PUT https://epic-mail-application.herokuapp.com/api/v1/messages/:id - Updates message by id
+- DELETE https://epic-mail-application.herokuapp.com/api/v1/messages/:id - Deletes message by id

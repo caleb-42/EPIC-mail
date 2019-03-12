@@ -1,0 +1,762 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "EPIC mail",
+    "description": "This is an API documentation for a web aplication named EPIC mail. It will cater for the Messaging needs of users who sign up on it"
+  },
+  "schemes": [
+    "https"
+  ],
+  "host": "epic-mail-application.herokuapp.com",
+  "basePath": "/api/v1",
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Creates a User",
+        "description": "Adds a new user to the User list.",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "The person to create.",
+            "schema": {
+              "$ref": "#/definitions/SendNewUserData"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Persons succesfully created and receives a token.",
+            "schema": {
+              "$ref": "#/definitions/returnNewUserData"
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Gets Authorization",
+        "description": "Signs in User.",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "The user to Authorize.",
+            "schema": {
+              "$ref": "#/definitions/SendAuthData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Persons succesfully sign in and receives a token.",
+            "schema": {
+              "$ref": "#/definitions/returnAuthData"
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/messages": {
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Gets all Received messages",
+        "description": "Returns a list of received messages.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of received messages",
+            "schema": {
+              "$ref": "#/definitions/returnMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Send a Message",
+        "description": "Creates and Sends a message.",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "body",
+            "description": "The message to send.",
+            "schema": {
+              "$ref": "#/definitions/SendMessage"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sent message has been Created.",
+            "schema": {
+              "$ref": "#/definitions/returnMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/messages/all": {
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Gets all messages",
+        "description": "Returns a list of all messages.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all messages",
+            "schema": {
+              "$ref": "#/definitions/returnMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/messages/read": {
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Gets all Read messages",
+        "description": "Returns a list of all Read messages.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all Read messages",
+            "schema": {
+              "$ref": "#/definitions/returnMessageTypeData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/messages/unread": {
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Gets all Unread messages",
+        "description": "Returns a list of all Unread messages.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all Unread messages",
+            "schema": {
+              "$ref": "#/definitions/returnMessageTypeData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/messages/draft": {
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Gets all Draft messages",
+        "description": "Returns a list of all Draft messages.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all Draft messages",
+            "schema": {
+              "$ref": "#/definitions/returnMessageTypeData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/messages/{id}": {
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Gets Single message by id",
+        "description": "Returns a single message.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The message Id",
+            "type": "integer"
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A Single Message in a data key within a response object",
+            "schema": {
+              "$ref": "#/definitions/returnMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid token, in an error key within a response object",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access, in an error key within a response object",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "404": {
+            "description": "message ID does not exist",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Update sent/draft messages",
+        "description": "updates sent and draft messages",
+        "operationId": "updatemessages",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The message Id",
+            "type": "integer"
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated message object",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UpdateMessage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "message successfully updated",
+            "schema": {
+              "$ref": "#/definitions/returnMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid message ID supplied",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "404": {
+            "description": "message ID not found",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Deletes a message",
+        "description": "Deletes a message by id",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Message id to delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted",
+            "schema": {
+              "$ref": "#/definitions/returnDeleteMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid token, in an error key within a response object",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access,",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "404": {
+            "description": "message ID does not exist",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "DeleteMessage": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Tag"
+      }
+    },
+    "Token": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Tag"
+      }
+    },
+    "SendMessage": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string"
+        },
+        "receiverId": {
+          "type": "string"
+        },
+        "mailerName": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "parentMessageId": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "NewUserData"
+      }
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdOn": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "receiverId": {
+          "type": "string"
+        },
+        "senderId": {
+          "type": "string"
+        },
+        "mailerName": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "parentMessageId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "NewUserData"
+      }
+    },
+    "UpdateMessage": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string"
+        },
+        "receiverId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "NewUserData"
+      }
+    },
+    "MessageType": {
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdOn": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "receiverId": {
+          "type": "string"
+        },
+        "senderId": {
+          "type": "string"
+        },
+        "mailerName": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "NewUserData"
+      }
+    },
+    "SendNewUserData": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Tag"
+      }
+    },
+    "SendAuthData": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Tag"
+      }
+    },
+    "returnMessageData": {
+      "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Message"
+          }
+        }
+      }
+    },
+    "returnMessageTypeData": {
+      "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MessageType"
+          }
+        }
+      }
+    },
+    "returnAuthData": {
+      "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Token"
+          }
+        }
+      }
+    },
+    "returnDeleteMessageData": {
+      "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeleteMessage"
+          }
+        }
+      }
+    },
+    "returnError": {
+      "type": "object",
+      "required": [
+        "status",
+        "error"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "NewUserData": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "NewUserData"
+      }
+    },
+    "returnNewUserData": {
+      "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NewUserData"
+          }
+        }
+      }
+    }
+  }
+}
