@@ -9,7 +9,6 @@ const validate = (msg) => {
   const schema = {
     /* id: joi.number().equal(0), */
     receiverId: joi.number().required(),
-    senderId: joi.number().required(),
     mailerName: joi.string().required(),
     subject: joi.string().max(32).required(),
     message: joi.string().required(),
@@ -76,8 +75,8 @@ router.get('/:id', auth, async (req, res) => {
 });
 router.post('/', auth, async (req, res) => {
   const { id } = req.user;
-  req.body.senderId = id;
   const { error } = validate(req.body);
+  req.body.senderId = id;
   if (error) {
     return res.status(400).send({
       status: 400,
