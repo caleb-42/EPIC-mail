@@ -13,6 +13,7 @@ const validate = (user) => {
     email: joi.string().email().required(),
     phoneNumber: joi.string().max(13).min(13).required(),
     password: joi.string().min(5).max(255).required(),
+    confirmPassword: joi.any().valid(joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match with password' } } }),
   };
   return joi.validate(user, schema);
 };
