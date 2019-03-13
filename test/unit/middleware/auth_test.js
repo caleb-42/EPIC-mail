@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import dbHandler from '../../../src/database/dbHandler';
+import dbHandler from '../../../src/v1/database/dbHandler';
 import auth from '../../../src/middleware/auth';
 
 describe('AUTH MIDDLEWARE UNIT TEST', () => {

@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import config from 'config';
 import jwt from 'jsonwebtoken';
-import dbHandler from '../../../src/database/dbHandler';
+import dbHandler from '../../../src/v1/database/dbHandler';
 
 
 let user1;

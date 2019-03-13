@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import dbHandler from '../../../src/database/dbHandler';
+import dbHandler from '../../../src/v1/database/dbHandler';
 
 let server;
 let user1;
@@ -15,6 +15,7 @@ describe('USER API ENDPOINTS', () => {
       lastName: 'user',
       confirmPassword: 'admin123',
       password: 'admin123',
+      confirmPassword: 'admin123',
       phoneNumber: '2348130439102',
     };
     user2 = {
