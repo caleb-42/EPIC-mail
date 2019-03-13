@@ -54,7 +54,7 @@
     ],
     filtered: [],
   };
-  dummyData.filtered = dummyData.messages;
+  dummyData.filtered = dummyData.messages.filter(msg => msg.status === 'read' || msg.status === 'unread');
   /* let endpoint = 'http://localhost:3000/api/v1/messages'; */
   authenticate();
   const switchClass = (target, toggleClass, type = 'toggle') => {
@@ -261,7 +261,7 @@
       }); */
     });
   });
-  const inputs = document.querySelectorAll('.input-group input.inputs');
+  const inputs = document.querySelectorAll('.input-group .inputs');
 
   inputs.forEach((input) => {
     input.addEventListener('focusin', (event) => {

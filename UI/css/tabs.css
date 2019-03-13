@@ -36,7 +36,7 @@
 .custom-modal .modal-content{
     background-color: rgb(246, 246, 246);
     width: 70%;
-    height: 65%;
+    height: 75%;
     position: absolute;
     top:50%;
     left: 50%;
@@ -71,16 +71,18 @@
     margin:0 auto 1.2rem;
     text-align: center;
 }
-.form-hd .input-group label{
-    font-size: 1.0rem;
-    color: rgba(43, 129, 71, 0.9);
+.form-hd .input-group label, .form-hd .input-group textarea{
+    font-size: .8rem;
+    color: rgba(0, 0, 0, 0.5);
     display: inline-block;
-    opacity: 0;
-    padding-bottom: -1.5em;
+    font-weight: 600;
+    padding-bottom: .8em;
+    /*opacity: 0;
+    padding-bottom: -1.5em; */
 }
-.form-hd .input-group label.show{
-    padding-bottom: .5em;
-    opacity: .6;
+.form-hd .input-group label.show , .form-hd .input-group textarea.show{
+   /*  padding-bottom: .5em; */
+    color: rgba(40, 202, 94, 0.9);
     font-weight: 600;
 }
 .form-hd .input-group input, .form-hd .input-group textarea{

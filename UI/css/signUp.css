@@ -79,7 +79,7 @@ body{
     margin: 1em auto;
 }
 .form-hd .input-group{
-    margin:0 auto 1.8em;
+    margin:0 auto 1.2em;
     text-align: center;
 }
 .form-hd .input-sub-group{
@@ -87,14 +87,16 @@ body{
 }
 .form-hd .input-group label{
     font-size: .8rem;
-    color: rgba(43, 129, 71, 0.9);
+    color: rgba(0, 0, 0, 0.5);
     display: inline-block;
-    opacity: 0;
-    padding-bottom: -1.5em;
+    font-weight: 600;
+    padding-bottom: .8em;
+    /*opacity: 0;
+    padding-bottom: -1.5em; */
 }
 .form-hd .input-group label.show{
-    padding-bottom: .5em;
-    opacity: .6;
+   /*  padding-bottom: .5em; */
+    color: rgba(40, 202, 94, 0.9);
     font-weight: 600;
 }
 .form-hd .input-group input{

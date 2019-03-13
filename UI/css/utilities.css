@@ -79,6 +79,9 @@ li, a {
 .float-right{
     float: right;
 }
+.ovflo-y{
+    overflow-y: auto;
+}
 .clr {
     clear: both; 
 }

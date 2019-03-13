@@ -48,21 +48,27 @@ body {
     .form-hd{
         width:80%;
     }
+    .logo{
+        width:170px;
+        height:120px;
+    }
 }
 .form-hd .input-group{
     margin:0 auto 2em;
     text-align: center;
 }
 .form-hd .input-group label{
-    font-size: 1.3rem;
-    color: rgba(255, 255, 255, .7);
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.5);
     display: inline-block;
-    opacity: 0;
-    padding-bottom: -1.5em;
+    font-weight: 600;
+    padding-bottom: .8em;
+    /*opacity: 0;
+    padding-bottom: -1.5em; */
 }
 .form-hd .input-group label.show{
-    padding-bottom: .5em;
-    opacity: .6;
+   /*  padding-bottom: .5em; */
+    color: rgba(229, 255, 255, 1);
     font-weight: 600;
 }
 .form-hd .input-group input{
