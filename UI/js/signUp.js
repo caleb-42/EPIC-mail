@@ -2,8 +2,8 @@
   const loader = document.querySelector('.loader');
   const resp = document.querySelector('.resp');
   const toggleLoader = () => {
-    resp.textContent = '';
     if (loader.classList.contains('gone')) {
+      resp.textContent = '';
       loader.classList.remove('gone');
       resp.classList.add('gone');
       document.querySelector('.submit').disabled = true;
@@ -25,6 +25,7 @@
     if (confirmPassword !== password) {
       resp.textContent = 'password mismatch, confirm password';
       toggleLoader();
+      console.log(resp.textContent);
       return;
     }
     if (password === '') {
