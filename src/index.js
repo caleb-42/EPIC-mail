@@ -1,6 +1,7 @@
 import express from 'express';
 import config from 'config';
 import winston from 'winston';
+import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json';
 import users from './routes/users';
@@ -10,7 +11,8 @@ import auth from './routes/auth';
 const app = express();
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 /* app.use(express.static('UI')); */ /* testing locally */
 app.use('/api/v1/users', users);
 app.use('/api/v1/messages', mails);
