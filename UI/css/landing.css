@@ -1,0 +1,131 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+body{
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    position: absolute;
+    width:100vw;
+    height:100vh;
+    font-family: 'Lato', sans-serif;
+}
+.wrapper {
+    width: 100vw;
+    height:100vh;
+    display: relative;
+    float: none;
+}
+header {
+    background-image: url('../UI-elements/background.png');
+    padding: .5rem 0;
+    width: 100%;
+    overflow: hidden;
+}
+nav{
+    float: right;
+    height: 100%;
+    margin: 1rem 1rem;
+}
+nav a{
+    color: rgba(255,255,255, .8);
+    font-size: 1.2rem;
+    height: 100%;
+    font-weight: 600;
+    padding: .5rem 1rem .6rem;
+    border-radius: .4rem;
+    margin-right: 1rem;
+    background: rgba(0,0,0, .3);
+}
+nav a:hover{
+    background: rgba(0,0,0, .5);
+}
+.logo{
+    float: left;
+    background-image: url('../UI-elements/logo.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width:5rem;
+    height:3.5rem;
+    margin-left: 2rem;
+}
+main{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.carousel{
+    background-image: url('../UI-elements/landing-sm.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width:100%;
+    height:60%;
+}
+aside{
+    width: 25vw;
+    height: 100%;
+    background: #333;
+    
+}
+aside > div{
+    padding: 3rem;
+}
+aside  div div{
+    padding: 1rem 1.5rem;
+    border: .1rem solid rgba(255,255,255, .4);
+    border-radius: .5rem;
+    margin-bottom: 2rem;
+}
+aside h2{
+    text-align: center;
+    color: rgba(255,255,255, .4);
+    /* color: rgb(229, 255, 0, .8); */
+}
+aside h1{
+    text-align: center;
+    color: #333;
+    /* color: rgb(229, 255, 0, .8); */
+}
+aside .title{
+    background: #ccc;
+    color: #333;
+}
+aside .title:hover{
+    background: #eee;
+}
+aside p{
+    text-align: center;
+    line-height: 1.5rem;
+    font-size: 1.rem;
+    color: rgba(255,255,255, .6);
+}
+.content{
+    width: 100%;
+    height: 20%;
+}
+.content h1{
+    opacity: .6;
+    display: block;
+    margin-bottom: 1rem;
+}
+.content p{
+    display: block;
+    opacity: .5;
+    text-align: center;
+    width: 60%;
+}
+@media(min-width: 992px){
+    .wrapper {
+        float: right;
+        width: 75vw;
+    }
+}
+@media(min-width: 768px){
+    .content p{
+        width: 40%;
+    }
+    .carousel{
+        background-image: url('../UI-elements/landing-desktop.png');
+    }
+}

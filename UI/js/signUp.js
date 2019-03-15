@@ -37,7 +37,7 @@
       toggleLoader();
       resp.textContent = 'created account successfully';
       localStorage.setItem('email', email);
-      window.location.href = './index.html';
+      window.location.href = './app.html';
     }, 2000);
     /* testing locally */
     /* const endpoint = 'http://localhost:3000/api/v1/users';
