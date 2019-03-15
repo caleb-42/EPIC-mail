@@ -54,7 +54,7 @@
       if (email === 'admin@gmail.com' && password === 'admin123') {
         localStorage.setItem('email', email);
         document.querySelector('.resp').textContent = 'successfully signed in';
-        window.location.href = './index.html';
+        window.location.href = './app.html';
         return;
       }
       document.querySelector('.resp').textContent = 'failed to signed in';

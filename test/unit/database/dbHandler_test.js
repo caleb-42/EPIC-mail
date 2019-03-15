@@ -15,6 +15,7 @@ describe('DATABASE METHODS', () => {
       email: 'ewere@gmail.com',
       firstName: 'admin',
       lastName: 'user',
+      confirmPassword: 'admin123',
       password: 'admin123',
       phoneNumber: '2348130439102',
     };
