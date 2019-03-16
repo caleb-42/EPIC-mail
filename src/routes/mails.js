@@ -92,10 +92,10 @@ router.post('/', auth, async (req, res) => {
 });
 
 router.put('/:id', auth, async (req, res) => {
-  if (req.body.status === 'read' || req.body.status === 'unread') {
+  if (req.body.status !== 'draft') {
     return res.status(400).send({
       status: 400,
-      error: 'Invalid message Type, Can only Update sent and Draft',
+      error: 'Invalid message Type, Can only Update Draft Messages',
     });
   }
   const id = parseInt(req.params.id, 10);
