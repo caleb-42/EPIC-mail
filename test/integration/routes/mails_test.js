@@ -4,7 +4,7 @@ import dbHandler from '../../../src/database/dbHandler';
 
 let server;
 let user;
-const register = {
+const user1 = {
   email: 'ewere@gmail.com',
   firstName: 'admin',
   lastName: 'user',
@@ -12,19 +12,22 @@ const register = {
   password: 'admin123',
   phoneNumber: '2348130439102',
 };
-const sentMsg = {
-  subject: 'i just registered',
-  receiverId: 2,
-  mailerName: 'paul jekande',
-  message: 'its so wonderful to be part of this app',
+const user2 = {
+  email: 'sam@gmail.com',
+  firstName: 'user',
+  lastName: 'user',
+  confirmPassword: 'user123',
+  password: 'user123',
+  phoneNumber: '2348130439102',
 };
+let sentMsg;
 const updateMsg = {
   subject: 'i just changed again',
   message: 'its so exiting to be part of this app',
 };
 describe('MAILS API ENDPOINTS', () => {
   const validToken = async (endpoint) => {
-    let res = await request(server).post('/api/v1/users').send(register);
+    let res = await request(server).post('/api/v1/users').send(user1);
     res = await request(server).post('/api/v1/auth').send(user);
     const { token } = res.body.data[0];
     const messages = await request(server).get(endpoint).set('x-auth-token', token);
@@ -53,6 +56,11 @@ describe('MAILS API ENDPOINTS', () => {
     user = {
       email: 'ewere@gmail.com',
       password: 'admin123',
+    };
+    sentMsg = {
+      subject: 'i just registered',
+      receiverId: 2,
+      message: 'its so wonderful to be part of this app',
     };
   });
   afterEach(() => {
@@ -115,7 +123,8 @@ describe('MAILS API ENDPOINTS', () => {
       await noToken('/api/v1/messages/1');
     });
     it('should release single mails for valid user', async () => {
-      let res = await request(server).post('/api/v1/users').send(register);
+      let res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
       const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
@@ -130,7 +139,8 @@ describe('MAILS API ENDPOINTS', () => {
       expect(singleMessage.body.data[0]).to.include(sentMsg);
     });
     it('should not get single mail with invalid id', async () => {
-      let res = await request(server).post('/api/v1/users').send(register);
+      let res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
       const singleMessage = await request(server).get('/api/v1/messages/6').set('x-auth-token', token);
@@ -146,8 +156,37 @@ describe('MAILS API ENDPOINTS', () => {
     it('should not send mail if user has no token', async () => {
       await noToken('/api/v1/messages/', 'post');
     });
+    it('should not send mail if user sends to self', async () => {
+      let res = await request(server).post('/api/v1/users').send(user1);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      sentMsg.receiverId = 1;
+      const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
+      expect(messages.status).to.be.equal(400);
+      expect(messages.body).to.have.property('status');
+      expect(messages.body.status).to.be.equal(400);
+      expect(messages.body).to.have.property('error');
+      expect(messages.body).to.not.have.property('data');
+      expect(messages.body.error).to.be.a('string');
+      expect(messages.body.error).to.include('user cannot send message to self');
+    });
+    it('should not send mail if receiver id is non existent', async () => {
+      let res = await request(server).post('/api/v1/users').send(user1);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      sentMsg.receiverId = 4;
+      const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
+      expect(messages.status).to.be.equal(404);
+      expect(messages.body).to.have.property('status');
+      expect(messages.body.status).to.be.equal(404);
+      expect(messages.body).to.have.property('error');
+      expect(messages.body).to.not.have.property('data');
+      expect(messages.body.error).to.be.a('string');
+      expect(messages.body.error).to.include('receiver not found');
+    });
     it('should send mail if user has valid token', async () => {
-      let res = await request(server).post('/api/v1/users').send(register);
+      let res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
       const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
@@ -165,7 +204,8 @@ describe('MAILS API ENDPOINTS', () => {
       await noToken('/api/v1/messages/1', 'update');
     });
     it('should not update single mails for invalid id', async () => {
-      let res = await request(server).post('/api/v1/users').send(register);
+      let res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
       const updatedMessage = await request(server).put('/api/v1/messages/3').send(updateMsg).set('x-auth-token', token);
@@ -177,7 +217,8 @@ describe('MAILS API ENDPOINTS', () => {
       expect(updatedMessage.body.error).to.include('message ID does not exist');
     });
     it('should update single mails for valid user', async () => {
-      let res = await request(server).post('/api/v1/users').send(register);
+      let res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
       const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
@@ -197,7 +238,8 @@ describe('MAILS API ENDPOINTS', () => {
       await noToken('/api/v1/messages/1', 'delete');
     });
     it('should delete mail if user has valid token', async () => {
-      let res = await request(server).post('/api/v1/users').send(register);
+      let res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
       const sentMessages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
@@ -212,7 +254,8 @@ describe('MAILS API ENDPOINTS', () => {
       expect(sentMsg).to.include(deleteMessages.body.data[0]);
     });
     it('should not delete mail if message id is invalid', async () => {
-      let res = await request(server).post('/api/v1/users').send(register);
+      let res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
       const deleteMessages = await request(server)
