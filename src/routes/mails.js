@@ -76,13 +76,14 @@ router.get('/:id', auth, async (req, res) => {
 router.post('/', auth, async (req, res) => {
   const { id } = req.user;
   const { error } = validate(req.body);
-  req.body.senderId = id;
   if (error) {
     return res.status(400).send({
       status: 400,
       error: error.details[0].message,
     });
   }
+  req.body.senderId = id;
+  req.body.status = 'sent';
   const msg = dbHandler.sendMessage(req.body);
   return res.status(201).send({
     status: 201,

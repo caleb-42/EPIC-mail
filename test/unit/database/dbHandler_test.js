@@ -24,6 +24,7 @@ describe('DATABASE METHODS', () => {
       receiverId: 1,
       mailerName: 'fred delight',
       subject: "get in the car, you're late",
+      status: 'sent',
       message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       parentMessageId: undefined,
     };

@@ -84,7 +84,6 @@ class DbHandler {
     const now = new Date();
     const createdOn = date.format(now, 'ddd MMM DD YYYY');
     msg.createdOn = createdOn;
-    msg.status = 'sent';
     const id = (this.db.messages).length + 1;
     msg.id = id;
     this.db.messages.push(msg);
@@ -96,12 +95,14 @@ class DbHandler {
       senderId: msg.senderId,
       mailerName: msg.mailerName,
       subject: msg.subject,
-      status: 'sent',
+      status: msg.status,
     };
     this.db.outbox.push(sentmsg);
-    const receivedmsg = _.cloneDeep(sentmsg);
-    receivedmsg.status = 'unread';
-    this.db.inbox.push(receivedmsg);
+    if (msg.status === 'sent') {
+      const receivedmsg = _.cloneDeep(sentmsg);
+      receivedmsg.status = 'unread';
+      this.db.inbox.push(receivedmsg);
+    }
     return [msg];
   }
 
