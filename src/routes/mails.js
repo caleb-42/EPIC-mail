@@ -21,7 +21,7 @@ router.get('/', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getReceivedMessages(id),
+    data: dbHandler.getInboxMessages(id),
   });
 });
 router.get('/all', auth, async (req, res) => {
@@ -35,28 +35,28 @@ router.get('/unread', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getReceivedMessages(id, 'unread'),
+    data: dbHandler.getInboxMessages(id, 'unread'),
   });
 });
 router.get('/read', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getReceivedMessages(id, 'read'),
+    data: dbHandler.getInboxMessages(id, 'read'),
   });
 });
 router.get('/sent', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getSentMessages(id),
+    data: dbHandler.getOutboxMessages(id, 'sent'),
   });
 });
 router.get('/draft', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getDraftMessages(id),
+    data: dbHandler.getOutboxMessages(id, 'draft'),
   });
 });
 router.get('/:id', auth, async (req, res) => {
@@ -113,7 +113,7 @@ router.put('/:id', auth, async (req, res) => {
 
 router.delete('/:id', auth, async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  const msg = dbHandler.deleteMessage(id);
+  const msg = dbHandler.deleteMessage(id, req.user.id);
   if (!msg) {
     return res.status(404).send({
       status: 404,
