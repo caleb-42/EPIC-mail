@@ -92,18 +92,18 @@ router.post('/', auth, async (req, res) => {
 });
 
 router.put('/:id', auth, async (req, res) => {
-  if (req.body.status !== 'draft') {
-    return res.status(400).send({
-      status: 400,
-      error: 'Invalid message Type, Can only Update Draft Messages',
-    });
-  }
   const id = parseInt(req.params.id, 10);
   const msg = dbHandler.updateMessageById(id, req.body);
-  if (!msg) {
+  if (msg === 'empty') {
     return res.status(404).send({
       status: 404,
       error: 'message ID does not exist',
+    });
+  }
+  if (msg === 'not outbox') {
+    return res.status(400).send({
+      status: 400,
+      error: 'Invalid message Type, Can only Update Outbox Messages',
     });
   }
   return res.status(200).send({

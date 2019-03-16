@@ -73,10 +73,28 @@ class DbHandler {
   updateMessageById(id, body) {
     const message = this.db.messages
       .find(msg => msg.id === id);
-    if (!message) return false;
+    if (!message) return 'empty';
+    const stringId = String(id);
+    const outbox = this.db.outbox
+      .find(msg => msg.messageId === stringId);
+    if (!outbox) return 'not outbox';
+
     message.subject = body.subject || message.subject;
     message.receiverId = body.receiverId || message.receiverId;
     message.message = body.message || message.message;
+
+    outbox.subject = body.subject || outbox.subject;
+    outbox.receiverId = body.receiverId || outbox.receiverId;
+    outbox.message = body.message || outbox.message;
+
+    if (outbox.status === 'sent') {
+      const inbox = this.db.inbox
+        .find(msg => msg.messageId === stringId);
+      inbox.subject = body.subject || inbox.subject;
+      inbox.receiverId = body.receiverId || inbox.receiverId;
+      inbox.message = body.message || inbox.message;
+      inbox.status = 'unread';
+    }
     return [message];
   }
 

@@ -139,7 +139,7 @@ describe('DATABASE METHODS', () => {
   describe('Update Message by Id', () => {
     it('should not update message with invalid id', () => {
       const res = dbHandler.updateMessageById(7, {});
-      expect(res).to.be.false;
+      expect(res).to.include('empty');
     });
     it('should return updated mail for valid user', () => {
       sentMsg.subject = 'I have Changed';
