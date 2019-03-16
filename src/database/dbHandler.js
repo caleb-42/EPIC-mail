@@ -11,8 +11,9 @@ class DbHandler {
     this.db = _.cloneDeep(db);
   }
 
-  find(table, body, query) {
-    return this.db[table].find(tab => tab[query] === body[query]);
+  find(table, body, query, key = null) {
+    if (!key) key = query;
+    return this.db[table].find(tab => tab[query] === body[key]);
   }
 
   generateJWT(user) {

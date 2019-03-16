@@ -9,7 +9,6 @@ const validate = (msg) => {
   const schema = {
     /* id: joi.number().equal(0), */
     receiverId: joi.number().required(),
-    mailerName: joi.string().required(),
     subject: joi.string().max(32).required(),
     message: joi.string().required(),
     parentMessageId: joi.number().optional(),
@@ -82,6 +81,20 @@ router.post('/', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
+  if (id === req.body.receiverId) {
+    return res.status(400).send({
+      status: 400,
+      error: 'user cannot send message to self',
+    });
+  }
+  const user = dbHandler.find('users', req.body, 'id', 'receiverId');
+  if (!user) {
+    return res.status(404).send({
+      status: 404,
+      error: 'receiver not found',
+    });
+  }
+  req.body.mailerName = `${user.firstName} ${user.lastName}`;
   req.body.senderId = id;
   req.body.status = 'sent';
   const msg = dbHandler.sendMessage(req.body);
