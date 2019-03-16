@@ -21,8 +21,10 @@ describe('DATABASE METHODS', () => {
     };
     msg = {
       senderId: 2,
+      receiverId: 1,
       mailerName: 'fred delight',
       subject: "get in the car, you're late",
+      status: 'sent',
       message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       parentMessageId: undefined,
     };
@@ -76,7 +78,7 @@ describe('DATABASE METHODS', () => {
     it('should return all Recieved messages if user id is valid and type is not set', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = dbHandler.getReceivedMessages(user.id);
+      const res = dbHandler.getInboxMessages(user.id);
       expect(res).to.be.an('array');
     });
   });
@@ -84,7 +86,7 @@ describe('DATABASE METHODS', () => {
     it('should return Sent messages if user id is valid', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = dbHandler.getSentMessages(user.id);
+      const res = dbHandler.getOutboxMessages(user.id, 'sent');
       expect(res).to.be.an('array');
     });
   });
@@ -92,7 +94,7 @@ describe('DATABASE METHODS', () => {
     it('should return Draft messages if user id is valid', () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = dbHandler.getDraftMessages(user.id);
+      const res = dbHandler.getOutboxMessages(user.id, 'draft');
       expect(res).to.be.an('array');
     });
   });
@@ -107,13 +109,19 @@ describe('DATABASE METHODS', () => {
     it('should add new message to Database for valid message', () => {
       const { db } = dbHandler;
       const allMessageArray = db.messages;
-      const sentmessageArray = db.sent;
+      const sentmessageArray = db.outbox;
+      const receivedmessageArray = db.inbox;
       const message = allMessageArray[0];
       const sentMessage = sentmessageArray[0];
+      const receivedMessage = receivedmessageArray[0];
       expect(allMessageArray).to.have.lengthOf(1);
       expect(sentmessageArray).to.have.lengthOf(1);
+      expect(receivedmessageArray).to.have.lengthOf(1);
       expect(message).to.include(msg);
       expect(sentMessage).to.have.any.keys('messageId');
+      expect(receivedMessage).to.have.any.keys('messageId');
+      expect(sentMessage.status).to.be.equal('sent');
+      expect(receivedMessage.status).to.be.equal('unread');
     });
   });
   describe('Single Message', () => {
@@ -131,7 +139,7 @@ describe('DATABASE METHODS', () => {
   describe('Update Message by Id', () => {
     it('should not update message with invalid id', () => {
       const res = dbHandler.updateMessageById(7, {});
-      expect(res).to.be.false;
+      expect(res).to.include('empty');
     });
     it('should return updated mail for valid user', () => {
       sentMsg.subject = 'I have Changed';
@@ -146,15 +154,26 @@ describe('DATABASE METHODS', () => {
       expect(res).to.be.false;
     });
     it('should delete mail for valid user', () => {
-      const res = dbHandler.deleteMessage(1);
+      const res = dbHandler.deleteMessage(1, msg.senderId);
       expect(res).to.be.an('array');
       expect(res[0]).to.have.any.keys('message');
       expect(msg).to.include(res[0]);
     });
-    it('should remove message from Database after message delete', () => {
+    it('should remove sent message from Database after sent message deleted', () => {
+      const { db } = dbHandler;
+      const sentmessageArray = db.outbox;
+      const receivedmessageArray = db.inbox;
+      const allMessageArray = db.messages;
+      expect(receivedmessageArray).to.have.lengthOf(0);
+      expect(sentmessageArray).to.have.lengthOf(1);
+      expect(allMessageArray).to.have.lengthOf(1);
+      expect(sentmessageArray[0].status).to.be.equal('draft');
+    });
+    it('should remove draft message from Database after draft message delete', () => {
+      dbHandler.deleteMessage(1, msg.senderId);
       const { db } = dbHandler;
       const allMessageArray = db.messages;
-      const sentmessageArray = db.sent;
+      const sentmessageArray = db.outbox;
       expect(allMessageArray).to.have.lengthOf(0);
       expect(sentmessageArray).to.have.lengthOf(0);
     });

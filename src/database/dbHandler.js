@@ -37,13 +37,17 @@ class DbHandler {
     return this.generateJWT(user);
   }
 
+  getUsers() {
+    return this.db.users;
+  }
+
   getMessages(id) {
     const messages = this.db.messages
       .filter(message => message.senderId === id || message.receiverId === id);
     return messages;
   }
 
-  getReceivedMessages(id, type = 'all') {
+  getInboxMessages(id, type = 'all') {
     const messages = this.db.inbox
       .filter((message) => {
         if (type === 'all') return message.receiverId === id;
@@ -53,15 +57,9 @@ class DbHandler {
     return messages;
   }
 
-  getSentMessages(id) {
-    const messages = this.db.sent
-      .filter(message => message.senderId === id);
-    return messages;
-  }
-
-  getDraftMessages(id) {
-    const messages = this.db.draft
-      .filter(message => message.senderId === id);
+  getOutboxMessages(id, type) {
+    const messages = this.db.outbox
+      .filter(message => message.senderId === id && message.status === type);
     return messages;
   }
 
@@ -75,10 +73,28 @@ class DbHandler {
   updateMessageById(id, body) {
     const message = this.db.messages
       .find(msg => msg.id === id);
-    if (!message) return false;
+    if (!message) return 'empty';
+    const stringId = String(id);
+    const outbox = this.db.outbox
+      .find(msg => msg.messageId === stringId);
+    if (!outbox) return 'not outbox';
+
     message.subject = body.subject || message.subject;
     message.receiverId = body.receiverId || message.receiverId;
     message.message = body.message || message.message;
+
+    outbox.subject = body.subject || outbox.subject;
+    outbox.receiverId = body.receiverId || outbox.receiverId;
+    outbox.message = body.message || outbox.message;
+
+    if (outbox.status === 'sent') {
+      const inbox = this.db.inbox
+        .find(msg => msg.messageId === stringId);
+      inbox.subject = body.subject || inbox.subject;
+      inbox.receiverId = body.receiverId || inbox.receiverId;
+      inbox.message = body.message || inbox.message;
+      inbox.status = 'unread';
+    }
     return [message];
   }
 
@@ -86,7 +102,6 @@ class DbHandler {
     const now = new Date();
     const createdOn = date.format(now, 'ddd MMM DD YYYY');
     msg.createdOn = createdOn;
-    msg.status = 'sent';
     const id = (this.db.messages).length + 1;
     msg.id = id;
     this.db.messages.push(msg);
@@ -98,26 +113,67 @@ class DbHandler {
       senderId: msg.senderId,
       mailerName: msg.mailerName,
       subject: msg.subject,
-      status: 'sent',
+      status: msg.status,
     };
-    this.db.sent.push(sentmsg);
+    this.db.outbox.push(sentmsg);
+    if (msg.status === 'sent') {
+      const receivedmsg = _.cloneDeep(sentmsg);
+      receivedmsg.status = 'unread';
+      this.db.inbox.push(receivedmsg);
+    }
     return [msg];
   }
 
-  deleteMessage(id) {
+  deleteMessage(id, userId) {
     const deleteMsg = this.db.messages.find(msg => msg.id === id);
     if (!deleteMsg) return false;
-    const msgType = (deleteMsg.status === 'read' || deleteMsg.status === 'unread') ? 'inbox' : deleteMsg.status;
-    const newMsgArray = this.db.messages.filter(msg => msg.id !== deleteMsg.id);
-    const messageId = String(deleteMsg.id);
-    const newTypeMsgArray = this.db[msgType]
-      .filter(msg => msg.messageId !== messageId);
 
-    this.db.messages = newMsgArray;
-    this.db[msgType] = newTypeMsgArray;
-    return [{
-      message: deleteMsg.message,
-    }];
+    const messageId = String(deleteMsg.id);
+
+    const deleteMsgDraft = this.db.outbox.find(msg => msg.messageId === messageId
+                                              && msg.status === 'draft'
+                                              && userId === msg.senderId);
+    if (deleteMsgDraft) {
+      const newMsgArray = this.db.messages.filter(msg => msg.id !== deleteMsg.id);
+      this.db.messages = newMsgArray;
+
+      const newOutboxMsgArray = this.db.outbox.filter(msg => msg.messageId !== messageId);
+      this.db.outbox = newOutboxMsgArray;
+
+      return [{
+        message: deleteMsg.message,
+      }];
+    }
+
+    const deleteMsgSent = this.db.outbox.find(msg => msg.messageId === messageId
+                                              && msg.status === 'sent'
+                                              && userId === msg.senderId);
+    if (deleteMsgSent) {
+      deleteMsgSent.status = 'draft';
+
+      const newMsgArray = this.db.messages.find(msg => msg.id === deleteMsg.id);
+      newMsgArray.status = 'draft';
+
+      const newInboxMsgArray = this.db.inbox.filter(msg => msg.messageId !== messageId);
+      this.db.inbox = newInboxMsgArray;
+
+      return [{
+        message: deleteMsg.message,
+      }];
+    }
+
+    const deleteMsgInbox = this.db.inbox.find(msg => msg.messageId === messageId
+                                              && userId === msg.receiverId);
+
+    if (deleteMsgInbox) {
+      const newInboxMsgArray = this.db.inbox.filter(msg => msg.messageId !== messageId);
+      this.db.inbox = newInboxMsgArray;
+
+      return [{
+        message: deleteMsg.message,
+      }];
+    }
+    /* return false; */
   }
 
   resetDb() {

@@ -4,8 +4,7 @@ const testDb = {
   users: [],
   contacts: [],
   messages: [],
-  sent: [],
-  draft: [],
+  outbox: [],
   inbox: [],
   groups: [],
   groupMembers: [],
@@ -24,8 +23,7 @@ const prodDb = {
   ],
   contacts: [],
   messages: [],
-  sent: [],
-  draft: [],
+  outbox: [],
   inbox: [],
   groups: [],
   groupMembers: [],
@@ -141,7 +139,7 @@ const devDb = {
       status: 'draft',
     },
   ],
-  sent: [
+  outbox: [
     {
       messageId: '3',
       createdOn: 'Sun 11th, Aug 2018',
@@ -160,8 +158,6 @@ const devDb = {
       subject: 'u ahave come again abi',
       status: 'sent',
     },
-  ],
-  draft: [
     {
       messageId: '6',
       createdOn: 'Sat 23rd, Jun 2015',

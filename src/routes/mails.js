@@ -21,7 +21,7 @@ router.get('/', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getReceivedMessages(id),
+    data: dbHandler.getInboxMessages(id),
   });
 });
 router.get('/all', auth, async (req, res) => {
@@ -35,28 +35,28 @@ router.get('/unread', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getReceivedMessages(id, 'unread'),
+    data: dbHandler.getInboxMessages(id, 'unread'),
   });
 });
 router.get('/read', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getReceivedMessages(id, 'read'),
+    data: dbHandler.getInboxMessages(id, 'read'),
   });
 });
 router.get('/sent', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getSentMessages(id),
+    data: dbHandler.getOutboxMessages(id, 'sent'),
   });
 });
 router.get('/draft', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getDraftMessages(id),
+    data: dbHandler.getOutboxMessages(id, 'draft'),
   });
 });
 router.get('/:id', auth, async (req, res) => {
@@ -76,13 +76,14 @@ router.get('/:id', auth, async (req, res) => {
 router.post('/', auth, async (req, res) => {
   const { id } = req.user;
   const { error } = validate(req.body);
-  req.body.senderId = id;
   if (error) {
     return res.status(400).send({
       status: 400,
       error: error.details[0].message,
     });
   }
+  req.body.senderId = id;
+  req.body.status = 'sent';
   const msg = dbHandler.sendMessage(req.body);
   return res.status(201).send({
     status: 201,
@@ -91,18 +92,18 @@ router.post('/', auth, async (req, res) => {
 });
 
 router.put('/:id', auth, async (req, res) => {
-  if (req.body.status === 'read' || req.body.status === 'unread') {
-    return res.status(400).send({
-      status: 400,
-      error: 'Invalid message Type, Can only Update sent and Draft',
-    });
-  }
   const id = parseInt(req.params.id, 10);
   const msg = dbHandler.updateMessageById(id, req.body);
-  if (!msg) {
+  if (msg === 'empty') {
     return res.status(404).send({
       status: 404,
       error: 'message ID does not exist',
+    });
+  }
+  if (msg === 'not outbox') {
+    return res.status(400).send({
+      status: 400,
+      error: 'Invalid message Type, Can only Update Outbox Messages',
     });
   }
   return res.status(200).send({
@@ -113,7 +114,7 @@ router.put('/:id', auth, async (req, res) => {
 
 router.delete('/:id', auth, async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  const msg = dbHandler.deleteMessage(id);
+  const msg = dbHandler.deleteMessage(id, req.user.id);
   if (!msg) {
     return res.status(404).send({
       status: 404,
