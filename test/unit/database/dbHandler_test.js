@@ -24,7 +24,6 @@ describe('DATABASE METHODS', () => {
       receiverId: 1,
       mailerName: 'fred delight',
       subject: "get in the car, you're late",
-      status: 'sent',
       message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       parentMessageId: undefined,
     };
@@ -179,7 +178,7 @@ describe('DATABASE METHODS', () => {
     });
   });
   describe('Save Message', () => {
-    it('should return mail draft message is valid', () => {
+    it('should return mail draft if message is valid', () => {
       msg.status = 'draft';
       const res = dbHandler.saveMessage(msg);
       expect(res).to.be.an('array');
@@ -201,6 +200,34 @@ describe('DATABASE METHODS', () => {
       expect(message).to.include(msg);
       expect(draftMessage).to.have.any.keys('messageId');
       expect(draftMessage.status).to.be.equal('draft');
+    });
+  });
+  describe('Send Draft Message', () => {
+    it('should return mail sent if message is valid', () => {
+      dbHandler.resetDb();
+      const saveres = dbHandler.saveMessage(msg);
+      const res = dbHandler.sendDraftMessage(saveres[0]);
+      expect(res).to.be.an('array');
+      const [draftMsg] = res;
+      expect(draftMsg).to.have.any.keys('messageId', 'id');
+      expect(draftMsg).to.include(msg);
+    });
+    it('should add new message to inbox Database for valid message', () => {
+      const { db } = dbHandler;
+      const allMessageArray = db.messages;
+      const sentmessageArray = db.outbox;
+      const receivedmessageArray = db.inbox;
+      const message = allMessageArray[0];
+      const sentMessage = sentmessageArray[0];
+      const receivedMessage = receivedmessageArray[0];
+      expect(allMessageArray).to.have.lengthOf(1);
+      expect(sentmessageArray).to.have.lengthOf(1);
+      expect(receivedmessageArray).to.have.lengthOf(1);
+      expect(message).to.include(msg);
+      expect(sentMessage).to.have.any.keys('messageId');
+      expect(receivedMessage).to.have.any.keys('messageId');
+      expect(sentMessage.status).to.be.equal('sent');
+      expect(receivedMessage.status).to.be.equal('unread');
     });
   });
 });
