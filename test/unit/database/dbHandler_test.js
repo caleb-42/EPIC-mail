@@ -178,4 +178,29 @@ describe('DATABASE METHODS', () => {
       expect(sentmessageArray).to.have.lengthOf(0);
     });
   });
+  describe('Save Message', () => {
+    it('should return mail draft message is valid', () => {
+      msg.status = 'draft';
+      const res = dbHandler.saveMessage(msg);
+      expect(res).to.be.an('array');
+      const [draftMsg] = res;
+      expect(draftMsg).to.have.any.keys('messageId', 'id', 'status');
+      expect(draftMsg).to.include(msg);
+    });
+    it('should add new message to Database for valid message', () => {
+      msg.status = 'draft';
+      const { db } = dbHandler;
+      const allMessageArray = db.messages;
+      const draftmessageArray = db.outbox;
+      const receivedmessageArray = db.inbox;
+      const message = allMessageArray[0];
+      const draftMessage = draftmessageArray[0];
+      expect(allMessageArray).to.have.lengthOf(1);
+      expect(draftmessageArray).to.have.lengthOf(1);
+      expect(receivedmessageArray).to.have.lengthOf(0);
+      expect(message).to.include(msg);
+      expect(draftMessage).to.have.any.keys('messageId');
+      expect(draftMessage.status).to.be.equal('draft');
+    });
+  });
 });

@@ -16,6 +16,17 @@ const validate = (msg) => {
   return joi.validate(msg, schema);
 };
 
+const draftValidate = (msg) => {
+  const schema = {
+    /* id: joi.number().equal(0), */
+    receiverId: joi.number().optional(),
+    subject: joi.string().max(32).required(),
+    message: joi.string().required(),
+    parentMessageId: joi.number().optional(),
+  };
+  return joi.validate(msg, schema);
+};
+
 router.get('/', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
@@ -98,6 +109,41 @@ router.post('/', auth, async (req, res) => {
   req.body.senderId = id;
   req.body.status = 'sent';
   const msg = dbHandler.sendMessage(req.body);
+  return res.status(201).send({
+    status: 201,
+    data: msg,
+  });
+});
+
+router.post('/save', auth, async (req, res) => {
+  const { id } = req.user;
+  const { error } = draftValidate(req.body);
+  if (error) {
+    return res.status(400).send({
+      status: 400,
+      error: error.details[0].message,
+    });
+  }
+  if (req.body.receiverId) {
+    const user = dbHandler.find('users', req.body, 'id', 'receiverId');
+    if (!user) {
+      return res.status(404).send({
+        status: 404,
+        error: 'receiver not found',
+      });
+    }
+    req.body.mailerName = `${user.firstName} ${user.lastName}`;
+    if (id === req.body.receiverId && req.body.receiverId) {
+      return res.status(400).send({
+        status: 400,
+        error: 'user cannot send message to self',
+      });
+    }
+  }
+
+  req.body.senderId = id;
+  req.body.status = 'draft';
+  const msg = dbHandler.saveMessage(req.body);
   return res.status(201).send({
     status: 201,
     data: msg,

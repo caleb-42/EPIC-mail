@@ -197,6 +197,54 @@ describe('MAILS API ENDPOINTS', () => {
       expect(messages.body).to.not.have.property('error');
       expect(messages.body.data).to.be.an('array');
       expect(messages.body.data[0]).to.include(sentMsg);
+      expect(messages.body.data[0]).to.have.property('mailerName');
+    });
+  });
+  describe('Save draft mail api/v1/messages/save', () => {
+    it('should not send mail if user has no token', async () => {
+      await noToken('/api/v1/messages/save', 'post');
+    });
+    it('should not save mail if user sends to self', async () => {
+      let res = await request(server).post('/api/v1/users').send(user1);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      sentMsg.receiverId = 1;
+      const messages = await request(server).post('/api/v1/messages/save').send(sentMsg).set('x-auth-token', token);
+      expect(messages.status).to.be.equal(400);
+      expect(messages.body).to.have.property('status');
+      expect(messages.body.status).to.be.equal(400);
+      expect(messages.body).to.have.property('error');
+      expect(messages.body).to.not.have.property('data');
+      expect(messages.body.error).to.be.a('string');
+      expect(messages.body.error).to.include('user cannot send message to self');
+    });
+    it('should not save mail if receiver id is non existent', async () => {
+      let res = await request(server).post('/api/v1/users').send(user1);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      sentMsg.receiverId = 4;
+      const messages = await request(server).post('/api/v1/messages/save').send(sentMsg).set('x-auth-token', token);
+      expect(messages.status).to.be.equal(404);
+      expect(messages.body).to.have.property('status');
+      expect(messages.body.status).to.be.equal(404);
+      expect(messages.body).to.have.property('error');
+      expect(messages.body).to.not.have.property('data');
+      expect(messages.body.error).to.be.a('string');
+      expect(messages.body.error).to.include('receiver not found');
+    });
+    it('should save mail if user has valid token', async () => {
+      let res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      const messages = await request(server).post('/api/v1/messages/save').send(sentMsg).set('x-auth-token', token);
+      expect(messages.status).to.be.equal(201);
+      expect(messages.body).to.have.property('status');
+      expect(messages.body.status).to.be.equal(201);
+      expect(messages.body).to.have.property('data');
+      expect(messages.body).to.not.have.property('error');
+      expect(messages.body.data).to.be.an('array');
+      expect(messages.body.data[0]).to.include(sentMsg);
     });
   });
   describe('Update Single Mails by ID api/v1/messages/id', () => {
