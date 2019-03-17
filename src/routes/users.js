@@ -40,10 +40,10 @@ router.post('/', async (req, res) => {
   });
 });
 
-router.get('/', auth, async (req, res) => {
-  const users = await dbHandler.getUsers();
-  return res.status(201).send({
-    status: 201,
+router.get('/contacts', auth, async (req, res) => {
+  const users = await dbHandler.getUsers(req.user.id);
+  return res.status(200).send({
+    status: 200,
     data: users,
   });
 });

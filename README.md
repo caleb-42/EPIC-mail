@@ -48,13 +48,17 @@ Admin user
 # Routes
 
 - POST https://epic-mail-application.herokuapp.com/api/v1/users - Create a new user / Signs up a new user
+- GET https://epic-mail-application.herokuapp.com/api/v1/users/contacts - gets a contacts for a user
 - POST https://epic-mail-application.herokuapp.com/api/v1/auth - Signs in a user
-- GET https://epic-mail-application.herokuapp.com/api/v1/messages/all - List all all messages
 - GET https://epic-mail-application.herokuapp.com/api/v1/messages - List all received messages
+- POST https://epic-mail-application.herokuapp.com/api/v1/messages/ - Send a newly created message
+- POST https://epic-mail-application.herokuapp.com/api/v1/messages/save - Saves a draft message
+- GET https://epic-mail-application.herokuapp.com/api/v1/messages/all - List all all messages
 - GET https://epic-mail-application.herokuapp.com/api/v1/messages/read - List all read messages
-- GET https://epic-mail-application.herokuapp.com/api/v1/messages/unread - List all unread messages
 - GET https://epic-mail-application.herokuapp.com/api/v1/messages/sent - List all sent messages
+- GET https://epic-mail-application.herokuapp.com/api/v1/messages/unread - List all unread messages
 - GET https://epic-mail-application.herokuapp.com/api/v1/messages/draft - List all draft messages
 - GET https://epic-mail-application.herokuapp.com/api/v1/messages/:id - Gets message by id
+- POST https://epic-mail-application.herokuapp.com/api/v1/messages/:id - Sends a Draft message by id
 - PUT https://epic-mail-application.herokuapp.com/api/v1/messages/:id - Updates message by id
 - DELETE https://epic-mail-application.herokuapp.com/api/v1/messages/:id - Deletes message by id
