@@ -1,5 +1,6 @@
 import express from 'express';
 import joi from 'joi';
+import _ from 'lodash';
 import auth from '../middleware/auth';
 import dbHandler from '../database/dbHandler';
 
@@ -107,7 +108,6 @@ router.post('/', auth, async (req, res) => {
   }
   req.body.mailerName = `${user.firstName} ${user.lastName}`;
   req.body.senderId = id;
-  req.body.status = 'sent';
   const msg = dbHandler.sendMessage(req.body);
   return res.status(201).send({
     status: 201,
@@ -142,14 +142,12 @@ router.post('/save', auth, async (req, res) => {
   }
 
   req.body.senderId = id;
-  req.body.status = 'draft';
   const msg = dbHandler.saveMessage(req.body);
   return res.status(201).send({
     status: 201,
     data: msg,
   });
 });
-
 router.put('/:id', auth, async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const msg = dbHandler.updateMessageById(id, req.body);

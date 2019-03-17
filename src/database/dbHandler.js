@@ -119,14 +119,35 @@ class DbHandler {
       senderId: msg.senderId,
       mailerName: msg.mailerName,
       subject: msg.subject,
-      status: msg.status,
+      status: 'sent',
     };
     this.db.outbox.push(sentmsg);
-    if (msg.status === 'sent') {
-      const receivedmsg = _.cloneDeep(sentmsg);
-      receivedmsg.status = 'unread';
-      this.db.inbox.push(receivedmsg);
-    }
+    const receivedmsg = _.cloneDeep(sentmsg);
+    receivedmsg.status = 'unread';
+    this.db.inbox.push(receivedmsg);
+    return [msg];
+  }
+
+  sendDraftMessage(msg) {
+    const now = new Date();
+    const createdOn = date.format(now, 'ddd MMM DD YYYY');
+    msg.createdOn = createdOn;
+    const { id } = msg;
+    const sentMsg = this.find('outbox', { messageId: String(msg.id) }, 'messageId');
+    sentMsg.receiverId = msg.receiverId;
+    sentMsg.createdOn = createdOn;
+    sentMsg.mailerName = msg.mailerName;
+    sentMsg.status = 'sent';
+    const receivedMsg = {
+      messageId: id.toString(),
+      createdOn,
+      receiverId: msg.receiverId,
+      senderId: msg.senderId,
+      mailerName: msg.mailerName,
+      subject: msg.subject,
+      status: 'unread',
+    };
+    this.db.inbox.push(receivedMsg);
     return [msg];
   }
 
@@ -145,7 +166,7 @@ class DbHandler {
       senderId: msg.senderId,
       mailerName: msg.mailerName || null,
       subject: msg.subject,
-      status: msg.status,
+      status: 'draft',
     };
 
     this.db.outbox.push(draftmsg);
