@@ -40,12 +40,4 @@ router.post('/', async (req, res) => {
   });
 });
 
-router.get('/', auth, async (req, res) => {
-  const users = await dbHandler.getUsers();
-  return res.status(201).send({
-    status: 201,
-    data: users,
-  });
-});
-
 module.exports = router;

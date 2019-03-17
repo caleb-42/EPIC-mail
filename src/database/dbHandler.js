@@ -38,8 +38,14 @@ class DbHandler {
     return this.generateJWT(user);
   }
 
-  getUsers() {
-    return this.db.users;
+  getUsers(id) {
+    const users = _.cloneDeep(this.db.users);
+    const contacts = users.filter((user) => {
+      user.password = undefined;
+      user.isAdmin = undefined;
+      return user.id !== id;
+    });
+    return contacts;
   }
 
   getMessages(id) {

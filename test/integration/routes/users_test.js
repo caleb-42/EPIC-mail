@@ -3,12 +3,12 @@ import request from 'supertest';
 import dbHandler from '../../../src/database/dbHandler';
 
 let server;
-let user;
+let user1;
 
 describe('USER API ENDPOINTS', () => {
   beforeEach(() => {
     server = require('../../../src/index');
-    user = {
+    user1 = {
       email: 'ewere@gmail.com',
       firstName: 'admin',
       lastName: 'user',
@@ -23,7 +23,7 @@ describe('USER API ENDPOINTS', () => {
   });
   describe('Sign Up', () => {
     it('should create user with valid request', async () => {
-      const res = await request(server).post('/api/v1/users').send(user);
+      const res = await request(server).post('/api/v1/users').send(user1);
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(201);
       expect(res.body).to.have.property('data');
@@ -32,8 +32,8 @@ describe('USER API ENDPOINTS', () => {
       expect(res.body.data[0]).to.have.property('token');
     });
     it('should not create user that already exist', async () => {
-      let res = await request(server).post('/api/v1/users').send(user);
-      res = await request(server).post('/api/v1/users').send(user);
+      let res = await request(server).post('/api/v1/users').send(user1);
+      res = await request(server).post('/api/v1/users').send(user1);
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(400);
       expect(res.body).to.have.property('error');

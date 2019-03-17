@@ -5,18 +5,27 @@ import jwt from 'jsonwebtoken';
 import dbHandler from '../../../src/database/dbHandler';
 
 
-let register;
+let user1;
+let user2;
 let msg;
 let sentMsg;
 
 describe('DATABASE METHODS', () => {
   beforeEach(() => {
-    register = {
+    user1 = {
       email: 'ewere@gmail.com',
       firstName: 'admin',
       lastName: 'user',
       confirmPassword: 'admin123',
       password: 'admin123',
+      phoneNumber: '2348130439102',
+    };
+    user2 = {
+      email: 'sam@gmail.com',
+      firstName: 'sam',
+      lastName: 'user',
+      confirmPassword: 'user123',
+      password: 'user123',
       phoneNumber: '2348130439102',
     };
     msg = {
@@ -33,7 +42,7 @@ describe('DATABASE METHODS', () => {
   });
   describe('Create User', () => {
     it('should return valid token if new user infomation is valid ', async () => {
-      const res = await dbHandler.createUser(register);
+      const res = await dbHandler.createUser(user1);
       expect(res).to.be.a('string');
       const decoded = jwt.verify(res, config.get('jwtPrivateKey'));
       expect(decoded).to.be.an('object');
@@ -47,21 +56,30 @@ describe('DATABASE METHODS', () => {
       expect(user).to.have.any.keys('id', 'email', 'firstName', 'lastName', 'password', 'phoneNumber');
     });
   });
+  describe('Get Contacts', () => {
+    it('should return all users except current user as contacts', async () => {
+      const res = await dbHandler.createUser(user2);
+      const { id } = jwt.verify(res, config.get('jwtPrivateKey'));
+      const contacts = dbHandler.getUsers(id);
+      expect(contacts).to.be.an('array');
+      expect(contacts).to.have.lengthOf(1);
+    });
+  });
   describe('Validate User', () => {
     it('should return valid token if user password is correct', async () => {
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.validateUser(register, user);
+      const res = await dbHandler.validateUser(user1, user);
       expect(res).to.be.a('string');
       const decoded = jwt.verify(res, config.get('jwtPrivateKey'));
       expect(decoded).to.be.an('object');
       expect(decoded).to.have.property('id');
     });
     it('should return false if user password is incorrect', async () => {
-      register.password = 'wrong';
+      user1.password = 'wrong';
       const { db } = dbHandler;
       const user = db.users[0];
-      const res = await dbHandler.validateUser(register, user);
+      const res = await dbHandler.validateUser(user1, user);
       expect(res).to.be.false;
     });
   });
