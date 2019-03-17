@@ -30,13 +30,51 @@
         ],
         "responses": {
           "201": {
-            "description": "Persons succesfully created and receives a token.",
+            "description": "User succesfully created and receives a token.",
             "schema": {
               "$ref": "#/definitions/returnNewUserData"
             }
           },
           "400": {
             "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/users/contact": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Gets all Contacts",
+        "description": "Returns a list of contact users.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of contacts",
+            "schema": {
+              "$ref": "#/definitions/returnContactData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
             "schema": {
               "$ref": "#/definitions/returnError"
             }
@@ -63,7 +101,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Persons succesfully sign in and receives a token.",
+            "description": "User succesfully sign in and receives a token.",
             "schema": {
               "$ref": "#/definitions/returnAuthData"
             }
@@ -146,6 +184,39 @@
         }
       }
     },
+    "/messages/save": {
+      "post": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Send a Message as Draft",
+        "description": "Creates and Saves a message.",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "body",
+            "description": "The message to save.",
+            "schema": {
+              "$ref": "#/definitions/SaveMessage"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Draft message has been Created.",
+            "schema": {
+              "$ref": "#/definitions/returnSaveMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
     "/messages/all": {
       "get": {
         "tags": [
@@ -203,6 +274,44 @@
         "responses": {
           "200": {
             "description": "A list of all Read messages",
+            "schema": {
+              "$ref": "#/definitions/returnMessageTypeData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/messages/sent": {
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "Gets all Sent messages",
+        "description": "Returns a list of all Sent messages.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all Sent messages",
             "schema": {
               "$ref": "#/definitions/returnMessageTypeData"
             }
@@ -348,6 +457,49 @@
           }
         }
       },
+      "post": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "send Draft Message",
+        "description": "Creates and Sends a message.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The Draft message Id",
+            "type": "integer"
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "required": true,
+            "description": "user token for authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sent message has been Created",
+            "schema": {
+              "$ref": "#/definitions/returnMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      },
       "put": {
         "tags": [
           "messages"
@@ -480,7 +632,7 @@
         "name": "Tag"
       }
     },
-    "SendMessage": {
+    "SaveMessage": {
       "type": "object",
       "properties": {
         "subject": {
@@ -489,7 +641,24 @@
         "receiverId": {
           "type": "string"
         },
-        "mailerName": {
+        "message": {
+          "type": "string"
+        },
+        "parentMessageId": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "NewUserData"
+      }
+    },
+    "SendMessage": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string"
+        },
+        "receiverId": {
           "type": "string"
         },
         "message": {
@@ -530,8 +699,38 @@
         },
         "parentMessageId": {
           "type": "string"
+        }
+      },
+      "xml": {
+        "name": "NewUserData"
+      }
+    },
+    "MessageSave": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
         },
-        "status": {
+        "createdOn": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "receiverId": {
+          "type": "string"
+        },
+        "senderId": {
+          "type": "string"
+        },
+        "mailerName": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "parentMessageId": {
           "type": "string"
         }
       },
@@ -586,10 +785,10 @@
         "name": "NewUserData"
       }
     },
-    "SendNewUserData": {
+    "ContactType": {
       "type": "object",
       "properties": {
-        "firstName": {
+        "id": {
           "type": "integer",
           "format": "int64"
         },
@@ -599,7 +798,33 @@
         "email": {
           "type": "string"
         },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "ContactType"
+      }
+    },
+    "SendNewUserData": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
         "password": {
+          "type": "string"
+        },
+        "confirmPassword": {
           "type": "string"
         },
         "phoneNumber": {
@@ -639,6 +864,44 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Message"
+          }
+        }
+      }
+    },
+    "returnSaveMessageData": {
+      "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MessageSave"
+          }
+        }
+      }
+    },
+    "returnContactData": {
+      "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContactType"
           }
         }
       }
@@ -719,19 +982,7 @@
     "NewUserData": {
       "type": "object",
       "properties": {
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "phoneNumber": {
+        "token": {
           "type": "string"
         }
       },

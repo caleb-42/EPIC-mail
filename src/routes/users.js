@@ -40,4 +40,12 @@ router.post('/', async (req, res) => {
   });
 });
 
+router.get('/contacts', auth, async (req, res) => {
+  const users = await dbHandler.getUsers(req.user.id);
+  return res.status(200).send({
+    status: 200,
+    data: users,
+  });
+});
+
 module.exports = router;
