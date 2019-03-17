@@ -247,6 +247,27 @@ describe('MAILS API ENDPOINTS', () => {
       expect(messages.body.data[0]).to.include(sentMsg);
     });
   });
+  describe('Send draft mail api/v1/messages/:id', () => {
+    it('should not send mail if user has no token', async () => {
+      await noToken('/api/v1/messages/1', 'post');
+    });
+    it('should send draft mail if user has valid token', async () => {
+      let res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
+      res = await request(server).post('/api/v1/auth').send(user);
+      const { token } = res.body.data[0];
+      const draftMsg = await request(server).post('/api/v1/messages/save').send(sentMsg).set('x-auth-token', token);
+      const sentDraftMsg = await request(server).post(`/api/v1/messages/${draftMsg.body.data[0].id}`).set('x-auth-token', token);
+      expect(sentDraftMsg.status).to.be.equal(201);
+      expect(sentDraftMsg.body).to.have.property('status');
+      expect(sentDraftMsg.body.status).to.be.equal(201);
+      expect(sentDraftMsg.body).to.have.property('data');
+      expect(sentDraftMsg.body).to.not.have.property('error');
+      expect(sentDraftMsg.body.data).to.be.an('array');
+      expect(sentDraftMsg.body.data[0]).to.include(sentMsg);
+      expect(sentDraftMsg.body.data[0]).to.have.property('mailerName');
+    });
+  });
   describe('Update Single Mails by ID api/v1/messages/id', () => {
     it('should not update single mails for user with no token', async () => {
       await noToken('/api/v1/messages/1', 'update');

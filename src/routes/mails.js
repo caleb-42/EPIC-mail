@@ -148,6 +148,24 @@ router.post('/save', auth, async (req, res) => {
     data: msg,
   });
 });
+
+router.post('/:id', auth, async (req, res) => {
+  const draftId = parseInt(req.params.id, 10);
+  const draftMsg = dbHandler.find('messages', { draftId }, 'id', 'draftId');
+  const { error } = validate(_.pick(draftMsg, ['receiverId', 'subject', 'message']));
+  if (error) {
+    return res.status(400).send({
+      status: 400,
+      error: error.details[0].message,
+    });
+  }
+  const msg = dbHandler.sendDraftMessage(draftMsg);
+  return res.status(201).send({
+    status: 201,
+    data: msg,
+  });
+});
+
 router.put('/:id', auth, async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const msg = dbHandler.updateMessageById(id, req.body);
