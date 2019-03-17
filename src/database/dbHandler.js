@@ -79,14 +79,18 @@ class DbHandler {
     const outbox = this.db.outbox
       .find(msg => msg.messageId === stringId);
     if (!outbox) return 'not outbox';
+    const user = this.db.users.find(usr => usr.id === outbox.receiverId);
+    const mailerName = `${user.firstName} ${user.lastName}`;
 
     message.subject = body.subject || message.subject;
     message.receiverId = body.receiverId || message.receiverId;
     message.message = body.message || message.message;
+    message.mailerName = mailerName;
 
     outbox.subject = body.subject || outbox.subject;
     outbox.receiverId = body.receiverId || outbox.receiverId;
     outbox.message = body.message || outbox.message;
+    outbox.mailerName = mailerName;
 
     if (outbox.status === 'sent') {
       const inbox = this.db.inbox
@@ -94,6 +98,7 @@ class DbHandler {
       inbox.subject = body.subject || inbox.subject;
       inbox.receiverId = body.receiverId || inbox.receiverId;
       inbox.message = body.message || inbox.message;
+      inbox.mailerName = mailerName;
       inbox.status = 'unread';
     }
     return [message];
@@ -122,6 +127,28 @@ class DbHandler {
       receivedmsg.status = 'unread';
       this.db.inbox.push(receivedmsg);
     }
+    return [msg];
+  }
+
+  saveMessage(msg) {
+    const now = new Date();
+    const createdOn = date.format(now, 'ddd MMM DD YYYY');
+    msg.createdOn = createdOn;
+    const id = (this.db.messages).length + 1;
+    msg.id = id;
+    this.db.messages.push(msg);
+
+    const draftmsg = {
+      messageId: id.toString(),
+      createdOn,
+      receiverId: msg.receiverId || null,
+      senderId: msg.senderId,
+      mailerName: msg.mailerName || null,
+      subject: msg.subject,
+      status: msg.status,
+    };
+
+    this.db.outbox.push(draftmsg);
     return [msg];
   }
 
