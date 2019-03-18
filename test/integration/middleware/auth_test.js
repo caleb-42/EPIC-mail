@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import request from 'supertest';
 import { expect } from 'chai';
-import dbHandler from '../../../src/v1/database/dbHandler';
+import dbHandler from '../../../src/database/dbHandler';
 
 let server;
 let user;
@@ -15,7 +15,6 @@ describe('AUTH MIDDLEWARE INTEGRATION TEST', () => {
       lastName: 'user',
       confirmPassword: 'admin123',
       password: 'admin123',
-      confirmPassword: 'admin123',
       phoneNumber: '2348130439102',
     };
   });

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import dbHandler from '../../../src/v1/database/dbHandler';
+import dbHandler from '../../../src/database/dbHandler';
 
 let server;
 let user;
@@ -10,7 +10,6 @@ const register = {
   lastName: 'user',
   confirmPassword: 'admin123',
   password: 'admin123',
-  confirmPassword: 'admin123',
   phoneNumber: '2348130439102',
 };
 

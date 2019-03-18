@@ -1,7 +1,7 @@
 import express from 'express';
 import joi from 'joi';
 import _ from 'lodash';
-import auth from '../../middleware/auth';
+import auth from '../middleware/auth';
 import dbHandler from '../database/dbHandler';
 
 const router = express.Router();

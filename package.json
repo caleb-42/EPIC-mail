@@ -57,7 +57,6 @@
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.0",
     "lodash": "^4.17.11",
-    "pg": "^7.8.2",
     "swagger-ui-express": "^4.0.2",
     "winston": "^3.2.1"
   }
