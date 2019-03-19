@@ -6,8 +6,10 @@ CREATE TABLE IF NOT EXISTS users (
   phonenumber VARCHAR(30),
   password TEXT
 );
+
 CREATE TYPE _status as enum('read', 'unread', 'draft');
-  CREATE TABLE IF NOT EXISTS messages (
+
+CREATE TABLE IF NOT EXISTS messages (
   id SERIAL PRIMARY KEY,
   createdon VARCHAR(30),
   message VARCHAR(500),

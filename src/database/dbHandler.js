@@ -1,9 +1,8 @@
 import _ from 'lodash';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import config from 'config';
 import { Pool } from 'pg';
 import date from 'date-and-time';
+import helper from '../utilities';
 import db from './db';
 
 
@@ -22,21 +21,9 @@ class DbHandler {
   find(table, body, query, key = null) {
     /* find any record in database */
   }
-
-  generateJWT(user) {
-    /* generate jwt token */
-    return jwt.sign({ id: user.id }, config.get('jwtPrivateKey'));
-  }
-
+  
   async createUser(newUser) {
     /* create user using in user table */
-  }
-
-  async validateUser(guest, user) {
-    /* validate user password using bcrypt */
-    const validPassword = await bcrypt.compare(guest.password, user.password);
-    if (!validPassword) return false;
-    return this.generateJWT(user);
   }
 
   getUsers(id) {
@@ -84,4 +71,4 @@ class DbHandler {
   }
 }
 const dbHandler = new DbHandler();
-module.exports = dbHandler;
+export default dbHandler;
