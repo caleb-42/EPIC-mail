@@ -28,4 +28,4 @@ app.get('/', (req, res) => res.status(200).send('Welcome to EPIC-mail'));
 const port = process.env.PORT || 3000;
 const server = app.listen(port);
 
-module.exports = server;
+export default server;

@@ -1,5 +1,7 @@
 import joi from 'joi';
 import express from 'express';
+import bcrypt from 'bcrypt';
+import helper from '../utilities';
 import dbHandler from '../database/dbHandler';
 
 const router = express.Router();
@@ -14,7 +16,6 @@ const validate = (user) => {
 };
 
 router.post('/', async (req, res) => {
-  /* console.log(req.body); */
   const { error } = validate(req.body);
   if (error) {
     return res.send({
@@ -29,7 +30,8 @@ router.post('/', async (req, res) => {
       error: 'Invalid email or password',
     });
   }
-  const token = await dbHandler.validateUser(req.body, user);
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  const token = validPassword ? helper.generateJWT(user) : false;
   if (!token) {
     return res.status(400).send({
       status: 400,
@@ -47,4 +49,4 @@ router.post('/', async (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

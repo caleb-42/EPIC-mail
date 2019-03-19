@@ -1,239 +1,74 @@
 import _ from 'lodash';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import config from 'config';
+import { Pool } from 'pg';
 import date from 'date-and-time';
+import helper from '../utilities';
 import db from './db';
 
 
 class DbHandler {
   constructor() {
     this.db = _.cloneDeep(db);
+    this.pool = new Pool({
+      user: 'root',
+      host: 'localhost',
+      database: 'epicmaildev',
+      password: 'ewere',
+      port: 5432,
+    });
   }
 
   find(table, body, query, key = null) {
-    if (!key) key = query;
-    return this.db[table].find(tab => tab[query] === body[key]);
+    /* find any record in database */
   }
-
-  generateJWT(user) {
-    return jwt.sign({ id: user.id }, config.get('jwtPrivateKey'));
-  }
-
+  
   async createUser(newUser) {
-    const id = (this.db.users).length + 1;
-    const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'isAdmin', 'password']);
-    user.id = id;
-    user.isAdmin = id === 1;
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
-    this.db.users.push(user);
-    const token = this.generateJWT(user);
-    return token;
-  }
-
-  async validateUser(guest, user) {
-    const validPassword = await bcrypt.compare(guest.password, user.password);
-    if (!validPassword) return false;
-    return this.generateJWT(user);
+    /* create user using in user table */
   }
 
   getUsers(id) {
-    const users = _.cloneDeep(this.db.users);
-    const contacts = users.filter((user) => {
-      user.password = undefined;
-      user.isAdmin = undefined;
-      return user.id !== id;
-    });
-    return contacts;
+    /* get all contacts */
   }
 
   getMessages(id) {
-    const messages = this.db.messages
-      .filter(message => message.senderId === id || message.receiverId === id);
-    return messages;
+    /* get all received messages for a particular user */
   }
 
   getInboxMessages(id, type = 'all') {
-    const messages = this.db.inbox
-      .filter((message) => {
-        if (type === 'all') return message.receiverId === id;
-        if (type === 'read') return message.receiverId === id && message.status === 'read';
-        return message.receiverId === id && message.status === 'unread';
-      });
-    return messages;
+    /* get all messages for a particular user */
   }
 
   getOutboxMessages(id, type) {
-    const messages = this.db.outbox
-      .filter(message => message.senderId === id && message.status === type);
-    return messages;
+    /* get either draft or sent messages */
   }
 
   getMessageById(id) {
-    const message = this.db.messages
-      .find(msg => msg.id === id);
-    if (!message) return false;
-    return [message];
+    /* get a particular message */
   }
 
   updateMessageById(id, body) {
-    const message = this.db.messages
-      .find(msg => msg.id === id);
-    if (!message) return 'empty';
-    const stringId = String(id);
-    const outbox = this.db.outbox
-      .find(msg => msg.messageId === stringId);
-    if (!outbox) return 'not outbox';
-    const user = this.db.users.find(usr => usr.id === outbox.receiverId);
-    const mailerName = `${user.firstName} ${user.lastName}`;
-
-    message.subject = body.subject || message.subject;
-    message.receiverId = body.receiverId || message.receiverId;
-    message.message = body.message || message.message;
-    message.mailerName = mailerName;
-
-    outbox.subject = body.subject || outbox.subject;
-    outbox.receiverId = body.receiverId || outbox.receiverId;
-    outbox.message = body.message || outbox.message;
-    outbox.mailerName = mailerName;
-
-    if (outbox.status === 'sent') {
-      const inbox = this.db.inbox
-        .find(msg => msg.messageId === stringId);
-      inbox.subject = body.subject || inbox.subject;
-      inbox.receiverId = body.receiverId || inbox.receiverId;
-      inbox.message = body.message || inbox.message;
-      inbox.mailerName = mailerName;
-      inbox.status = 'unread';
-    }
-    return [message];
+    /* update a particular message */
   }
 
   sendMessage(msg) {
-    const now = new Date();
-    const createdOn = date.format(now, 'ddd MMM DD YYYY');
-    msg.createdOn = createdOn;
-    const id = (this.db.messages).length + 1;
-    msg.id = id;
-    this.db.messages.push(msg);
-
-    const sentmsg = {
-      messageId: id.toString(),
-      createdOn,
-      receiverId: msg.receiverId,
-      senderId: msg.senderId,
-      mailerName: msg.mailerName,
-      subject: msg.subject,
-      status: 'sent',
-    };
-    this.db.outbox.push(sentmsg);
-    const receivedmsg = _.cloneDeep(sentmsg);
-    receivedmsg.status = 'unread';
-    this.db.inbox.push(receivedmsg);
-    return [msg];
+    /* send message from a particular user to another */
   }
 
   sendDraftMessage(msg) {
-    const now = new Date();
-    const createdOn = date.format(now, 'ddd MMM DD YYYY');
-    msg.createdOn = createdOn;
-    const { id } = msg;
-    const sentMsg = this.find('outbox', { messageId: String(msg.id) }, 'messageId');
-    sentMsg.receiverId = msg.receiverId;
-    sentMsg.createdOn = createdOn;
-    sentMsg.mailerName = msg.mailerName;
-    sentMsg.status = 'sent';
-    const receivedMsg = {
-      messageId: id.toString(),
-      createdOn,
-      receiverId: msg.receiverId,
-      senderId: msg.senderId,
-      mailerName: msg.mailerName,
-      subject: msg.subject,
-      status: 'unread',
-    };
-    this.db.inbox.push(receivedMsg);
-    return [msg];
+    /* send draft message */
   }
 
   saveMessage(msg) {
-    const now = new Date();
-    const createdOn = date.format(now, 'ddd MMM DD YYYY');
-    msg.createdOn = createdOn;
-    const id = (this.db.messages).length + 1;
-    msg.id = id;
-    this.db.messages.push(msg);
-
-    const draftmsg = {
-      messageId: id.toString(),
-      createdOn,
-      receiverId: msg.receiverId || null,
-      senderId: msg.senderId,
-      mailerName: msg.mailerName || null,
-      subject: msg.subject,
-      status: 'draft',
-    };
-
-    this.db.outbox.push(draftmsg);
-    return [msg];
+    /* creat a draft message */
   }
 
   deleteMessage(id, userId) {
-    const deleteMsg = this.db.messages.find(msg => msg.id === id);
-    if (!deleteMsg) return false;
-
-    const messageId = String(deleteMsg.id);
-
-    const deleteMsgDraft = this.db.outbox.find(msg => msg.messageId === messageId
-                                              && msg.status === 'draft'
-                                              && userId === msg.senderId);
-    if (deleteMsgDraft) {
-      const newMsgArray = this.db.messages.filter(msg => msg.id !== deleteMsg.id);
-      this.db.messages = newMsgArray;
-
-      const newOutboxMsgArray = this.db.outbox.filter(msg => msg.messageId !== messageId);
-      this.db.outbox = newOutboxMsgArray;
-
-      return [{
-        message: deleteMsg.message,
-      }];
-    }
-
-    const deleteMsgSent = this.db.outbox.find(msg => msg.messageId === messageId
-                                              && msg.status === 'sent'
-                                              && userId === msg.senderId);
-    if (deleteMsgSent) {
-      deleteMsgSent.status = 'draft';
-
-      const newMsgArray = this.db.messages.find(msg => msg.id === deleteMsg.id);
-      newMsgArray.status = 'draft';
-
-      const newInboxMsgArray = this.db.inbox.filter(msg => msg.messageId !== messageId);
-      this.db.inbox = newInboxMsgArray;
-
-      return [{
-        message: deleteMsg.message,
-      }];
-    }
-
-    const deleteMsgInbox = this.db.inbox.find(msg => msg.messageId === messageId
-                                              && userId === msg.receiverId);
-
-    if (deleteMsgInbox) {
-      const newInboxMsgArray = this.db.inbox.filter(msg => msg.messageId !== messageId);
-      this.db.inbox = newInboxMsgArray;
-
-      return [{
-        message: deleteMsg.message,
-      }];
-    }
-    /* return false; */
+    /* delete a draft message......... or convert unread message to draft */
   }
 
   resetDb() {
-    this.db = _.cloneDeep(db);
+    /* reset db */
   }
 }
 const dbHandler = new DbHandler();
-module.exports = dbHandler;
+export default dbHandler;
