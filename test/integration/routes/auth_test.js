@@ -1,4 +1,4 @@
-/* import { expect } from 'chai';
+import { expect } from 'chai';
 import request from 'supertest';
 import dbHandler from '../../../src/database/dbHandler';
 
@@ -60,4 +60,3 @@ describe('AUTH API ENDPOINTS', () => {
     });
   });
 });
- */
