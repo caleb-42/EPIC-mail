@@ -7,15 +7,18 @@
     "node": "10.x"
   },
   "scripts": {
-    "test": "cross-env NODE_ENV=testing && nyc mocha --require @babel/register --timeout 10000 --recursive",
+    "test": "npm run recreateDB && cross-env NODE_ENV=testing && nyc mocha --require @babel/register --timeout 20000 --recursive",
     "start": "node build/index.js",
     "start-local": "cross-env NODE_ENV=production && nodemon --exec babel-node src/index.js",
     "dev": "cross-env NODE_ENV=development && nodemon --exec babel-node src/index.js",
     "build": "babel src --out-dir build",
+    "migrate": "psql -d epicmailtest -U postgres -f src/database/db.sql",
+    "dropDB": "psql -d epicmailtest -U postgres -f src/database/dropDb.sql",
+    "recreateDB": "npm run dropDB && npm run migrate",
     "serve": "node build/index.js",
-    "test-mocha": "cross-env NODE_ENV=testing && mocha --require @babel/register --timeout 10000 --recursive",
-    "coverage": "cross-env NODE_ENV=testing && npm test && npm run generate-lcov",
-    "generate-lcov": "cross-env NODE_ENV=testing && nyc report --reporter=text-lcov > lcov.info"
+    "test-mocha": "npm run recreateDB && cross-env NODE_ENV=testing && mocha --require @babel/register --timeout 20000 --recursive",
+    "coverage": "npm run recreateDB && cross-env NODE_ENV=testing && npm test && npm run generate-lcov",
+    "generate-lcov": "npm run recreateDB && cross-env NODE_ENV=testing && nyc report --reporter=text-lcov > lcov.info"
   },
   "repository": {
     "type": "git",

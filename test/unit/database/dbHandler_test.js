@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { expect } from 'chai';
+/* import { expect } from 'chai';
 import config from 'config';
 import jwt from 'jsonwebtoken';
 import dbHandler from '../../../src/database/dbHandler';
@@ -248,4 +248,4 @@ describe('DATABASE METHODS', () => {
       expect(receivedMessage.status).to.be.equal('unread');
     });
   });
-});
+}); */

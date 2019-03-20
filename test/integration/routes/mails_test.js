@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+/* import { expect } from 'chai';
 import request from 'supertest';
 import dbHandler from '../../../src/database/dbHandler';
 
@@ -67,9 +67,6 @@ describe('MAILS API ENDPOINTS', () => {
     dbHandler.resetDb();
     server.close();
   });
-  /* after(() => {
-    dbHandler.resetDb();
-  }); */
   describe('Get All Mails api/v1/messages/all', () => {
     it('should not release mails to user with no token', async () => {
       await noToken('/api/v1/messages/all');
@@ -338,3 +335,4 @@ describe('MAILS API ENDPOINTS', () => {
     });
   });
 });
+ */

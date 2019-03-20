@@ -1,4 +1,10 @@
 {
     "jwtPrivateKey": "epic",
-    "database" : "testDb"
+    "database" : {
+        "user": "postgres",
+        "host": "localhost",
+        "database": "epicmailtest",
+        "password": "postgres",
+        "port": 5432
+    }
 }
