@@ -35,7 +35,6 @@ describe('MAILS API ENDPOINTS', () => {
     expect(messages.body.status).to.be.equal(200);
     expect(messages.body).to.have.property('data');
     expect(messages.body).to.not.have.property('error');
-    console.log(messages.body);
     expect(messages.body.data).to.be.an('array');
   };
   const noToken = async (endpoint, method = 'get') => {

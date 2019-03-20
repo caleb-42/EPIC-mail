@@ -179,12 +179,29 @@ class DbHandler {
     }
   }
 
+  async createGroup(group) {
+    /* create user using in user table */
+    try {
+      const { rows } = await this.pool.query(`INSERT INTO groups (
+        name, role, userid) 
+        VALUES ($1, $2, $3) RETURNING *`, [group.name, group.role, group.userid]);
+      await this.pool.query(`INSERT INTO groupmembers (
+        groupid, role, userid) 
+        VALUES ($1, $2, $3) RETURNING *`, [rows[0].id, group.role, group.userid]);
+      return rows;
+    } catch (err) {
+      return '';
+    }
+  }
+
   async resetDb() {
     /* reset db */
     await this.pool.query(`
     DROP TABLE IF EXISTS users CASCADE;
     DROP TABLE IF EXISTS messages CASCADE; 
     DROP TYPE IF EXISTS _status;
+    DROP TABLE IF EXISTS groups CASCADE;
+    DROP TABLE IF EXISTS groupmembers CASCADE;
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       firstname VARCHAR(30),
@@ -206,7 +223,28 @@ class DbHandler {
       constraint fk_user
       foreign key (receiverid) 
       REFERENCES users (id)
-    );`);
+    );
+    CREATE TABLE IF NOT EXISTS groups (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(30),
+      role VARCHAR(30),
+      userid INTEGER,
+      constraint fk_userid
+      foreign key (userid) 
+      REFERENCES users (id)
+    );
+    CREATE TABLE IF NOT EXISTS groupmembers (
+      groupid INTEGER,
+      userid INTEGER,
+      role VARCHAR(30),
+      constraint fk_userid
+      foreign key (userid) 
+      REFERENCES users (id),
+      constraint fk_groupid
+      foreign key (groupid) 
+      REFERENCES groups (id)
+    );
+    `);
   }
 }
 const dbHandler = new DbHandler();

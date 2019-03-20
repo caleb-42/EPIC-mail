@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import express from 'express';
 import winston from 'winston';
 import bodyParser from 'body-parser';
@@ -7,6 +7,7 @@ import swaggerDocument from '../swagger.json';
 import users from './routes/users';
 import mails from './routes/mails';
 import auth from './routes/auth';
+import groups from './routes/groups';
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/v1/users', users);
 app.use('/api/v1/messages', mails);
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/groups', groups);
 
 if (!process.env.jwtPrivateKey) {
   winston.error('Fatal ERROR : jwtPrivateKey is not defined');

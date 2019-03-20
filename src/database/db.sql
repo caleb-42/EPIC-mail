@@ -22,3 +22,25 @@ CREATE TABLE IF NOT EXISTS messages (
   foreign key (receiverid) 
   REFERENCES users (id)
 );
+
+CREATE TABLE IF NOT EXISTS groups (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(30),
+  role VARCHAR(30),
+  userid INTEGER,
+  constraint fk_userid
+  foreign key (userid) 
+  REFERENCES users (id)
+);
+
+CREATE TABLE IF NOT EXISTS groupmembers (
+  groupid INTEGER,
+  userid INTEGER,
+  role VARCHAR(30),
+  constraint fk_userid
+  foreign key (userid) 
+  REFERENCES users (id),
+  constraint fk_groupid
+  foreign key (groupid) 
+  REFERENCES groups (id)
+);
