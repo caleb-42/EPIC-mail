@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import config from 'config';
 import bcrypt from 'bcrypt';
+import winston from 'winston';
 import { Pool } from 'pg';
 import date from 'date-and-time';
 import helper from '../utilities';
@@ -50,40 +51,126 @@ class DbHandler {
     }
   }
 
-  getMessages(id) {
+  async getMessages(id) {
     /* get all received messages for a particular user */
+    try {
+      const { rows } = await this.pool.query('SELECT * FROM messages WHERE senderid = $1 OR receiverid = $2', [id, id]);
+      return rows;
+    } catch (err) {
+      winston.error(err);
+    }
   }
 
-  getInboxMessages(id, type = 'all') {
+  async getInboxMessages(id, type = 'all') {
     /* get all messages for a particular user */
+    if (type === 'all') {
+      const { rows } = await this.pool.query('SELECT * FROM messages WHERE receiverid = $1', [id]);
+      return rows;
+    }
+    const { rows } = await this.pool.query('SELECT * FROM messages WHERE receiverid = $1 AND status = $2', [id, type]);
+    return rows;
   }
 
-  getOutboxMessages(id, type) {
+  async getOutboxMessages(id, type) {
     /* get either draft or sent messages */
+    if (type === 'draft') {
+      const { rows } = await this.pool.query('SELECT * FROM messages WHERE senderId = $1 AND status = $2', [id, 'draft']);
+      return rows;
+    }
+    const { rows } = await this.pool.query(`SELECT * FROM messages WHERE senderId = $1 AND
+    (status = $2 OR status = $3)`, [id, 'unread', 'read']);
+    return rows;
   }
 
-  getMessageById(id) {
+  async getMessageById(id) {
     /* get a particular message */
+    const { rows } = await this.pool.query('SELECT * FROM messages WHERE id = $1', [id]);
+    return rows;
   }
 
-  updateMessageById(id, body) {
+  async updateMessageById(req, msg) {
     /* update a particular message */
+    const message = req.message || msg.message;
+    const receiverId = req.receiverId || msg.receiverid;
+    const subject = req.subject || msg.subject;
+    const id = req.id || msg.id;
+
+    const { rows } = await this.pool.query(`UPDATE messages SET message = $1, receiverId = $2, subject = $3
+    WHERE (id = $4) RETURNING *`,
+    [message, receiverId, subject, id]);
+    return rows;
   }
 
-  sendMessage(msg) {
+  async sendMessage(msg) {
     /* send message from a particular user to another */
+    try {
+      const now = new Date();
+      const createdOn = date.format(now, 'ddd MMM DD YYYY');
+      msg.createdOn = createdOn;
+      msg.status = 'unread';
+      msg.parentMessageId = msg.parentMessageId || null;
+
+      const message = _.pick(msg, ['createdOn', 'message', 'parentMessageId', 'receiverId', 'subject', 'senderId', 'status']);
+      const { rows } = await this.pool.query(`INSERT INTO messages (
+        createdOn, message, parentMessageId,
+        receiverid, subject, senderid, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      Object.values(message));
+      const sentMsg = rows[0];
+      return [sentMsg];
+    } catch (err) {
+      winston.error(err.stack);
+    }
   }
 
-  sendDraftMessage(msg) {
-    /* send draft message */
+  async sendDraftMessage(msg) {
+    try {
+      const { rows } = await this.pool.query('UPDATE messages SET status = $1 WHERE (id = $2) RETURNING *',
+        ['unread', msg.id]);
+      const sentMsg = rows[0];
+      return [sentMsg];
+    } catch (err) {
+      winston.error(err.stack);
+    }
   }
 
-  saveMessage(msg) {
+  async saveMessage(msg) {
     /* creat a draft message */
+    try {
+      const now = new Date();
+      const createdOn = date.format(now, 'ddd MMM DD YYYY');
+      msg.createdOn = createdOn;
+      msg.status = 'draft';
+      msg.parentMessageId = msg.parentMessageId || null;
+      msg.receiverId = msg.receiverId || null;
+
+      const message = _.pick(msg, ['createdOn', 'message', 'parentMessageId', 'receiverId', 'subject', 'senderId', 'status']);
+      const { rows } = await this.pool.query(`INSERT INTO messages (
+        createdOn, message, parentMessageId,
+        receiverid, subject, senderid, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      Object.values(message));
+      const draftMsg = rows[0];
+      return [draftMsg];
+    } catch (err) {
+      winston.error(err.stack);
+    }
   }
 
-  deleteMessage(id, userId) {
+  async deleteMessage(msg, user) {
     /* delete a draft message......... or convert unread message to draft */
+    try {
+      if (msg.status === 'draft') {
+        await this.pool.query('DELETE FROM messages WHERE (id = $1 AND (senderid = $2 OR receiverid = $3)) RETURNING *',
+          [msg.id, user.id, user.id]);
+      } else if (msg.status === 'unread') {
+        await this.pool.query('UPDATE messages SET status = $1 WHERE (id = $2 AND (senderid = $3 OR receiverid = $4)) RETURNING *',
+          ['draft', msg.id, user.id, user.id]);
+      }
+      return [{ message: msg.message }];
+    } catch (e) {
+      winston.error(e.stack);
+    }
   }
 
   async resetDb() {

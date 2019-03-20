@@ -17,6 +17,16 @@ const validate = (msg) => {
   return joi.validate(msg, schema);
 };
 
+const updateValidate = (msg) => {
+  const schema = {
+    id: joi.number().required(),
+    receiverId: joi.number().optional(),
+    subject: joi.string().max(32).required(),
+    message: joi.string().required(),
+  };
+  return joi.validate(msg, schema);
+};
+
 const draftValidate = (msg) => {
   const schema = {
     /* id: joi.number().equal(0), */
@@ -32,48 +42,48 @@ router.get('/', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getInboxMessages(id),
+    data: await dbHandler.getInboxMessages(id),
   });
 });
 router.get('/all', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getMessages(id),
+    data: await dbHandler.getMessages(id),
   });
 });
 router.get('/unread', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getInboxMessages(id, 'unread'),
+    data: await dbHandler.getInboxMessages(id, 'unread'),
   });
 });
 router.get('/read', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getInboxMessages(id, 'read'),
+    data: await dbHandler.getInboxMessages(id, 'read'),
   });
 });
 router.get('/sent', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getOutboxMessages(id, 'sent'),
+    data: await dbHandler.getOutboxMessages(id, 'sent'),
   });
 });
 router.get('/draft', auth, async (req, res) => {
   const { id } = req.user;
   return res.status(200).send({
     status: 200,
-    data: dbHandler.getOutboxMessages(id, 'draft'),
+    data: await dbHandler.getOutboxMessages(id, 'draft'),
   });
 });
 router.get('/:id', auth, async (req, res) => {
   const msgId = parseInt(req.params.id, 10);
-  const msg = dbHandler.getMessageById(msgId);
-  if (!msg) {
+  const msg = await dbHandler.getMessageById(msgId);
+  if (msg.length === 0) {
     return res.status(404).send({
       status: 404,
       error: 'message ID does not exist',
@@ -99,16 +109,15 @@ router.post('/', auth, async (req, res) => {
       error: 'user cannot send message to self',
     });
   }
-  const user = dbHandler.find('users', req.body, 'id', 'receiverId');
+  const user = await dbHandler.find('users', req.body, 'id', 'receiverId');
   if (!user) {
     return res.status(404).send({
       status: 404,
       error: 'receiver not found',
     });
   }
-  req.body.mailerName = `${user.firstName} ${user.lastName}`;
   req.body.senderId = id;
-  const msg = dbHandler.sendMessage(req.body);
+  const msg = await dbHandler.sendMessage(req.body);
   return res.status(201).send({
     status: 201,
     data: msg,
@@ -125,14 +134,13 @@ router.post('/save', auth, async (req, res) => {
     });
   }
   if (req.body.receiverId) {
-    const user = dbHandler.find('users', req.body, 'id', 'receiverId');
+    const user = await dbHandler.find('users', req.body, 'id', 'receiverId');
     if (!user) {
       return res.status(404).send({
         status: 404,
         error: 'receiver not found',
       });
     }
-    req.body.mailerName = `${user.firstName} ${user.lastName}`;
     if (id === req.body.receiverId && req.body.receiverId) {
       return res.status(400).send({
         status: 400,
@@ -142,7 +150,7 @@ router.post('/save', auth, async (req, res) => {
   }
 
   req.body.senderId = id;
-  const msg = dbHandler.saveMessage(req.body);
+  const msg = await dbHandler.saveMessage(req.body);
   return res.status(201).send({
     status: 201,
     data: msg,
@@ -150,8 +158,9 @@ router.post('/save', auth, async (req, res) => {
 });
 
 router.post('/:id', auth, async (req, res) => {
-  const draftId = parseInt(req.params.id, 10);
-  const draftMsg = dbHandler.find('messages', { draftId }, 'id', 'draftId');
+  const id = parseInt(req.params.id, 10);
+  const draftMsg = await dbHandler.find('messages', { id }, 'id');
+  draftMsg.receiverId = draftMsg.receiverid;
   const { error } = validate(_.pick(draftMsg, ['receiverId', 'subject', 'message']));
   if (error) {
     return res.status(400).send({
@@ -159,43 +168,45 @@ router.post('/:id', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
-  const msg = dbHandler.sendDraftMessage(draftMsg);
+  const msg = await dbHandler.sendDraftMessage(draftMsg);
   return res.status(201).send({
     status: 201,
     data: msg,
   });
 });
 
-router.put('/:id', auth, async (req, res) => {
-  const id = parseInt(req.params.id, 10);
-  const msg = dbHandler.updateMessageById(id, req.body);
-  if (msg === 'empty') {
-    return res.status(404).send({
-      status: 404,
-      error: 'message ID does not exist',
-    });
-  }
-  if (msg === 'not outbox') {
+router.patch('/', auth, async (req, res) => {
+  const { error } = updateValidate(req.body);
+  if (error) {
     return res.status(400).send({
       status: 400,
-      error: 'Invalid message Type, Can only Update Outbox Messages',
+      error: error.details[0].message,
     });
   }
-  return res.status(200).send({
-    status: 200,
-    data: msg,
-  });
-});
-
-router.delete('/:id', auth, async (req, res) => {
-  const id = parseInt(req.params.id, 10);
-  const msg = dbHandler.deleteMessage(id, req.user.id);
+  const msg = await dbHandler.find('messages', req.body, 'id');
   if (!msg) {
     return res.status(404).send({
       status: 404,
       error: 'message ID does not exist',
     });
   }
+  const updateMsg = await dbHandler.updateMessageById(req.body, msg);
+  return res.status(200).send({
+    status: 200,
+    data: updateMsg,
+  });
+});
+
+router.delete('/:id', auth, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  let msg = await dbHandler.find('messages', { id }, 'id');
+  if (!msg) {
+    return res.status(404).send({
+      status: 404,
+      error: 'message ID does not exist',
+    });
+  }
+  msg = await dbHandler.deleteMessage(msg, req.user);
   return res.status(200).send({
     status: 200,
     data: msg,
