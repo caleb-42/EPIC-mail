@@ -1,16 +1,22 @@
+import dotenv from 'dotenv';
 import _ from 'lodash';
-import config from 'config';
 import bcrypt from 'bcrypt';
 import winston from 'winston';
 import { Pool } from 'pg';
 import date from 'date-and-time';
 import helper from '../utilities';
-import db from './db';
+
+dotenv.config();
 
 class DbHandler {
   constructor() {
-    this.db = _.cloneDeep(db);
-    this.pool = new Pool(config.get('database'));
+    this.pool = new Pool({
+      user: process.env.DBUSERNAME,
+      host: 'localhost',
+      database: process.env.DBNAME,
+      password: process.env.DBPASS,
+      port: 5432,
+    });
   }
 
   async find(table, body, query, key = null) {

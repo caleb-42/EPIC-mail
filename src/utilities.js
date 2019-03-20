@@ -1,9 +1,11 @@
 import jwt from 'jsonwebtoken';
-import config from 'config';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const helpers = {
 
-  generateJWT: user => jwt.sign({ id: user.id }, config.get('jwtPrivateKey')),
+  generateJWT: user => jwt.sign({ id: user.id }, process.env.jwtPrivateKey),
 
 };
 

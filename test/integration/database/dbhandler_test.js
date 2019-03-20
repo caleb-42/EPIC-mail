@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import config from 'config';
+import dotenv from 'dotenv';
 import _ from 'lodash';
 import jwt from 'jsonwebtoken';
 import dbHandler from '../../../src/database/dbHandler';
 
+dotenv.config();
 
 let user1;
 let user2;
@@ -44,7 +45,7 @@ describe('DATABASE METHODS', () => {
     it('should return valid token if new user infomation is valid ', async () => {
       const res = await dbHandler.createUser(user1);
       expect(res).to.be.a('string');
-      const decoded = jwt.verify(res, config.get('jwtPrivateKey'));
+      const decoded = jwt.verify(res, process.env.jwtPrivateKey);
       expect(decoded).to.be.an('object');
       expect(decoded).to.have.property('id');
     });
@@ -52,7 +53,7 @@ describe('DATABASE METHODS', () => {
   describe('Get Contacts', () => {
     it('should return all users except current user as contacts', async () => {
       const res = await dbHandler.createUser(user2);
-      const { id } = jwt.verify(res, config.get('jwtPrivateKey'));
+      const { id } = jwt.verify(res, process.env.jwtPrivateKey);
       const contacts = await dbHandler.getUsers(id);
       expect(contacts).to.be.an('array');
       expect(contacts).to.have.lengthOf(1);

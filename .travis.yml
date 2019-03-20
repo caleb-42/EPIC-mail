@@ -7,7 +7,6 @@ cache:
   - node_modules
 env:
   global:
-  - epic_jwtPrivateKey=EPIC-mail
   - NODE_ENV=testing
 before_script:
   - psql -c 'create database epicmailtest;' -U postgres
