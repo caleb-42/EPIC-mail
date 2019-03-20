@@ -150,4 +150,15 @@ describe('DATABASE METHODS', () => {
       expect(draftMsg).to.have.any.keys('id');
     });
   });
+  describe('Create Group', () => {
+    it('should create group if group is valid', async () => {
+      await dbHandler.resetDb();
+      const res = await dbHandler.createUser(user1);
+      const userToken = jwt.verify(res, process.env.jwtPrivateKey);
+      const newGroup = await dbHandler.createGroup({name: 'caleb', role: 'admin', userid: userToken.id });
+      expect(newGroup).to.be.an('array');
+      expect(newGroup[0]).to.have.any.keys('id', 'name', 'userid', 'role');
+      expect(newGroup[0]).to.include({ name: 'caleb' });
+    });
+  });
 });
