@@ -1,4 +1,10 @@
 {
     "jwtPrivateKey": "epic",
-    "database" : "devDb"
+    "database" : {
+        "user": "postgres",
+        "host": "localhost",
+        "database": "epicmaildev",
+        "password": "postgres",
+        "port": 5432
+    }
 }

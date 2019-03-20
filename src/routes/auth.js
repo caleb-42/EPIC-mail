@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
       error: error.details[0].message,
     });
   }
-  const user = dbHandler.find('users', req.body, 'email');
+  const user = await dbHandler.find('users', req.body, 'email');
   if (!user) {
     return res.status(400).send({
       status: 400,

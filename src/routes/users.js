@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
       error: error.details[0].message,
     });
   }
-  const userPresent = dbHandler.find('users', req.body, 'email');
+  const userPresent = await dbHandler.find('users', req.body, 'email');
   if (userPresent) {
     return res.status(400).send({
       status: 400,
@@ -48,4 +48,4 @@ router.get('/contacts', auth, async (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;

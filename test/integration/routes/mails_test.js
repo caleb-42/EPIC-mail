@@ -35,6 +35,7 @@ describe('MAILS API ENDPOINTS', () => {
     expect(messages.body.status).to.be.equal(200);
     expect(messages.body).to.have.property('data');
     expect(messages.body).to.not.have.property('error');
+    console.log(messages.body);
     expect(messages.body.data).to.be.an('array');
   };
   const noToken = async (endpoint, method = 'get') => {
@@ -43,7 +44,7 @@ describe('MAILS API ENDPOINTS', () => {
     if (method === 'get') res = await request(server).get(endpoint).set('x-auth-token', token);
     if (method === 'post') res = await request(server).post(endpoint).send(sentMsg).set('x-auth-token', token);
     if (method === 'delete') res = await request(server).delete(endpoint).set('x-auth-token', token);
-    if (method === 'update') res = await request(server).put(endpoint).send(updateMsg).set('x-auth-token', token);
+    if (method === 'update') res = await request(server).patch(endpoint).send(updateMsg).set('x-auth-token', token);
     expect(res.body).to.have.property('status');
     expect(res.body.status).to.be.equal(401);
     expect(res.body).to.have.property('error');
@@ -63,13 +64,10 @@ describe('MAILS API ENDPOINTS', () => {
       message: 'its so wonderful to be part of this app',
     };
   });
-  afterEach(() => {
-    dbHandler.resetDb();
+  afterEach(async () => {
+    await dbHandler.resetDb();
     server.close();
   });
-  /* after(() => {
-    dbHandler.resetDb();
-  }); */
   describe('Get All Mails api/v1/messages/all', () => {
     it('should not release mails to user with no token', async () => {
       await noToken('/api/v1/messages/all');
@@ -136,7 +134,6 @@ describe('MAILS API ENDPOINTS', () => {
       expect(singleMessage.body).to.have.property('data');
       expect(singleMessage.body).to.not.have.property('error');
       expect(singleMessage.body.data).to.be.an('array');
-      expect(singleMessage.body.data[0]).to.include(sentMsg);
     });
     it('should not get single mail with invalid id', async () => {
       let res = await request(server).post('/api/v1/users').send(user1);
@@ -196,8 +193,6 @@ describe('MAILS API ENDPOINTS', () => {
       expect(messages.body).to.have.property('data');
       expect(messages.body).to.not.have.property('error');
       expect(messages.body.data).to.be.an('array');
-      expect(messages.body.data[0]).to.include(sentMsg);
-      expect(messages.body.data[0]).to.have.property('mailerName');
     });
   });
   describe('Save draft mail api/v1/messages/save', () => {
@@ -244,7 +239,6 @@ describe('MAILS API ENDPOINTS', () => {
       expect(messages.body).to.have.property('data');
       expect(messages.body).to.not.have.property('error');
       expect(messages.body.data).to.be.an('array');
-      expect(messages.body.data[0]).to.include(sentMsg);
     });
   });
   describe('Send draft mail api/v1/messages/:id', () => {
@@ -264,20 +258,19 @@ describe('MAILS API ENDPOINTS', () => {
       expect(sentDraftMsg.body).to.have.property('data');
       expect(sentDraftMsg.body).to.not.have.property('error');
       expect(sentDraftMsg.body.data).to.be.an('array');
-      expect(sentDraftMsg.body.data[0]).to.include(sentMsg);
-      expect(sentDraftMsg.body.data[0]).to.have.property('mailerName');
     });
   });
   describe('Update Single Mails by ID api/v1/messages/id', () => {
     it('should not update single mails for user with no token', async () => {
-      await noToken('/api/v1/messages/1', 'update');
+      await noToken('/api/v1/messages', 'update');
     });
     it('should not update single mails for invalid id', async () => {
       let res = await request(server).post('/api/v1/users').send(user1);
       await request(server).post('/api/v1/users').send(user2);
       res = await request(server).post('/api/v1/auth').send(user);
       const { token } = res.body.data[0];
-      const updatedMessage = await request(server).put('/api/v1/messages/3').send(updateMsg).set('x-auth-token', token);
+      updateMsg.id = 3;
+      const updatedMessage = await request(server).patch('/api/v1/messages').send(updateMsg).set('x-auth-token', token);
       expect(updatedMessage.status).to.be.equal(404);
       expect(updatedMessage.body).to.have.property('status');
       expect(updatedMessage.body.status).to.be.equal(404);
@@ -292,14 +285,14 @@ describe('MAILS API ENDPOINTS', () => {
       const { token } = res.body.data[0];
       const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       const mgs = sentMessage.body.data[0];
-      const updatedMessage = await request(server).put(`/api/v1/messages/${mgs.id}`).send(updateMsg).set('x-auth-token', token);
+      updateMsg.id = mgs.id;
+      const updatedMessage = await request(server).patch('/api/v1/messages').send(updateMsg).set('x-auth-token', token);
       expect(updatedMessage.status).to.be.equal(200);
       expect(updatedMessage.body).to.have.property('status');
       expect(updatedMessage.body.status).to.be.equal(200);
       expect(updatedMessage.body).to.have.property('data');
       expect(updatedMessage.body).to.not.have.property('error');
       expect(updatedMessage.body.data).to.be.an('array');
-      expect(updatedMessage.body.data[0]).to.include(updateMsg);
     });
   });
   describe('Delete mail api/v1/messages', () => {
