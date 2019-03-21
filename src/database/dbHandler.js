@@ -57,6 +57,16 @@ class DbHandler {
     }
   }
 
+  async getGroups(id) {
+    /* get all contacts */
+    try {
+      const { rows } = await this.pool.query('SELECT * FROM groups WHERE userid = $1', [id]);
+      return rows;
+    } catch (err) {
+      winston.error(err);
+    }
+  }
+
   async getMessages(id) {
     /* get all received messages for a particular user */
     try {
