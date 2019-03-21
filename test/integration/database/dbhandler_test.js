@@ -211,4 +211,15 @@ describe('DATABASE METHODS', () => {
       expect(res).to.have.lengthOf(1);
     });
   });
+  describe('Patch group name', () => {
+    it('should return new name if user and name is valid', async () => {
+      await dbHandler.resetDb();
+      await dbHandler.createUser(user1);
+      const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: 1 });
+      const updateGroup = { name: 'sam' };
+      const resp = await dbHandler.updateGroupById(newGroup[0].id, updateGroup);
+      expect(resp).to.be.an('array');
+      expect(resp[0]).to.have.any.keys('id', 'name');
+    });
+  });
 });
