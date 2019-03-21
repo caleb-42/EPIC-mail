@@ -60,7 +60,7 @@ class DbHandler {
   async getMessages(id) {
     /* get all received messages for a particular user */
     try {
-      const { rows } = await this.pool.query('SELECT * FROM messages WHERE senderid = $1 OR receiverid = $2', [id, id]);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE (messages.receiverid = $1);', [id]);
       return rows;
     } catch (err) {
       winston.error(err);
@@ -70,27 +70,26 @@ class DbHandler {
   async getInboxMessages(id, type = 'all') {
     /* get all messages for a particular user */
     if (type === 'all') {
-      const { rows } = await this.pool.query('SELECT * FROM messages WHERE receiverid = $1', [id]);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE receiverid = $1', [id]);
       return rows;
     }
-    const { rows } = await this.pool.query('SELECT * FROM messages WHERE receiverid = $1 AND status = $2', [id, type]);
+    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE receiverid = $1 AND status = $2', [id, type]);
     return rows;
   }
 
   async getOutboxMessages(id, type) {
     /* get either draft or sent messages */
     if (type === 'draft') {
-      const { rows } = await this.pool.query('SELECT * FROM messages WHERE senderId = $1 AND status = $2', [id, 'draft']);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderId = users.id) WHERE messages.senderId = $1 AND messages.status = $2', [id, 'draft']);
       return rows;
     }
-    const { rows } = await this.pool.query(`SELECT * FROM messages WHERE senderId = $1 AND
-    (status = $2 OR status = $3)`, [id, 'unread', 'read']);
+    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderId = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3)', [id, 'unread', 'read']);
     return rows;
   }
 
   async getMessageById(id) {
     /* get a particular message */
-    const { rows } = await this.pool.query('SELECT * FROM messages WHERE id = $1', [id]);
+    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.id = $1', [id]);
     return rows;
   }
 
@@ -220,7 +219,14 @@ class DbHandler {
   async getGroupMembers(id) {
     /* get all contacts */
     try {
-      const { rows } = await this.pool.query('SELECT * FROM groupmembers WHERE groupid = $1', [id]);
+      /* const { rows } = await this.pool.query('SELECT * FROM groupmembers WHERE groupid = $1', [id]); */
+      const { rows } = await this.pool.query(`
+      SELECT groupmembers.*, groups.*, users.firstname,
+      users.lastname FROM groupmembers
+      INNER JOIN groups ON (groupmembers.groupid = groups.id) 
+      INNER JOIN users ON (groupmembers.userid = users.id) 
+      WHERE groupmembers.groupid = $1
+      `, [id]);
       return rows;
     } catch (err) {
       winston.error(err);
