@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import dbHandler from '../database/dbHandler';
 
 dotenv.config();
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   const token = req.header('x-auth-token');
   if (!token) {
     return res.status(401).send({
@@ -13,6 +14,13 @@ const auth = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.jwtPrivateKey);
+    const user = await dbHandler.find('users', { id: decoded.id }, 'id');
+    if (!user) {
+      return res.status(404).send({
+        status: 404,
+        error: 'User ID does not exist',
+      });
+    }
     req.user = decoded;
     next();
   } catch (e) {

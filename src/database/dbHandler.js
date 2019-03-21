@@ -194,6 +194,18 @@ class DbHandler {
     }
   }
 
+  async groupAddUser(payload) {
+    /* create user using in user table */
+    try {
+      const { rows } = await this.pool.query(`INSERT INTO groupmembers (
+        groupid, userid, role) 
+        VALUES ($1, $2, $3) RETURNING *`, [payload.groupid, payload.id, 'user']);
+      return rows;
+    } catch (err) {
+      winston.error(err.stack);
+    }
+  }
+
   async resetDb() {
     /* reset db */
     await this.pool.query(`
