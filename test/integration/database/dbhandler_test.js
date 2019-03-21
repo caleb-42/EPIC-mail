@@ -155,10 +155,23 @@ describe('DATABASE METHODS', () => {
       await dbHandler.resetDb();
       const res = await dbHandler.createUser(user1);
       const userToken = jwt.verify(res, process.env.jwtPrivateKey);
-      const newGroup = await dbHandler.createGroup({name: 'caleb', role: 'admin', userid: userToken.id });
+      const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: userToken.id });
       expect(newGroup).to.be.an('array');
       expect(newGroup[0]).to.have.any.keys('id', 'name', 'userid', 'role');
       expect(newGroup[0]).to.include({ name: 'caleb' });
+    });
+  });
+  describe('Add user to Group', () => {
+    it('should add user to group if user and group are valid', async () => {
+      await dbHandler.resetDb();
+      const res = await dbHandler.createUser(user1);
+      const userToken = jwt.verify(res, process.env.jwtPrivateKey);
+      const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: userToken.id });
+      const newGroupUser = await dbHandler
+        .groupAddUser({ groupid: newGroup[0].id, id: newGroup[0].userid });
+      expect(newGroupUser).to.be.an('array');
+      expect(newGroupUser[0]).to.have.any.keys('groupid', 'userid', 'role');
+      expect(newGroupUser[0]).to.include({ userid: newGroup[0].userid });
     });
   });
 });
