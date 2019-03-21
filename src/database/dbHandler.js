@@ -206,6 +206,17 @@ class DbHandler {
     }
   }
 
+  async groupDeleteUser(member, group) {
+    /* delete a draft message......... or convert unread message to draft */
+    try {
+      await this.pool.query('DELETE FROM groupmembers WHERE (userid = $1 AND groupid = $2) RETURNING *',
+        [member.id, group.id]);
+      return [{ messages: `${member.firstname} ${member.lastname} has been deleted from ${group.name}` }];
+    } catch (e) {
+      winston.error(e.stack);
+    }
+  }
+
   async resetDb() {
     /* reset db */
     await this.pool.query(`

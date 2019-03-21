@@ -79,5 +79,30 @@ router.post('/:id/users', auth, async (req, res) => {
   });
 });
 
+router.delete('/:groupid/users/:userid', auth, async (req, res) => {
+  const { groupid } = req.params;
+  const { userid } = req.params;
+  const group = await dbHandler.find('groups', { id: groupid }, 'id');
+  let user = await dbHandler.find('groupmembers', { userid }, 'userid');
+  if (!group) {
+    return res.status(404).send({
+      status: 404,
+      error: 'Group ID does not exist',
+    });
+  }
+  user = await dbHandler.find('users', { id: userid }, 'id');
+  if (!user) {
+    return res.status(404).send({
+      status: 404,
+      error: 'User ID does not exist in group',
+    });
+  }
+  const msg = await dbHandler.groupDeleteUser(user, group);
+  return res.status(200).send({
+    status: 200,
+    data: msg,
+  });
+});
+
 
 module.exports = router;
