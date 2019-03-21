@@ -52,6 +52,14 @@ router.post('/', auth, async (req, res) => {
   });
 });
 
+router.get('/', auth, async (req, res) => {
+  console.log(req.user.id);
+  return res.status(200).send({
+    status: 200,
+    data: await dbHandler.getGroups(req.user.id),
+  });
+});
+
 router.post('/:id/users', auth, async (req, res) => {
   const { id } = req.params;
   const { error } = validateAddUser(req.body);

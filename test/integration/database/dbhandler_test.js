@@ -201,4 +201,14 @@ describe('DATABASE METHODS', () => {
       expect(resp[0]).to.have.any.keys('id', 'receiverid', 'status');
     });
   });
+  describe('Get all groups', () => {
+    it('should return all groups if user id is valid', async () => {
+      await dbHandler.resetDb();
+      await dbHandler.createUser(user1);
+      await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: 1 });
+      const res = await dbHandler.getGroups(1);
+      expect(res).to.be.an('array');
+      expect(res).to.have.lengthOf(1);
+    });
+  });
 });

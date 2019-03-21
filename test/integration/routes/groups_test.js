@@ -179,4 +179,19 @@ describe('GROUPS API ENDPOINTS', () => {
       success(resp, 201);
     });
   });
+  describe('get all groups api/v1/groups/', () => {
+    it('should not realease groups to user with no token', async () => {
+      await noToken('/api/v1/groups');
+    });
+    it('should not realease groups to valid user', async () => {
+      const res = await request(server).post('/api/v1/users').send(user1);
+      const { token } = res.body.data[0];
+      const messages = await request(server).get('/api/v1/groups').set('x-auth-token', token);
+      expect(messages.body).to.have.property('status');
+      expect(messages.body.status).to.be.equal(200);
+      expect(messages.body).to.have.property('data');
+      expect(messages.body).to.not.have.property('error');
+      expect(messages.body.data).to.be.an('array');
+    });
+  });
 });
