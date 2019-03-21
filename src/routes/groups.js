@@ -46,9 +46,10 @@ router.post('/', auth, async (req, res) => {
   }
   req.body.role = 'admin';
   req.body.userid = req.user.id;
+  const newgroup = await dbHandler.createGroup(req.body);
   return res.status(201).send({
     status: 201,
-    data: await dbHandler.createGroup(req.body),
+    data: newgroup,
   });
 });
 
@@ -123,6 +124,29 @@ router.patch('/:id/name', auth, async (req, res) => {
   return res.status(200).send({
     status: 200,
     data: await dbHandler.updateGroupById(id, req.body),
+  });
+});
+
+router.delete('/:id', auth, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const group = await dbHandler.find('groups', { id }, 'id');
+  if (!group) {
+    return res.status(404).send({
+      status: 404,
+      error: 'Group ID does not exist',
+    });
+  }
+
+  if (group.userid !== req.user.id) {
+    return res.status(401).send({
+      status: 401,
+      error: 'You are not authorized to delete this group',
+    });
+  }
+  const msg = await dbHandler.deleteGroup(group, req.user);
+  return res.status(200).send({
+    status: 200,
+    data: msg,
   });
 });
 

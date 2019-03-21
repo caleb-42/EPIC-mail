@@ -194,12 +194,14 @@ class DbHandler {
       const { rows } = await this.pool.query(`INSERT INTO groups (
         name, role, userid) 
         VALUES ($1, $2, $3) RETURNING *`, [group.name, group.role, group.userid]);
-      await this.pool.query(`INSERT INTO groupmembers (
+      /* console.log(rows, group);
+      const members = await this.pool.query(`INSERT INTO groupmembers (
         groupid, role, userid) 
         VALUES ($1, $2, $3) RETURNING *`, [rows[0].id, group.role, group.userid]);
+      console.log(members); */
       return rows;
     } catch (err) {
-      return '';
+      winston.error(err);
     }
   }
 
@@ -243,6 +245,17 @@ class DbHandler {
     }
   }
 
+  async deleteGroup(group) {
+    /* delete a draft message......... or convert unread message to draft */
+    try {
+      await this.pool.query('DELETE FROM groups WHERE (id = $1)',
+        [group.id]);
+      return [{ message: `${group.name} has been deleted` }];
+    } catch (e) {
+      winston.error(e.stack);
+    }
+  }
+
   async groupSendMsg(msg) {
     /* send message from a particular user to another */
     try {
@@ -255,7 +268,7 @@ class DbHandler {
       let result;
       const groupMembers = await this.getGroupMembers(msg.groupid);
       if (groupMembers.length === 0) return [];
-      for (let i = 1; i < groupMembers.length; i += 1) {
+      for (let i = 0; i < groupMembers.length; i += 1) {
         // eslint-disable-next-line no-await-in-loop
         result = await this.pool.query(`INSERT INTO messages (
           createdOn, message, parentMessageId,

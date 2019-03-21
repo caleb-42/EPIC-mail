@@ -222,4 +222,15 @@ describe('DATABASE METHODS', () => {
       expect(resp[0]).to.have.any.keys('id', 'name');
     });
   });
+  describe('Delete group name', () => {
+    it('should Delete if id is valid', async () => {
+      await dbHandler.resetDb();
+      await dbHandler.createUser(user1);
+      const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: 1 });
+      const resp = await dbHandler.deleteGroup(newGroup[0]);
+      expect(resp).to.be.an('array');
+      expect(resp[0]).to.have.any.keys('message');
+      expect(resp[0].message).to.include('has been deleted');
+    });
+  });
 });
