@@ -212,4 +212,25 @@ describe('GROUPS API ENDPOINTS', () => {
       success(resp, 200);
     });
   });
+  describe('Delete group api/v1/groups/:id/name', () => {
+    it('should not delete group if user has no token', async () => {
+      await noToken('/api/v1/groups/1', 'delete');
+    });
+    it('should not delete group if user is not admin', async () => {
+      const res = await request(server).post('/api/v1/users').send(user1);
+      const unauth = await request(server).post('/api/v1/users').send(user2);
+      const { token } = res.body.data[0];
+      const unauthtoken = unauth.body.data[0].token;
+      await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
+      const resp = await request(server).delete('/api/v1/groups/1').set('x-auth-token', unauthtoken);
+      error(resp, 401, 'You are not authorized to delete this group');
+    });
+    it('should delete a group if user is admin', async () => {
+      const res = await request(server).post('/api/v1/users').send(user1);
+      const { token } = res.body.data[0];
+      await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
+      const resp = await request(server).delete('/api/v1/groups/1').set('x-auth-token', token);
+      success(resp, 200);
+    });
+  });
 });
