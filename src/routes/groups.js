@@ -97,6 +97,35 @@ router.post('/:id/users', auth, async (req, res) => {
   });
 });
 
+router.patch('/:id/name', auth, async (req, res) => {
+  const { id } = req.params;
+  const { error } = validate(req.body);
+  if (error) {
+    return res.status(400).send({
+      status: 400,
+      error: error.details[0].message,
+    });
+  }
+  let group = await dbHandler.find('groups', { id }, 'id');
+  if (!group) {
+    return res.status(404).send({
+      status: 404,
+      error: 'Group ID does not exist',
+    });
+  }
+  group = await dbHandler.find('groups', { name: req.body.name }, 'name');
+  if (group) {
+    return res.status(400).send({
+      status: 400,
+      error: 'Group already registered',
+    });
+  }
+  return res.status(200).send({
+    status: 200,
+    data: await dbHandler.updateGroupById(id, req.body),
+  });
+});
+
 router.delete('/:groupid/users/:userid', auth, async (req, res) => {
   const { groupid } = req.params;
   const { userid } = req.params;

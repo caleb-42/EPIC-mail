@@ -194,4 +194,22 @@ describe('GROUPS API ENDPOINTS', () => {
       expect(messages.body.data).to.be.an('array');
     });
   });
+  describe('patch group api/v1/groups/:id/name', () => {
+    it('should not patch group if user has no token', async () => {
+      await noToken('/api/v1/groups/1/name', 'update');
+    });
+    it('should not patch group if group ID is non existent', async () => {
+      const res = await request(server).post('/api/v1/users').send(user1);
+      const { token } = res.body.data[0];
+      const resp = await request(server).patch('/api/v1/groups/1/name').send({ name: 'sam' }).set('x-auth-token', token);
+      error(resp, 404, 'Group ID does not exist');
+    });
+    it('should patch a group if user and group ID is valid', async () => {
+      const res = await request(server).post('/api/v1/users').send(user1);
+      const { token } = res.body.data[0];
+      await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
+      const resp = await request(server).patch('/api/v1/groups/1/name').send({ name: 'sam' }).set('x-auth-token', token);
+      success(resp, 200);
+    });
+  });
 });

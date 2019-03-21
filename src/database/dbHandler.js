@@ -271,6 +271,18 @@ class DbHandler {
     }
   }
 
+  async updateGroupById(id, group) {
+    /* update a particular message */
+    try {
+      const { rows } = await this.pool.query(`UPDATE groups SET name = $1
+      WHERE (id = $2) RETURNING *`,
+      [group.name, id]);
+      return rows;
+    } catch (e) {
+      return [];
+    }
+  }
+
   async resetDb() {
     /* reset db */
     await this.pool.query(`
