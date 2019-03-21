@@ -7,7 +7,6 @@ const router = express.Router();
 
 const validate = (user) => {
   const schema = {
-    /* id: joi.number().equal(0), */
     firstName: joi.string().min(3).max(15).required(),
     lastName: joi.string().min(3).max(15).required(),
     email: joi.string().email().required(),

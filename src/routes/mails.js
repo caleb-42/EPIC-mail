@@ -8,7 +8,6 @@ const router = express.Router();
 
 const validate = (msg) => {
   const schema = {
-    /* id: joi.number().equal(0), */
     receiverId: joi.number().required(),
     subject: joi.string().max(32).required(),
     message: joi.string().required(),
@@ -29,7 +28,6 @@ const updateValidate = (msg) => {
 
 const draftValidate = (msg) => {
   const schema = {
-    /* id: joi.number().equal(0), */
     receiverId: joi.number().optional(),
     subject: joi.string().max(32).required(),
     message: joi.string().required(),
@@ -89,7 +87,6 @@ router.get('/:id', auth, async (req, res) => {
       error: 'message ID does not exist',
     });
   }
-  console.log(msg);
   if (msg[0].receiverid !== req.user.id && msg[0].senderid !== req.user.id) {
     return res.status(401).send({
       status: 401,
