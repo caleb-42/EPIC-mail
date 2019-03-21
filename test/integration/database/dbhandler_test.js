@@ -64,7 +64,7 @@ describe('DATABASE METHODS', () => {
       const res = await dbHandler.sendMessage(msg);
       expect(res).to.be.an('array');
       [sentMsg] = res;
-      expect(sentMsg).to.have.any.keys('messageid', 'id', 'receiverid', 'status');
+      expect(sentMsg).to.have.any.keys('id', 'receiverid', 'status');
     });
   });
   describe('Get all Messages', () => {
@@ -180,13 +180,25 @@ describe('DATABASE METHODS', () => {
       const res = await dbHandler.createUser(user1);
       const userToken = jwt.verify(res, process.env.jwtPrivateKey);
       const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: userToken.id });
-      const newGroupUser = await dbHandler
-        .groupAddUser({ groupid: newGroup[0].id, id: newGroup[0].userid });
+      await dbHandler.groupAddUser({ groupid: newGroup[0].id, id: newGroup[0].userid });
       const groupuser = await dbHandler.find('users', { id: userToken.id }, 'id');
       const deleteGroupUser = await dbHandler
         .groupDeleteUser(groupuser, newGroup[0]);
       expect(deleteGroupUser).to.be.a('array');
       expect(deleteGroupUser[0]).to.have.any.keys('messages');
+    });
+  });
+  describe('Send Message to group', () => {
+    it('should return mail sent if message is valid', async () => {
+      await dbHandler.resetDb();
+      await dbHandler.createUser(user1);
+      await dbHandler.createUser(user2);
+      const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: 2 });
+      await dbHandler.groupAddUser({ groupid: newGroup[0].id, id: 1 });
+      msg.groupid = newGroup[0].id;
+      const resp = await dbHandler.groupSendMsg(msg);
+      expect(resp).to.be.an('array');
+      expect(resp[0]).to.have.any.keys('id', 'receiverid', 'status');
     });
   });
 });

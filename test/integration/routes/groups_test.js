@@ -23,6 +23,10 @@ const user2 = {
   phoneNumber: '2348130439102',
 };
 
+const sentMsg = {
+  subject: 'i just registered',
+  message: 'its so wonderful to be part of this app',
+};
 describe('GROUPS API ENDPOINTS', () => {
   const noToken = async (endpoint, method = 'get') => {
     const token = '';
@@ -153,6 +157,26 @@ describe('GROUPS API ENDPOINTS', () => {
       await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('x-auth-token', token);
       const resp = await request(server).delete('/api/v1/groups/1/users/2').set('x-auth-token', token);
       success(resp, 200);
+    });
+  });
+  describe('send message to group api/v1/groups/:id/messages', () => {
+    it('should not send messsage to group if user has no token', async () => {
+      await noToken('/api/v1/groups/1/messages', 'post');
+    });
+    it('should not send message to group if group ID is non existent', async () => {
+      const res = await request(server).post('/api/v1/users').send(user1);
+      const { token } = res.body.data[0];
+      const resp = await request(server).post('/api/v1/groups/1/messages').send(sentMsg).set('x-auth-token', token);
+      error(resp, 404, 'Group ID does not exist');
+    });
+    it('should send message to a group if user and group ID is valid', async () => {
+      const res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user2);
+      const { token } = res.body.data[0];
+      await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
+      await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('x-auth-token', token);
+      const resp = await request(server).post('/api/v1/groups/1/messages').send(sentMsg).set('x-auth-token', token);
+      success(resp, 201);
     });
   });
 });
