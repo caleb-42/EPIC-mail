@@ -174,4 +174,19 @@ describe('DATABASE METHODS', () => {
       expect(newGroupUser[0]).to.include({ userid: newGroup[0].userid });
     });
   });
+  describe('Delete user from Group', () => {
+    it('should delete user from group if user and group are valid', async () => {
+      await dbHandler.resetDb();
+      const res = await dbHandler.createUser(user1);
+      const userToken = jwt.verify(res, process.env.jwtPrivateKey);
+      const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: userToken.id });
+      const newGroupUser = await dbHandler
+        .groupAddUser({ groupid: newGroup[0].id, id: newGroup[0].userid });
+      const groupuser = await dbHandler.find('users', { id: userToken.id }, 'id');
+      const deleteGroupUser = await dbHandler
+        .groupDeleteUser(groupuser, newGroup[0]);
+      expect(deleteGroupUser).to.be.a('array');
+      expect(deleteGroupUser[0]).to.have.any.keys('messages');
+    });
+  });
 });
