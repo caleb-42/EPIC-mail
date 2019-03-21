@@ -19,6 +19,16 @@ const validateAddUser = (user) => {
   return joi.validate(user, schema);
 };
 
+const validateSendMessage = (msg) => {
+  const schema = {
+    /* id: joi.number().equal(0), */
+    subject: joi.string().max(32).required(),
+    message: joi.string().required(),
+    parentMessageId: joi.number().optional(),
+  };
+  return joi.validate(msg, schema);
+};
+
 router.post('/', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) {
@@ -101,6 +111,30 @@ router.delete('/:groupid/users/:userid', auth, async (req, res) => {
   return res.status(200).send({
     status: 200,
     data: msg,
+  });
+});
+
+router.post('/:id/messages', auth, async (req, res) => {
+  const { id } = req.params;
+  const { error } = validateSendMessage(req.body);
+  if (error) {
+    return res.status(400).send({
+      status: 400,
+      error: error.details[0].message,
+    });
+  }
+  const group = await dbHandler.find('groups', { id }, 'id');
+  if (!group) {
+    return res.status(404).send({
+      status: 404,
+      error: 'Group ID does not exist',
+    });
+  }
+  req.body.groupid = id;
+  req.body.senderid = req.user.id;
+  return res.status(201).send({
+    status: 201,
+    data: await dbHandler.groupSendMsg(req.body),
   });
 });
 

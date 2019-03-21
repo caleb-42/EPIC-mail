@@ -217,6 +217,44 @@ class DbHandler {
     }
   }
 
+  async getGroupMembers(id) {
+    /* get all contacts */
+    try {
+      const { rows } = await this.pool.query('SELECT * FROM groupmembers WHERE groupid = $1', [id]);
+      return rows;
+    } catch (err) {
+      winston.error(err);
+    }
+  }
+
+  async groupSendMsg(msg) {
+    /* send message from a particular user to another */
+    try {
+      const now = new Date();
+      const createdOn = date.format(now, 'ddd MMM DD YYYY');
+      msg.createdOn = createdOn;
+      msg.status = 'unread';
+      msg.parentMessageId = msg.parentMessageId || null;
+
+      let result;
+      const groupMembers = await this.getGroupMembers(msg.groupid);
+      if (groupMembers.length === 0) return [];
+      for (let i = 1; i < groupMembers.length; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        result = await this.pool.query(`INSERT INTO messages (
+          createdOn, message, parentMessageId,
+          receiverid, subject, senderid, status
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+        [msg.createdOn, msg.message, msg.parentMessageId,
+          groupMembers[i].userid, msg.subject, msg.senderid, msg.status]);
+      }
+      const message = _.pick(result.rows[0], ['id', 'createdOn', 'message', 'parentMessageId', 'subject', 'status']);
+      return [message];
+    } catch (err) {
+      winston.error(err.stack);
+    }
+  }
+
   async resetDb() {
     /* reset db */
     await this.pool.query(`
