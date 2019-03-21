@@ -80,20 +80,20 @@ class DbHandler {
   async getInboxMessages(id, type = 'all') {
     /* get all messages for a particular user */
     if (type === 'all') {
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE receiverid = $1', [id]);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1', [id]);
       return rows;
     }
-    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE receiverid = $1 AND status = $2', [id, type]);
+    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND status = $2', [id, type]);
     return rows;
   }
 
   async getOutboxMessages(id, type) {
     /* get either draft or sent messages */
     if (type === 'draft') {
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderId = users.id) WHERE messages.senderId = $1 AND messages.status = $2', [id, 'draft']);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND messages.status = $2', [id, 'draft']);
       return rows;
     }
-    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderId = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3)', [id, 'unread', 'read']);
+    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3)', [id, 'unread', 'read']);
     return rows;
   }
 

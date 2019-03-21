@@ -20,6 +20,14 @@ const user2 = {
   password: 'user123',
   phoneNumber: '2348130439102',
 };
+const user3 = {
+  email: 'kal@gmail.com',
+  firstName: 'user',
+  lastName: 'user',
+  confirmPassword: 'user123',
+  password: 'user123',
+  phoneNumber: '2348130439102',
+};
 let sentMsg;
 const updateMsg = {
   subject: 'i just changed again',
@@ -118,6 +126,23 @@ describe('MAILS API ENDPOINTS', () => {
   describe('Get Single Mails by ID api/v1/messages/id', () => {
     it('should not release single mails to user with no token', async () => {
       await noToken('/api/v1/messages/1');
+    });
+    it('should not release single mails to user with no authorization', async () => {
+      const res = await request(server).post('/api/v1/users').send(user1);
+      await request(server).post('/api/v1/users').send(user3);
+      const wrongUser = await request(server).post('/api/v1/users').send(user2);
+      const wrongUserToken = wrongUser.body.data[0].token;
+      const { token } = res.body.data[0];
+      const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
+      const mgs = sentMessage.body.data[0];
+      const singleMessage = await request(server).get(`/api/v1/messages/${mgs.id}`).set('x-auth-token', wrongUserToken);
+      expect(singleMessage.status).to.be.equal(401);
+      expect(singleMessage.body).to.have.property('status');
+      expect(singleMessage.body.status).to.be.equal(401);
+      expect(singleMessage.body).to.have.property('error');
+      expect(singleMessage.body).to.not.have.property('data');
+      expect(singleMessage.body.error).to.be.a('string');
+      expect(singleMessage.body.error).to.include('you are not authorized to get this message');
     });
     it('should release single mails for valid user', async () => {
       let res = await request(server).post('/api/v1/users').send(user1);
