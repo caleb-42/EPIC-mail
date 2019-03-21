@@ -21,7 +21,6 @@ const validateAddUser = (user) => {
 
 const validateSendMessage = (msg) => {
   const schema = {
-    /* id: joi.number().equal(0), */
     subject: joi.string().max(32).required(),
     message: joi.string().required(),
     parentMessageId: joi.number().optional(),
@@ -54,7 +53,6 @@ router.post('/', auth, async (req, res) => {
 });
 
 router.get('/', auth, async (req, res) => {
-  console.log(req.user.id);
   return res.status(200).send({
     status: 200,
     data: await dbHandler.getGroups(req.user.id),

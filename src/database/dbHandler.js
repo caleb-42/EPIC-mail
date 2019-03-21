@@ -10,13 +10,19 @@ dotenv.config();
 
 class DbHandler {
   constructor() {
-    this.pool = new Pool({
-      user: process.env.DBUSERNAME,
-      host: 'localhost',
-      database: process.env.DBNAME,
-      password: process.env.DBPASS,
-      port: 5432,
-    });
+    if (process.env.NODE_ENV === 'production') {
+      this.pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+      });
+    } else {
+      this.pool = new Pool({
+        user: process.env.DBUSERNAME,
+        host: 'localhost',
+        database: process.env.DBNAME,
+        password: process.env.DBPASS,
+        port: 5432,
+      });
+    }
   }
 
   async find(table, body, query, key = null) {
@@ -196,7 +202,7 @@ class DbHandler {
         VALUES ($1, $2, $3) RETURNING *`, [group.name, group.role, group.userid]);
       /* console.log(rows, group);
       const members = await this.pool.query(`INSERT INTO groupmembers (
-        groupid, role, userid) 
+        groupid, role, userid)
         VALUES ($1, $2, $3) RETURNING *`, [rows[0].id, group.role, group.userid]);
       console.log(members); */
       return rows;
@@ -231,7 +237,6 @@ class DbHandler {
   async getGroupMembers(id) {
     /* get all contacts */
     try {
-      /* const { rows } = await this.pool.query('SELECT * FROM groupmembers WHERE groupid = $1', [id]); */
       const { rows } = await this.pool.query(`
       SELECT groupmembers.*, groups.*, users.firstname,
       users.lastname FROM groupmembers

@@ -47,9 +47,9 @@ Admin user
 
 # Routes
 
-- POST https://epic-mail-application.herokuapp.com/api/v1/users - Create a new user / Signs up a new user
+- POST https://epic-mail-application.herokuapp.com/api/v1/auth/signup - Create a new user / Signs up a new user
 - GET https://epic-mail-application.herokuapp.com/api/v1/users/contacts - gets a contacts for a user
-- POST https://epic-mail-application.herokuapp.com/api/v1/auth - Signs in a user
+- POST https://epic-mail-application.herokuapp.com/api/v1/auth/login - Signs in a user
 - GET https://epic-mail-application.herokuapp.com/api/v1/messages - List all received messages
 - POST https://epic-mail-application.herokuapp.com/api/v1/messages/ - Send a newly created message
 - POST https://epic-mail-application.herokuapp.com/api/v1/messages/save - Saves a draft message

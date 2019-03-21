@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-expressions */
 /* import { expect } from 'chai';
 import sinon from 'sinon';
-import dbHandler from '../../../src/database/dbHandler';
+import helper from '../../../src/utilities';
 import auth from '../../../src/middleware/auth';
 
 describe('AUTH MIDDLEWARE UNIT TEST', () => {
   it('should populate req.user with the payload of a valid json web token', async () => {
-    const token = dbHandler.generateJWT({ id: 1 });
+    const token = helper.generateJWT({ id: 1 });
     const mockReq = {
       header() {},
     };
@@ -23,7 +23,7 @@ describe('AUTH MIDDLEWARE UNIT TEST', () => {
   });
 
   it('should call the next function if user is valid', async () => {
-    const token = dbHandler.generateJWT({ id: 1 });
+    const token = helper.generateJWT({ id: 1 });
     const mockReq = {
       header() {},
     };

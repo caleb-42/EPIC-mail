@@ -75,16 +75,16 @@ describe('GROUPS API ENDPOINTS', () => {
       await noToken('/api/v1/groups/', 'post');
     });
     it('should not create group if group name already exist', async () => {
-      let res = await request(server).post('/api/v1/users').send(user1);
-      res = await request(server).post('/api/v1/auth').send(user);
+      let res = await request(server).post('/api/v1/auth/signup').send(user1);
+      res = await request(server).post('/api/v1/auth/login').send(user);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       const resp = await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       error(resp, 400, 'Group already registered');
     });
     it('should create group if user has valid token and group exist', async () => {
-      let res = await request(server).post('/api/v1/users').send(user1);
-      res = await request(server).post('/api/v1/auth').send(user);
+      let res = await request(server).post('/api/v1/auth/signup').send(user1);
+      res = await request(server).post('/api/v1/auth/login').send(user);
       const { token } = res.body.data[0];
       const resp = await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       success(resp, 201);
@@ -96,15 +96,15 @@ describe('GROUPS API ENDPOINTS', () => {
       await noToken('/api/v1/groups/1/users', 'post');
     });
     it('should not add user to a group if new group user ID is not valid', async () => {
-      let res = await request(server).post('/api/v1/users').send(user1);
-      res = await request(server).post('/api/v1/auth').send(user);
+      let res = await request(server).post('/api/v1/auth/signup').send(user1);
+      res = await request(server).post('/api/v1/auth/login').send(user);
       const { token } = res.body.data[0];
       const resp = await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('x-auth-token', token);
       error(resp, 404, 'User ID does not exist');
     });
     it('should not add user to a group if new user is already in group', async () => {
-      let res = await request(server).post('/api/v1/users').send(user1);
-      res = await request(server).post('/api/v1/auth').send(user);
+      let res = await request(server).post('/api/v1/auth/signup').send(user1);
+      res = await request(server).post('/api/v1/auth/login').send(user);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       await request(server).post('/api/v1/groups/1/users').send({ id: 1 }).set('x-auth-token', token);
@@ -112,16 +112,16 @@ describe('GROUPS API ENDPOINTS', () => {
       error(resp, 400, 'User Already in group');
     });
     it('should not add user to a group if group name does not  exist', async () => {
-      let res = await request(server).post('/api/v1/users').send(user1);
-      res = await request(server).post('/api/v1/auth').send(user);
+      let res = await request(server).post('/api/v1/auth/signup').send(user1);
+      res = await request(server).post('/api/v1/auth/login').send(user);
       const { token } = res.body.data[0];
       const resp = await request(server).post('/api/v1/groups/1/users').send({ id: 1 }).set('x-auth-token', token);
       error(resp, 404, 'Group ID does not exist');
     });
     it('should create group if user has valid token and group exist', async () => {
-      let res = await request(server).post('/api/v1/users').send(user1);
-      await request(server).post('/api/v1/users').send(user2);
-      res = await request(server).post('/api/v1/auth').send(user);
+      let res = await request(server).post('/api/v1/auth/signup').send(user1);
+      await request(server).post('/api/v1/auth/signup').send(user2);
+      res = await request(server).post('/api/v1/auth/login').send(user);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       const resp = await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('x-auth-token', token);
@@ -134,24 +134,24 @@ describe('GROUPS API ENDPOINTS', () => {
       await noToken('/api/v1/groups/1/users/1', 'delete');
     });
     it('should not delete user from a group if user ID is not valid', async () => {
-      let res = await request(server).post('/api/v1/users').send(user1);
-      res = await request(server).post('/api/v1/auth').send(user);
+      let res = await request(server).post('/api/v1/auth/signup').send(user1);
+      res = await request(server).post('/api/v1/auth/login').send(user);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       const resp = await request(server).delete('/api/v1/groups/1/users/2').set('x-auth-token', token);
       error(resp, 404, 'User ID does not exist in group');
     });
     it('should not delete user from a group if group ID is non existent', async () => {
-      let res = await request(server).post('/api/v1/users').send(user1);
-      res = await request(server).post('/api/v1/auth').send(user);
+      let res = await request(server).post('/api/v1/auth/signup').send(user1);
+      res = await request(server).post('/api/v1/auth/login').send(user);
       const { token } = res.body.data[0];
       const resp = await request(server).delete('/api/v1/groups/1/users/1').set('x-auth-token', token);
       error(resp, 404, 'Group ID does not exist');
     });
     it('should delete user from a group if user and group ID is valid', async () => {
-      let res = await request(server).post('/api/v1/users').send(user1);
-      await request(server).post('/api/v1/users').send(user2);
-      res = await request(server).post('/api/v1/auth').send(user);
+      let res = await request(server).post('/api/v1/auth/signup').send(user1);
+      await request(server).post('/api/v1/auth/signup').send(user2);
+      res = await request(server).post('/api/v1/auth/login').send(user);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('x-auth-token', token);
@@ -164,14 +164,14 @@ describe('GROUPS API ENDPOINTS', () => {
       await noToken('/api/v1/groups/1/messages', 'post');
     });
     it('should not send message to group if group ID is non existent', async () => {
-      const res = await request(server).post('/api/v1/users').send(user1);
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
       const resp = await request(server).post('/api/v1/groups/1/messages').send(sentMsg).set('x-auth-token', token);
       error(resp, 404, 'Group ID does not exist');
     });
     it('should send message to a group if user and group ID is valid', async () => {
-      const res = await request(server).post('/api/v1/users').send(user1);
-      await request(server).post('/api/v1/users').send(user2);
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('x-auth-token', token);
@@ -184,7 +184,7 @@ describe('GROUPS API ENDPOINTS', () => {
       await noToken('/api/v1/groups');
     });
     it('should not realease groups to valid user', async () => {
-      const res = await request(server).post('/api/v1/users').send(user1);
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
       const messages = await request(server).get('/api/v1/groups').set('x-auth-token', token);
       expect(messages.body).to.have.property('status');
@@ -199,13 +199,13 @@ describe('GROUPS API ENDPOINTS', () => {
       await noToken('/api/v1/groups/1/name', 'update');
     });
     it('should not patch group if group ID is non existent', async () => {
-      const res = await request(server).post('/api/v1/users').send(user1);
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
       const resp = await request(server).patch('/api/v1/groups/1/name').send({ name: 'sam' }).set('x-auth-token', token);
       error(resp, 404, 'Group ID does not exist');
     });
     it('should patch a group if user and group ID is valid', async () => {
-      const res = await request(server).post('/api/v1/users').send(user1);
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       const resp = await request(server).patch('/api/v1/groups/1/name').send({ name: 'sam' }).set('x-auth-token', token);
@@ -217,8 +217,8 @@ describe('GROUPS API ENDPOINTS', () => {
       await noToken('/api/v1/groups/1', 'delete');
     });
     it('should not delete group if user is not admin', async () => {
-      const res = await request(server).post('/api/v1/users').send(user1);
-      const unauth = await request(server).post('/api/v1/users').send(user2);
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      const unauth = await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
       const unauthtoken = unauth.body.data[0].token;
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
@@ -226,7 +226,7 @@ describe('GROUPS API ENDPOINTS', () => {
       error(resp, 401, 'You are not authorized to delete this group');
     });
     it('should delete a group if user is admin', async () => {
-      const res = await request(server).post('/api/v1/users').send(user1);
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('x-auth-token', token);
       const resp = await request(server).delete('/api/v1/groups/1').set('x-auth-token', token);
