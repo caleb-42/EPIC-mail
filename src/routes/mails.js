@@ -89,6 +89,13 @@ router.get('/:id', auth, async (req, res) => {
       error: 'message ID does not exist',
     });
   }
+  console.log(msg);
+  if (msg[0].receiverid !== req.user.id && msg[0].senderid !== req.user.id) {
+    return res.status(401).send({
+      status: 401,
+      error: 'you are not authorized to get this message',
+    });
+  }
   return res.status(200).send({
     status: 200,
     data: msg,
