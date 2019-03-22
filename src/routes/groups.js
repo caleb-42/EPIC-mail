@@ -37,6 +37,12 @@ router.post('/', auth, async (req, res) => {
     });
   }
   const group = await dbHandler.find('groups', req.body, 'name');
+  if (group === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (group) {
     return res.status(400).send({
       status: 400,
@@ -47,16 +53,31 @@ router.post('/', auth, async (req, res) => {
   req.body.userid = req.user.id;
   req.body.name = req.body.name.toLowerCase();
   const newgroup = await dbHandler.createGroup(req.body);
+  if (newgroup === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(201).send({
     status: 201,
     data: newgroup,
   });
 });
 
-router.get('/', auth, async (req, res) => res.status(200).send({
-  status: 200,
-  data: await dbHandler.getGroups(req.user.id),
-}));
+router.get('/', auth, async (req, res) => {
+  const msg = await dbHandler.getGroups(req.user.id);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
+  res.status(200).send({
+    status: 200,
+    data: msg,
+  });
+});
 
 router.post('/:id/users', auth, async (req, res) => {
   const { id } = req.params;
@@ -74,6 +95,12 @@ router.post('/:id/users', auth, async (req, res) => {
     });
   }
   const user = await dbHandler.find('users', { id: req.body.id }, 'id');
+  if (user === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!user) {
     return res.status(404).send({
       status: 404,
@@ -81,6 +108,12 @@ router.post('/:id/users', auth, async (req, res) => {
     });
   }
   const groupuser = await dbHandler.find('groupmembers', { userid: req.body.id }, 'userid');
+  if (groupuser === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (groupuser) {
     return res.status(400).send({
       status: 400,
@@ -88,6 +121,12 @@ router.post('/:id/users', auth, async (req, res) => {
     });
   }
   const group = await dbHandler.find('groups', { id }, 'id');
+  if (group === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!group) {
     return res.status(404).send({
       status: 404,
@@ -95,9 +134,16 @@ router.post('/:id/users', auth, async (req, res) => {
     });
   }
   req.body.groupid = id;
+  const msg = await dbHandler.groupAddUser(req.body);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(201).send({
     status: 201,
-    data: await dbHandler.groupAddUser(req.body),
+    data: msg,
   });
 });
 
@@ -117,6 +163,12 @@ router.patch('/:id/name', auth, async (req, res) => {
     });
   }
   let group = await dbHandler.find('groups', { id }, 'id');
+  if (group === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!group) {
     return res.status(404).send({
       status: 404,
@@ -124,15 +176,28 @@ router.patch('/:id/name', auth, async (req, res) => {
     });
   }
   group = await dbHandler.find('groups', { name: req.body.name }, 'name');
+  if (group === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (group) {
     return res.status(400).send({
       status: 400,
       error: 'Group already registered',
     });
   }
+  const msg = await dbHandler.updateGroupById(id, req.body);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
-    data: await dbHandler.updateGroupById(id, req.body),
+    data: msg,
   });
 });
 
@@ -145,6 +210,12 @@ router.delete('/:id', auth, async (req, res) => {
     });
   }
   const group = await dbHandler.find('groups', { id }, 'id');
+  if (group === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!group) {
     return res.status(404).send({
       status: 404,
@@ -159,6 +230,12 @@ router.delete('/:id', auth, async (req, res) => {
     });
   }
   const msg = await dbHandler.deleteGroup(group, req.user);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
     data: msg,
@@ -175,6 +252,12 @@ router.delete('/:groupid/users/:userid', auth, async (req, res) => {
     });
   }
   const group = await dbHandler.find('groups', { id: groupid }, 'id');
+  if (group === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!group) {
     return res.status(404).send({
       status: 404,
@@ -182,6 +265,12 @@ router.delete('/:groupid/users/:userid', auth, async (req, res) => {
     });
   }
   const user = await dbHandler.find('groupmembers', { userid }, 'userid');
+  if (user === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!user) {
     return res.status(404).send({
       status: 404,
@@ -189,6 +278,12 @@ router.delete('/:groupid/users/:userid', auth, async (req, res) => {
     });
   }
   const msg = await dbHandler.groupDeleteUser(user, group);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
     data: msg,
@@ -211,6 +306,12 @@ router.post('/:id/messages', auth, async (req, res) => {
     });
   }
   const group = await dbHandler.find('groups', { id }, 'id');
+  if (group === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!group) {
     return res.status(404).send({
       status: 404,
@@ -219,9 +320,16 @@ router.post('/:id/messages', auth, async (req, res) => {
   }
   req.body.groupid = id;
   req.body.senderid = req.user.id;
+  const msg = await dbHandler.groupSendMsg(req.body);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(201).send({
     status: 201,
-    data: await dbHandler.groupSendMsg(req.body),
+    data: msg,
   });
 });
 

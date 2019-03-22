@@ -21,6 +21,7 @@ app.use('/api/v1/users', users);
 app.use('/api/v1/messages', mails);
 app.use('/api/v1/groups', groups);
 
+
 if (!process.env.jwtPrivateKey) {
   winston.error('Fatal ERROR : jwtPrivateKey is not defined');
   process.exit(1);
@@ -30,5 +31,15 @@ app.get('/', (req, res) => res.status(200).send('Welcome to EPIC-mail'));
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port);
+
+app.use((req, res) => res.status(404).send({
+  status: 404,
+  error: `Route ${req.url} Not found`,
+}));
+
+app.use((error, req, res) => res.status(500).send({
+  status: 500,
+  error,
+}));
 
 module.exports = server;

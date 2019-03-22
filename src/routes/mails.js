@@ -38,46 +38,93 @@ const draftValidate = (msg) => {
 
 router.get('/', auth, async (req, res) => {
   const { id } = req.user;
+  const msg = await dbHandler.getInboxMessages(id);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
-    data: await dbHandler.getInboxMessages(id),
+    data: msg,
   });
 });
 router.get('/all', auth, async (req, res) => {
   const { id } = req.user;
+  const msg = await dbHandler.getMessages(id);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
-    data: await dbHandler.getMessages(id),
+    data: msg,
   });
 });
+
 router.get('/unread', auth, async (req, res) => {
   const { id } = req.user;
+  const msg = await dbHandler.getInboxMessages(id, 'unread');
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
-    data: await dbHandler.getInboxMessages(id, 'unread'),
+    data: msg,
   });
 });
+
 router.get('/read', auth, async (req, res) => {
   const { id } = req.user;
+  const msg = await dbHandler.getInboxMessages(id, 'read');
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
-    data: await dbHandler.getInboxMessages(id, 'read'),
+    data: msg,
   });
 });
+
 router.get('/sent', auth, async (req, res) => {
   const { id } = req.user;
+  const msg = await dbHandler.getOutboxMessages(id, 'sent');
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
-    data: await dbHandler.getOutboxMessages(id, 'sent'),
+    data: msg,
   });
 });
+
 router.get('/draft', auth, async (req, res) => {
   const { id } = req.user;
+  const msg = await dbHandler.getOutboxMessages(id, 'draft');
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
-    data: await dbHandler.getOutboxMessages(id, 'draft'),
+    data: msg,
   });
 });
+
 router.get('/:id', auth, async (req, res) => {
   const msgId = req.params.id;
   if (isNaN(msgId)) {
@@ -87,6 +134,13 @@ router.get('/:id', auth, async (req, res) => {
     });
   }
   const msg = await dbHandler.getMessageById(msgId);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
+
   if (msg.length === 0) {
     return res.status(404).send({
       status: 404,
@@ -104,6 +158,7 @@ router.get('/:id', auth, async (req, res) => {
     data: msg,
   });
 });
+
 router.post('/', auth, async (req, res) => {
   const { id } = req.user;
   const { error } = validate(req.body);
@@ -120,6 +175,12 @@ router.post('/', auth, async (req, res) => {
     });
   }
   const user = await dbHandler.find('users', req.body, 'id', 'receiverId');
+  if (user === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!user) {
     return res.status(404).send({
       status: 404,
@@ -128,6 +189,12 @@ router.post('/', auth, async (req, res) => {
   }
   req.body.senderId = id;
   const msg = await dbHandler.sendMessage(req.body);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(201).send({
     status: 201,
     data: msg,
@@ -145,6 +212,12 @@ router.post('/save', auth, async (req, res) => {
   }
   if (req.body.receiverId) {
     const user = await dbHandler.find('users', req.body, 'id', 'receiverId');
+    if (user === 500) {
+      return res.status(500).send({
+        status: 500,
+        data: 'Internal server error',
+      });
+    }
     if (!user) {
       return res.status(404).send({
         status: 404,
@@ -158,9 +231,14 @@ router.post('/save', auth, async (req, res) => {
       });
     }
   }
-
   req.body.senderId = id;
   const msg = await dbHandler.saveMessage(req.body);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(201).send({
     status: 201,
     data: msg,
@@ -176,6 +254,12 @@ router.post('/:id', auth, async (req, res) => {
     });
   }
   const draftMsg = await dbHandler.find('messages', { id }, 'id');
+  if (draftMsg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   draftMsg.receiverId = draftMsg.receiverid;
   const { error } = validate(_.pick(draftMsg, ['receiverId', 'subject', 'message']));
   if (error) {
@@ -185,6 +269,12 @@ router.post('/:id', auth, async (req, res) => {
     });
   }
   const msg = await dbHandler.sendDraftMessage(draftMsg);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(201).send({
     status: 201,
     data: msg,
@@ -200,6 +290,12 @@ router.patch('/', auth, async (req, res) => {
     });
   }
   const msg = await dbHandler.find('messages', req.body, 'id');
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!msg) {
     return res.status(404).send({
       status: 404,
@@ -207,6 +303,12 @@ router.patch('/', auth, async (req, res) => {
     });
   }
   const updateMsg = await dbHandler.updateMessageById(req.body, msg);
+  if (updateMsg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
     data: updateMsg,
@@ -222,6 +324,12 @@ router.delete('/:id', auth, async (req, res) => {
     });
   }
   let msg = await dbHandler.find('messages', { id }, 'id');
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   if (!msg) {
     return res.status(404).send({
       status: 404,
@@ -229,6 +337,12 @@ router.delete('/:id', auth, async (req, res) => {
     });
   }
   msg = await dbHandler.deleteMessage(msg, req.user);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
+    });
+  }
   return res.status(200).send({
     status: 200,
     data: msg,
