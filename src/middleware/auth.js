@@ -12,15 +12,15 @@ const auth = async (req, res, next) => {
       error: 'Access denied, no token provided',
     });
   }
+  const decoded = jwt.verify(token, process.env.jwtPrivateKey);
+  const user = await dbHandler.find('users', { id: decoded.id }, 'id');
+  if (!user) {
+    return res.status(404).send({
+      status: 401,
+      error: 'Access denied, no token provided User does not exist',
+    });
+  }
   try {
-    const decoded = jwt.verify(token, process.env.jwtPrivateKey);
-    const user = await dbHandler.find('users', { id: decoded.id }, 'id');
-    if (!user) {
-      return res.status(404).send({
-        status: 404,
-        error: 'User ID does not exist',
-      });
-    }
     req.user = decoded;
     next();
   } catch (e) {

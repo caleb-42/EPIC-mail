@@ -32,7 +32,8 @@ class DbHandler {
       const { rows } = await this.pool.query(`SELECT * FROM ${table} WHERE ${query} = $1`, [body[key]]);
       return rows[0];
     } catch (e) {
-      return false;
+      winston.error(e);
+      return 500;
     }
   }
 
@@ -49,7 +50,8 @@ class DbHandler {
       const token = helper.generateJWT(createdUser);
       return token;
     } catch (err) {
-      return '';
+      winston.error(err);
+      return 500;
     }
   }
 
@@ -60,6 +62,7 @@ class DbHandler {
       return rows;
     } catch (err) {
       winston.error(err);
+      return 500;
     }
   }
 
@@ -70,6 +73,7 @@ class DbHandler {
       return rows;
     } catch (err) {
       winston.error(err);
+      return 500;
     }
   }
 
@@ -80,46 +84,67 @@ class DbHandler {
       return rows;
     } catch (err) {
       winston.error(err);
+      return 500;
     }
   }
 
   async getInboxMessages(id, type = 'all') {
     /* get all messages for a particular user */
-    if (type === 'all') {
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1', [id]);
+    try {
+      if (type === 'all') {
+        const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1', [id]);
+        return rows;
+      }
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND status = $2', [id, type]);
       return rows;
+    } catch (err) {
+      winston.error(err);
+      return 500;
     }
-    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND status = $2', [id, type]);
-    return rows;
   }
 
   async getOutboxMessages(id, type) {
     /* get either draft or sent messages */
-    if (type === 'draft') {
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND messages.status = $2', [id, 'draft']);
+    try {
+      if (type === 'draft') {
+        const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND messages.status = $2', [id, 'draft']);
+        return rows;
+      }
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3)', [id, 'unread', 'read']);
       return rows;
+    } catch (err) {
+      winston.error(err);
+      return 500;
     }
-    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3)', [id, 'unread', 'read']);
-    return rows;
   }
 
   async getMessageById(id) {
     /* get a particular message */
-    const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.id = $1', [id]);
-    return rows;
+    try {
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.id = $1', [id]);
+      return rows;
+    } catch (err) {
+      winston.error(err);
+      return 500;
+    }
   }
 
   async updateMessageById(req, msg) {
     /* update a particular message */
-    const message = req.message || msg.message;
-    const receiverId = req.receiverId || msg.receiverid;
-    const subject = req.subject || msg.subject;
-    const id = req.id || msg.id;
+    try {
+      const message = req.message || msg.message;
+      const receiverId = req.receiverId || msg.receiverid;
+      const subject = req.subject || msg.subject;
+      const id = req.id || msg.id;
 
-    const { rows } = await this.pool.query(`UPDATE messages SET message = $1, receiverId = $2, subject = $3
-    WHERE (id = $4) RETURNING *`,
-    [message, receiverId, subject, id]);
-    return rows;
+      const { rows } = await this.pool.query(`UPDATE messages SET message = $1, receiverId = $2, subject = $3
+      WHERE (id = $4) RETURNING *`,
+      [message, receiverId, subject, id]);
+      return rows;
+    } catch (err) {
+      winston.error(err);
+      return 500;
+    }
   }
 
   async sendMessage(msg) {
@@ -141,6 +166,7 @@ class DbHandler {
       return [sentMsg];
     } catch (err) {
       winston.error(err.stack);
+      return 500;
     }
   }
 
@@ -151,7 +177,8 @@ class DbHandler {
       const sentMsg = rows[0];
       return [sentMsg];
     } catch (err) {
-      winston.error(err.stack);
+      winston.error(err);
+      return 500;
     }
   }
 
@@ -174,7 +201,8 @@ class DbHandler {
       const draftMsg = rows[0];
       return [draftMsg];
     } catch (err) {
-      winston.error(err.stack);
+      winston.error(err);
+      return 500;
     }
   }
 
@@ -189,8 +217,9 @@ class DbHandler {
           ['draft', msg.id, user.id, user.id]);
       }
       return [{ message: msg.message }];
-    } catch (e) {
-      winston.error(e.stack);
+    } catch (err) {
+      winston.error(err);
+      return 500;
     }
   }
 
@@ -208,6 +237,7 @@ class DbHandler {
       return rows;
     } catch (err) {
       winston.error(err);
+      return 500;
     }
   }
 
@@ -219,7 +249,8 @@ class DbHandler {
         VALUES ($1, $2, $3) RETURNING *`, [payload.groupid, payload.id, 'user']);
       return rows;
     } catch (err) {
-      winston.error(err.stack);
+      winston.error(err);
+      return 500;
     }
   }
 
@@ -229,8 +260,9 @@ class DbHandler {
       await this.pool.query('DELETE FROM groupmembers WHERE (userid = $1 AND groupid = $2) RETURNING *',
         [member.id, group.id]);
       return [{ messages: `${member.firstname} ${member.lastname} has been deleted from ${group.name}` }];
-    } catch (e) {
-      winston.error(e.stack);
+    } catch (err) {
+      winston.error(err);
+      return 500;
     }
   }
 
@@ -247,6 +279,7 @@ class DbHandler {
       return rows;
     } catch (err) {
       winston.error(err);
+      return 500;
     }
   }
 
@@ -256,8 +289,9 @@ class DbHandler {
       await this.pool.query('DELETE FROM groups WHERE (id = $1)',
         [group.id]);
       return [{ message: `${group.name} has been deleted` }];
-    } catch (e) {
-      winston.error(e.stack);
+    } catch (err) {
+      winston.error(err);
+      return 500;
     }
   }
 
@@ -285,7 +319,8 @@ class DbHandler {
       const message = _.pick(result.rows[0], ['id', 'createdOn', 'message', 'parentMessageId', 'subject', 'status']);
       return [message];
     } catch (err) {
-      winston.error(err.stack);
+      winston.error(err);
+      return 500;
     }
   }
 
@@ -296,8 +331,9 @@ class DbHandler {
       WHERE (id = $2) RETURNING *`,
       [group.name, id]);
       return rows;
-    } catch (e) {
-      return [];
+    } catch (err) {
+      winston.error(err);
+      return 500;
     }
   }
 
