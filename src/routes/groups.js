@@ -21,8 +21,8 @@ const validateAddUser = (user) => {
 
 const validateSendMessage = (msg) => {
   const schema = {
-    subject: joi.string().max(32).required(),
-    message: joi.string().required(),
+    subject: joi.string().trim().max(32).required(),
+    message: joi.string().trim().required(),
     parentMessageId: joi.number().optional(),
   };
   return joi.validate(msg, schema);
@@ -45,6 +45,7 @@ router.post('/', auth, async (req, res) => {
   }
   req.body.role = 'admin';
   req.body.userid = req.user.id;
+  req.body.name = req.body.name.toLowerCase();
   const newgroup = await dbHandler.createGroup(req.body);
   return res.status(201).send({
     status: 201,
@@ -52,15 +53,19 @@ router.post('/', auth, async (req, res) => {
   });
 });
 
-router.get('/', auth, async (req, res) => {
-  return res.status(200).send({
-    status: 200,
-    data: await dbHandler.getGroups(req.user.id),
-  });
-});
+router.get('/', auth, async (req, res) => res.status(200).send({
+  status: 200,
+  data: await dbHandler.getGroups(req.user.id),
+}));
 
 router.post('/:id/users', auth, async (req, res) => {
   const { id } = req.params;
+  if (isNaN(id)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
   const { error } = validateAddUser(req.body);
   if (error) {
     return res.status(400).send({
@@ -98,6 +103,12 @@ router.post('/:id/users', auth, async (req, res) => {
 
 router.patch('/:id/name', auth, async (req, res) => {
   const { id } = req.params;
+  if (isNaN(id)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
   const { error } = validate(req.body);
   if (error) {
     return res.status(400).send({
@@ -126,7 +137,13 @@ router.patch('/:id/name', auth, async (req, res) => {
 });
 
 router.delete('/:id', auth, async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+  const { id } = req.params;
+  if (isNaN(id)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
   const group = await dbHandler.find('groups', { id }, 'id');
   if (!group) {
     return res.status(404).send({
@@ -151,15 +168,20 @@ router.delete('/:id', auth, async (req, res) => {
 router.delete('/:groupid/users/:userid', auth, async (req, res) => {
   const { groupid } = req.params;
   const { userid } = req.params;
+  if (isNaN(groupid) || isNaN(userid)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
   const group = await dbHandler.find('groups', { id: groupid }, 'id');
-  let user = await dbHandler.find('groupmembers', { userid }, 'userid');
   if (!group) {
     return res.status(404).send({
       status: 404,
       error: 'Group ID does not exist',
     });
   }
-  user = await dbHandler.find('users', { id: userid }, 'id');
+  const user = await dbHandler.find('groupmembers', { userid }, 'userid');
   if (!user) {
     return res.status(404).send({
       status: 404,
@@ -175,6 +197,12 @@ router.delete('/:groupid/users/:userid', auth, async (req, res) => {
 
 router.post('/:id/messages', auth, async (req, res) => {
   const { id } = req.params;
+  if (isNaN(id)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
   const { error } = validateSendMessage(req.body);
   if (error) {
     return res.status(400).send({

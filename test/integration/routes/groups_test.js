@@ -92,8 +92,14 @@ describe('GROUPS API ENDPOINTS', () => {
   });
 
   describe('Add user to group api/v1/groups/:id/users', () => {
-    it('should not create group if user has no token', async () => {
+    it('should not add user to group if user has no token', async () => {
       await noToken('/api/v1/groups/1/users', 'post');
+    });
+    it('should not add user to group if id param is NaN', async () => {
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      const { token } = res.body.data[0];
+      const resp = await request(server).post('/api/v1/groups/d/users').send(user).set('x-auth-token', token);
+      error(resp, 400, 'param IDs must be numbers');
     });
     it('should not add user to a group if new group user ID is not valid', async () => {
       let res = await request(server).post('/api/v1/auth/signup').send(user1);
@@ -133,6 +139,12 @@ describe('GROUPS API ENDPOINTS', () => {
     it('should not create group if user has no token', async () => {
       await noToken('/api/v1/groups/1/users/1', 'delete');
     });
+    it('should not delete user from group if id param is NaN', async () => {
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      const { token } = res.body.data[0];
+      const resp = await request(server).delete('/api/v1/groups/d/users/k').set('x-auth-token', token);
+      error(resp, 400, 'param IDs must be numbers');
+    });
     it('should not delete user from a group if user ID is not valid', async () => {
       let res = await request(server).post('/api/v1/auth/signup').send(user1);
       res = await request(server).post('/api/v1/auth/login').send(user);
@@ -162,6 +174,12 @@ describe('GROUPS API ENDPOINTS', () => {
   describe('send message to group api/v1/groups/:id/messages', () => {
     it('should not send messsage to group if user has no token', async () => {
       await noToken('/api/v1/groups/1/messages', 'post');
+    });
+    it('should not send message to group if id param is NaN', async () => {
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      const { token } = res.body.data[0];
+      const resp = await request(server).post('/api/v1/groups/d/messages').send(sentMsg).set('x-auth-token', token);
+      error(resp, 400, 'param IDs must be numbers');
     });
     it('should not send message to group if group ID is non existent', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
@@ -198,6 +216,12 @@ describe('GROUPS API ENDPOINTS', () => {
     it('should not patch group if user has no token', async () => {
       await noToken('/api/v1/groups/1/name', 'update');
     });
+    it('should not patch group if id param is NaN', async () => {
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      const { token } = res.body.data[0];
+      const resp = await request(server).patch('/api/v1/groups/d/name').set('x-auth-token', token);
+      error(resp, 400, 'param IDs must be numbers');
+    });
     it('should not patch group if group ID is non existent', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
@@ -215,6 +239,12 @@ describe('GROUPS API ENDPOINTS', () => {
   describe('Delete group api/v1/groups/:id/name', () => {
     it('should not delete group if user has no token', async () => {
       await noToken('/api/v1/groups/1', 'delete');
+    });
+    it('should not delete group if id param is NaN', async () => {
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      const { token } = res.body.data[0];
+      const resp = await request(server).delete('/api/v1/groups/d').set('x-auth-token', token);
+      error(resp, 400, 'param IDs must be numbers');
     });
     it('should not delete group if user is not admin', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);

@@ -9,8 +9,8 @@ const router = express.Router();
 const validate = (msg) => {
   const schema = {
     receiverId: joi.number().required(),
-    subject: joi.string().max(32).required(),
-    message: joi.string().required(),
+    subject: joi.string().trim().max(32).required(),
+    message: joi.string().trim().required(),
     parentMessageId: joi.number().optional(),
   };
   return joi.validate(msg, schema);
@@ -20,8 +20,8 @@ const updateValidate = (msg) => {
   const schema = {
     id: joi.number().required(),
     receiverId: joi.number().optional(),
-    subject: joi.string().max(32).required(),
-    message: joi.string().required(),
+    subject: joi.string().trim().max(32).required(),
+    message: joi.string().trim().required(),
   };
   return joi.validate(msg, schema);
 };
@@ -29,8 +29,8 @@ const updateValidate = (msg) => {
 const draftValidate = (msg) => {
   const schema = {
     receiverId: joi.number().optional(),
-    subject: joi.string().max(32).required(),
-    message: joi.string().required(),
+    subject: joi.string().trim().max(32).required(),
+    message: joi.string().trim().required(),
     parentMessageId: joi.number().optional(),
   };
   return joi.validate(msg, schema);
@@ -79,7 +79,13 @@ router.get('/draft', auth, async (req, res) => {
   });
 });
 router.get('/:id', auth, async (req, res) => {
-  const msgId = parseInt(req.params.id, 10);
+  const msgId = req.params.id;
+  if (isNaN(msgId)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
   const msg = await dbHandler.getMessageById(msgId);
   if (msg.length === 0) {
     return res.status(404).send({
@@ -162,7 +168,13 @@ router.post('/save', auth, async (req, res) => {
 });
 
 router.post('/:id', auth, async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+  const { id } = req.params;
+  if (isNaN(id)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
   const draftMsg = await dbHandler.find('messages', { id }, 'id');
   draftMsg.receiverId = draftMsg.receiverid;
   const { error } = validate(_.pick(draftMsg, ['receiverId', 'subject', 'message']));
@@ -202,7 +214,13 @@ router.patch('/', auth, async (req, res) => {
 });
 
 router.delete('/:id', auth, async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+  const { id } = req.params;
+  if (isNaN(id)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
   let msg = await dbHandler.find('messages', { id }, 'id');
   if (!msg) {
     return res.status(404).send({

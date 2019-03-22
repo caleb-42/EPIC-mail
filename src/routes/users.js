@@ -7,11 +7,11 @@ const router = express.Router();
 
 const validate = (user) => {
   const schema = {
-    firstName: joi.string().min(3).max(15).required(),
-    lastName: joi.string().min(3).max(15).required(),
-    email: joi.string().email().required(),
-    phoneNumber: joi.string().max(13).min(13).required(),
-    password: joi.string().min(5).max(255).required(),
+    firstName: joi.string().trim().required(),
+    lastName: joi.string().trim().required(),
+    email: joi.string().email().trim().required(),
+    phoneNumber: joi.number().required(),
+    password: joi.string().trim().required(),
     confirmPassword: joi.any().valid(joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match with password' } } }),
   };
   return joi.validate(user, schema);
