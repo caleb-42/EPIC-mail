@@ -133,7 +133,7 @@ router.get('/:id', auth, async (req, res) => {
       error: 'param IDs must be numbers',
     });
   }
-  const msg = await dbHandler.getMessageById(msgId);
+  const msg = await dbHandler.getMessageById(msgId, req.user.id);
   if (msg === 500) {
     return res.status(500).send({
       status: 500,
@@ -168,7 +168,7 @@ router.post('/', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
-  if (id === req.body.receiverId) {
+  if (id === Number(req.body.receiverId)) {
     return res.status(400).send({
       status: 400,
       error: 'user cannot send message to self',
