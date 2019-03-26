@@ -118,13 +118,19 @@ class DbHandler {
     }
   }
 
-  async getMessageById(id) {
+  async getMessageById(id, userId) {
     /* get a particular message */
     try {
       const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.id = $1', [id]);
+      if (rows.length === 0) return rows;
+      if (rows[0].receiverid === userId) {
+        await this.pool.query(`UPDATE messages SET status = $1
+        WHERE (id = $2) RETURNING *`, ['read', id]);
+        rows[0].status = 'read';
+      }
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.log(err);
       return 500;
     }
   }
