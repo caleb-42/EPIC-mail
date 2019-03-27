@@ -15,7 +15,7 @@ let sentMsg;
 describe('DATABASE METHODS', () => {
   beforeEach(() => {
     user1 = {
-      email: 'ewere@gmail.com',
+      email: 'ewere@epicmail.com',
       firstName: 'admin',
       lastName: 'user',
       confirmPassword: 'admin123',
@@ -23,7 +23,7 @@ describe('DATABASE METHODS', () => {
       phoneNumber: '2348130439102',
     };
     user2 = {
-      email: 'sam@gmail.com',
+      email: 'sam@epicmail.com',
       firstName: 'sam',
       lastName: 'user',
       confirmPassword: 'user123',

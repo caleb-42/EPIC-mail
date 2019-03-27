@@ -10,7 +10,7 @@ describe('AUTH MIDDLEWARE INTEGRATION TEST', () => {
   beforeEach(() => {
     server = require('../../../src/index');
     user = {
-      email: 'ewere@gmail.com',
+      email: 'ewere@epicmail.com',
       firstName: 'admin',
       lastName: 'user',
       confirmPassword: 'admin123',

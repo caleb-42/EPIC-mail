@@ -17,8 +17,8 @@
     "recreateDB": "npm run dropDB && npm run migrate",
     "serve": "node build/index.js",
     "test-mocha": "npm run recreateDB && cross-env NODE_ENV=testing && mocha --require @babel/register --timeout 20000 --recursive",
-    "coverage": "npm run recreateDB && cross-env NODE_ENV=testing && npm test && npm run generate-lcov",
-    "generate-lcov": "npm run recreateDB && cross-env NODE_ENV=testing && nyc report --reporter=text-lcov > lcov.info"
+    "coverage": "npm test && npm run generate-lcov",
+    "generate-lcov": "nyc report --reporter=html > lcov.info"
   },
   "repository": {
     "type": "git",
