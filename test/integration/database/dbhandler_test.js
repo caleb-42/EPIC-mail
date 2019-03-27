@@ -98,7 +98,7 @@ describe('DATABASE METHODS', () => {
       expect(res).to.have.lengthOf(0);
     });
     it('should return single mail for valid user', async () => {
-      const res = await dbHandler.getMessageById(1);
+      const res = await dbHandler.getMessageById(1, 2);
       expect(res).to.be.an('array');
       expect(res[0]).to.have.any.keys('message', 'id');
     });
@@ -118,7 +118,7 @@ describe('DATABASE METHODS', () => {
       const res = await dbHandler.deleteMessage(sentMsg, user);
       expect(res).to.be.an('array');
       expect(res[0]).to.have.any.keys('message');
-      expect(msg).to.include(res[0]);
+      expect(res[0].message).to.include('message has been deleted');
     });
   });
   describe('Save Message', () => {

@@ -298,7 +298,7 @@ describe('MAILS API ENDPOINTS', () => {
       const delMessage = sentMessages.body.data[0];
       const deleteMessages = await request(server).delete(`/api/v1/messages/${delMessage.id}`).set('x-auth-token', token);
       success(deleteMessages, 200);
-      expect(sentMsg).to.include(deleteMessages.body.data[0]);
+      expect(deleteMessages.body.data[0].message).to.include('message has been deleted');
     });
     it('should not delete mail if message id is invalid', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);

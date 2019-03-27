@@ -80,7 +80,7 @@ class DbHandler {
   async getMessages(id) {
     /* get all received messages for a particular user */
     try {
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE (messages.receiverid = $1);', [id]);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE (messages.receiverid = $1 AND messages.visible != $2) OR (messages.senderid = $3 AND messages.visible != $4);', [id, 'sender', id, 'receiver']);
       return rows;
     } catch (err) {
       winston.error(err);
@@ -92,10 +92,10 @@ class DbHandler {
     /* get all messages for a particular user */
     try {
       if (type === 'all') {
-        const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1', [id]);
+        const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND messages.visible != $2', [id, 'sender']);
         return rows;
       }
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND status = $2', [id, type]);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND status = $2 AND messages.visible != $3', [id, type, 'sender']);
       return rows;
     } catch (err) {
       winston.error(err);
@@ -107,10 +107,10 @@ class DbHandler {
     /* get either draft or sent messages */
     try {
       if (type === 'draft') {
-        const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND messages.status = $2', [id, 'draft']);
+        const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND messages.status = $2 AND messages.visible != $3', [id, 'draft', 'receiver']);
         return rows;
       }
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3)', [id, 'unread', 'read']);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3) AND messages.visible != $4', [id, 'unread', 'read', 'receiver']);
       return rows;
     } catch (err) {
       winston.error(err);
@@ -121,7 +121,13 @@ class DbHandler {
   async getMessageById(id, userId) {
     /* get a particular message */
     try {
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.id = $1', [id]);
+      const { rows } = await this.pool.query(`SELECT messages.*, users.firstname, users.lastname FROM messages
+      INNER JOIN users ON (messages.receiverid = users.id)
+      WHERE messages.id = $1
+      AND ((messages.receiverid = $2 AND messages.visible != $3)
+      OR (messages.senderid = $4 AND messages.visible != $5))`,
+      [id, userId, 'sender', userId, 'receiver']);
+
       if (rows.length === 0) return rows;
       if (rows[0].receiverid === userId) {
         await this.pool.query(`UPDATE messages SET status = $1
@@ -160,12 +166,13 @@ class DbHandler {
       msg.createdOn = createdOn;
       msg.status = 'unread';
       msg.parentMessageId = msg.parentMessageId || null;
+      msg.visible = 'all';
 
-      const message = _.pick(msg, ['createdOn', 'message', 'parentMessageId', 'receiverId', 'subject', 'senderId', 'status']);
+      const message = _.pick(msg, ['createdOn', 'message', 'parentMessageId', 'receiverId', 'subject', 'senderId', 'status', 'visible']);
       const { rows } = await this.pool.query(`INSERT INTO messages (
         createdOn, message, parentMessageId,
-        receiverid, subject, senderid, status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+        receiverid, subject, senderid, status, visible
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
       Object.values(message));
       const sentMsg = rows[0];
       return [sentMsg];
@@ -177,8 +184,8 @@ class DbHandler {
 
   async sendDraftMessage(msg) {
     try {
-      const { rows } = await this.pool.query('UPDATE messages SET status = $1 WHERE (id = $2) RETURNING *',
-        ['unread', msg.id]);
+      const { rows } = await this.pool.query('UPDATE messages SET status = $1, visible = $2 WHERE (id = $3) RETURNING *',
+        ['unread', 'all', msg.id]);
       const sentMsg = rows[0];
       return [sentMsg];
     } catch (err) {
@@ -196,12 +203,13 @@ class DbHandler {
       msg.status = 'draft';
       msg.parentMessageId = msg.parentMessageId || null;
       msg.receiverId = msg.receiverId || null;
+      msg.visible = 'sender';
 
-      const message = _.pick(msg, ['createdOn', 'message', 'parentMessageId', 'receiverId', 'subject', 'senderId', 'status']);
+      const message = _.pick(msg, ['createdOn', 'message', 'parentMessageId', 'receiverId', 'subject', 'senderId', 'status', 'visible']);
       const { rows } = await this.pool.query(`INSERT INTO messages (
         createdOn, message, parentMessageId,
-        receiverid, subject, senderid, status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+        receiverid, subject, senderid, status, visible
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
       Object.values(message));
       const draftMsg = rows[0];
       return [draftMsg];
@@ -217,11 +225,28 @@ class DbHandler {
       if (msg.status === 'draft') {
         await this.pool.query('DELETE FROM messages WHERE (id = $1 AND (senderid = $2 OR receiverid = $3)) RETURNING *',
           [msg.id, user.id, user.id]);
-      } else if (msg.status === 'unread') {
-        await this.pool.query('UPDATE messages SET status = $1 WHERE (id = $2 AND (senderid = $3 OR receiverid = $4)) RETURNING *',
-          ['draft', msg.id, user.id, user.id]);
       }
-      return [{ message: msg.message }];
+      if (msg.senderid === user.id && msg.status === 'unread') {
+        await this.pool.query('UPDATE messages SET status = $1, visible = $2 WHERE (id = $3 AND senderid = $4) RETURNING *',
+          ['draft', 'sender', msg.id, user.id]);
+      }
+
+      if (msg.senderid === user.id && msg.status !== 'draft' && msg.visible === 'sender') {
+        await this.pool.query('DELETE FROM messages WHERE (id = $1 AND senderid = $2) RETURNING *',
+          [msg.id, user.id]);
+      } else if (msg.senderid === user.id && msg.status === 'read' && msg.visible === 'all') {
+        await this.pool.query('UPDATE messages SET visible = $1 WHERE (id = $2 AND senderid = $3) RETURNING *',
+          ['receiver', msg.id, user.id]);
+      }
+
+      if (msg.receiverid === user.id && msg.status !== 'draft' && msg.visible === 'receiver') {
+        await this.pool.query('DELETE FROM messages WHERE (id = $1 AND receiverid = $2) RETURNING *',
+          [msg.id, user.id]);
+      } else if (msg.receiverid === user.id && msg.status === 'read' && msg.visible === 'all') {
+        await this.pool.query('UPDATE messages SET visible = $1 WHERE (id = $2 AND receiverid = $3) RETURNING *',
+          ['sender', msg.id, user.id]);
+      }
+      return [{ message: 'message has been deleted' }];
     } catch (err) {
       winston.error(err);
       return 500;
@@ -366,6 +391,7 @@ class DbHandler {
       parentmessageid VARCHAR(30),
       receiverid INTEGER,
       subject VARCHAR(30),
+      visible VARCHAR(30),
       senderid INTEGER,
       status _status,
       constraint fk_user
