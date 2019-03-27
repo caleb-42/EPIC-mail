@@ -1,6 +1,5 @@
 import express from 'express';
 import joi from 'joi';
-import _ from 'lodash';
 import auth from '../middleware/auth';
 import dbHandler from '../database/dbHandler';
 
@@ -8,8 +7,8 @@ const router = express.Router();
 
 const validate = (msg) => {
   const schema = {
-    receiverId: joi.number().required(),
     subject: joi.string().trim().max(32).required(),
+    email: joi.string().email().trim().required(),
     message: joi.string().trim().required(),
     parentMessageId: joi.number().optional(),
   };
@@ -18,8 +17,7 @@ const validate = (msg) => {
 
 const updateValidate = (msg) => {
   const schema = {
-    id: joi.number().required(),
-    receiverId: joi.number().optional(),
+    email: joi.string().email().trim().optional(),
     subject: joi.string().trim().max(32).required(),
     message: joi.string().trim().required(),
   };
@@ -28,7 +26,7 @@ const updateValidate = (msg) => {
 
 const draftValidate = (msg) => {
   const schema = {
-    receiverId: joi.number().optional(),
+    email: joi.string().email().trim().optional(),
     subject: joi.string().trim().max(32).required(),
     message: joi.string().trim().required(),
     parentMessageId: joi.number().optional(),
@@ -168,13 +166,7 @@ router.post('/', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
-  if (id === Number(req.body.receiverId)) {
-    return res.status(400).send({
-      status: 400,
-      error: 'user cannot send message to self',
-    });
-  }
-  const user = await dbHandler.find('users', req.body, 'id', 'receiverId');
+  const user = await dbHandler.find('users', req.body, 'email');
   if (user === 500) {
     return res.status(500).send({
       status: 500,
@@ -187,8 +179,16 @@ router.post('/', auth, async (req, res) => {
       error: 'receiver not found',
     });
   }
+  if (id === Number(user.id)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'user cannot send message to self',
+    });
+  }
+  req.body.receiverId = user.id;
   req.body.senderId = id;
   const msg = await dbHandler.sendMessage(req.body);
+  /* console.log(msg); */
   if (msg === 500) {
     return res.status(500).send({
       status: 500,
@@ -210,8 +210,8 @@ router.post('/save', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
-  if (req.body.receiverId) {
-    const user = await dbHandler.find('users', req.body, 'id', 'receiverId');
+  if (req.body.email) {
+    const user = await dbHandler.find('users', req.body, 'email');
     if (user === 500) {
       return res.status(500).send({
         status: 500,
@@ -224,12 +224,13 @@ router.post('/save', auth, async (req, res) => {
         error: 'receiver not found',
       });
     }
-    if (id === req.body.receiverId && req.body.receiverId) {
+    if (id === Number(user.id)) {
       return res.status(400).send({
         status: 400,
         error: 'user cannot send message to self',
       });
     }
+    req.body.receiverId = user.id;
   }
   req.body.senderId = id;
   const msg = await dbHandler.saveMessage(req.body);
@@ -247,6 +248,7 @@ router.post('/save', auth, async (req, res) => {
 
 router.post('/:id', auth, async (req, res) => {
   const { id } = req.params;
+  /* console.log(id); */
   if (isNaN(id)) {
     return res.status(400).send({
       status: 400,
@@ -260,12 +262,10 @@ router.post('/:id', auth, async (req, res) => {
       data: 'Internal server error',
     });
   }
-  draftMsg.receiverId = draftMsg.receiverid;
-  const { error } = validate(_.pick(draftMsg, ['receiverId', 'subject', 'message']));
-  if (error) {
+  if (!draftMsg.receiverid) {
     return res.status(400).send({
       status: 400,
-      error: error.details[0].message,
+      error: 'message must have receiver',
     });
   }
   const msg = await dbHandler.sendDraftMessage(draftMsg);
@@ -281,7 +281,14 @@ router.post('/:id', auth, async (req, res) => {
   });
 });
 
-router.patch('/', auth, async (req, res) => {
+router.patch('/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  if (isNaN(id)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
   const { error } = updateValidate(req.body);
   if (error) {
     return res.status(400).send({
@@ -289,7 +296,7 @@ router.patch('/', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
-  const msg = await dbHandler.find('messages', req.body, 'id');
+  const msg = await dbHandler.find('messages', { id }, 'id');
   if (msg === 500) {
     return res.status(500).send({
       status: 500,

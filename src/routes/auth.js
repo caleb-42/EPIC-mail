@@ -85,7 +85,8 @@ router.post('/signup', async (req, res) => {
       error: error.details[0].message,
     });
   }
-  req.body.email = req.body.email.toLowerCase();
+  const email = String(req.body.email);
+  req.body.email = `${email.toLowerCase().substring(0, email.indexOf('@'))}@epicmail.com`;
   const userPresent = await dbHandler.find('users', req.body, 'email');
   if (userPresent === 500) {
     return res.status(500).send({

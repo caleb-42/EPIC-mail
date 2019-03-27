@@ -130,7 +130,7 @@ class DbHandler {
       }
       return rows;
     } catch (err) {
-      console.log(err);
+      winston.error(err);
       return 500;
     }
   }
@@ -141,11 +141,10 @@ class DbHandler {
       const message = req.message || msg.message;
       const receiverId = req.receiverId || msg.receiverid;
       const subject = req.subject || msg.subject;
-      const id = req.id || msg.id;
 
       const { rows } = await this.pool.query(`UPDATE messages SET message = $1, receiverId = $2, subject = $3
       WHERE (id = $4) RETURNING *`,
-      [message, receiverId, subject, id]);
+      [message, receiverId, subject, msg.id]);
       return rows;
     } catch (err) {
       winston.error(err);
