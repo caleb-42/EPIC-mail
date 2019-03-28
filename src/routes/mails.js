@@ -131,24 +131,30 @@ router.get('/:id', auth, async (req, res) => {
       error: 'param IDs must be numbers',
     });
   }
-  const msg = await dbHandler.getMessageById(msgId, req.user.id);
-  if (msg === 500) {
+  const findMsg = await dbHandler.find('messages', { id: msgId }, 'id');
+  if (findMsg === 500) {
     return res.status(500).send({
       status: 500,
       data: 'Internal server error',
     });
   }
-
-  if (msg.length === 0) {
+  if (!findMsg) {
     return res.status(404).send({
       status: 404,
       error: 'message ID does not exist',
     });
   }
-  if (msg[0].receiverid !== req.user.id && msg[0].senderid !== req.user.id) {
+  if (findMsg.receiverid !== req.user.id && findMsg.senderid !== req.user.id) {
     return res.status(401).send({
       status: 401,
       error: 'you are not authorized to get this message',
+    });
+  }
+  const msg = await dbHandler.getMessageById(msgId, req.user.id);
+  if (msg === 500) {
+    return res.status(500).send({
+      status: 500,
+      data: 'Internal server error',
     });
   }
   return res.status(200).send({
@@ -262,6 +268,12 @@ router.post('/:id', auth, async (req, res) => {
       data: 'Internal server error',
     });
   }
+  if (draftMsg.senderid !== req.user.id) {
+    return res.status(401).send({
+      status: 401,
+      error: 'you are not authorized to send this message',
+    });
+  }
   if (!draftMsg.receiverid) {
     return res.status(400).send({
       status: 400,
@@ -341,6 +353,12 @@ router.delete('/:id', auth, async (req, res) => {
     return res.status(404).send({
       status: 404,
       error: 'message ID does not exist',
+    });
+  }
+  if (msg.receiverid !== req.user.id && msg.senderid !== req.user.id) {
+    return res.status(401).send({
+      status: 401,
+      error: 'you are not authorized to get this message',
     });
   }
   msg = await dbHandler.deleteMessage(msg, req.user);

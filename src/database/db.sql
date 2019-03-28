@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS messages (
   parentmessageid VARCHAR(30),
   receiverid INTEGER,
   subject VARCHAR(30),
+  visible VARCHAR(30),
   senderid INTEGER,
   status _status,
   constraint fk_user
