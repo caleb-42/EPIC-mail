@@ -150,7 +150,7 @@ router.get('/:id', auth, async (req, res) => {
       error: 'you are not authorized to get this message',
     });
   }
-  const msg = await dbHandler.getMessageById(msgId, req.user.id);
+  const msg = await dbHandler.getMessageById(findMsg, req.user.id);
   if (msg === 500) {
     return res.status(500).send({
       status: 500,

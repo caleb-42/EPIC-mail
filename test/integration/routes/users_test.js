@@ -5,12 +5,13 @@ import dbHandler from '../../../src/database/dbHandler';
 let server;
 let user1;
 let user2;
+let sentMsg;
 
 describe('USER API ENDPOINTS', () => {
   beforeEach(() => {
     server = require('../../../src/index');
     user1 = {
-      email: 'ewere@gmail.com',
+      email: 'ewere@epicmail.com',
       firstName: 'admin',
       lastName: 'user',
       confirmPassword: 'admin123',
@@ -18,12 +19,17 @@ describe('USER API ENDPOINTS', () => {
       phoneNumber: '2348130439102',
     };
     user2 = {
-      email: 'sam@gmail.com',
+      email: 'sam@epicmail.com',
       firstName: 'sam',
       lastName: 'user',
       confirmPassword: 'user123',
       password: 'user123',
       phoneNumber: '2348130439102',
+    };
+    sentMsg = {
+      subject: 'i just registered',
+      email: 'sam@epicmail.com',
+      message: 'its so wonderful to be part of this app',
     };
   });
   afterEach(async () => {
@@ -32,7 +38,7 @@ describe('USER API ENDPOINTS', () => {
   });
   describe('Get Contacts', () => {
     it('should not get contacts if user has no token', async () => {
-      const res = await request(server).get('/api/v1/messages/1').set('x-auth-token', '');
+      const res = await request(server).get('/api/v1/messages/1').set('Cookie', ['token=""']);
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(401);
       expect(res.body).to.have.property('error');
@@ -43,8 +49,10 @@ describe('USER API ENDPOINTS', () => {
 
     it('should get contacts if user has valid token', async () => {
       let res = await request(server).post('/api/v1/auth/signup').send(user1);
-      const token = await request(server).post('/api/v1/auth/signup').send(user2);
-      res = await request(server).get('/api/v1/users/contacts').set('x-auth-token', token.body.data[0].token);
+      await request(server).post('/api/v1/auth/signup').send(user2);
+      const { token } = res.body.data[0];
+      await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
+      res = await request(server).get('/api/v1/users/contacts').set('Cookie', [`token=${token}`]);
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(200);
       expect(res.body).to.have.property('data');

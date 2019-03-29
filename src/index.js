@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import winston from 'winston';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json';
 import users from './routes/users';
@@ -13,6 +14,7 @@ dotenv.config();
 const app = express();
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 /* app.use(express.static('UI')); */ /* testing locally */

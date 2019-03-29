@@ -66,6 +66,7 @@ router.post('/login', async (req, res) => {
       error: 'Invalid email or password',
     });
   }
+  res.cookie('token', token);
   return res.status(200).send({
     status: 200,
     data: [
@@ -107,6 +108,7 @@ router.post('/signup', async (req, res) => {
       data: 'Internal server error',
     });
   }
+  res.cookie('token', token);
   return res.status(201).send({
     status: 201,
     data: [{ token }],
