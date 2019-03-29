@@ -44,19 +44,11 @@ describe('DATABASE METHODS', () => {
   describe('Create User', () => {
     it('should return valid token if new user infomation is valid ', async () => {
       const res = await dbHandler.createUser(user1);
+      await dbHandler.createUser(user2);
       expect(res).to.be.a('string');
       const decoded = jwt.verify(res, process.env.jwtPrivateKey);
       expect(decoded).to.be.an('object');
       expect(decoded).to.have.property('id');
-    });
-  });
-  describe('Get Contacts', () => {
-    it('should return all users except current user as contacts', async () => {
-      const res = await dbHandler.createUser(user2);
-      const { id } = jwt.verify(res, process.env.jwtPrivateKey);
-      const contacts = await dbHandler.getUsers(id);
-      expect(contacts).to.be.an('array');
-      expect(contacts).to.have.lengthOf(1);
     });
   });
   describe('Send Message', () => {
@@ -65,6 +57,13 @@ describe('DATABASE METHODS', () => {
       expect(res).to.be.an('array');
       [sentMsg] = res;
       expect(sentMsg).to.have.any.keys('id', 'receiverid', 'status');
+    });
+  });
+  describe('Get Contacts', () => {
+    it('should return all users except current user as contacts', async () => {
+      const contacts = await dbHandler.getUsers(2);
+      expect(contacts).to.be.an('array');
+      expect(contacts).to.have.lengthOf(1);
     });
   });
   describe('Get all Messages', () => {
@@ -98,7 +97,7 @@ describe('DATABASE METHODS', () => {
       expect(res).to.have.lengthOf(0);
     });
     it('should return single mail for valid user', async () => {
-      const res = await dbHandler.getMessageById(1, 2);
+      const res = await dbHandler.getMessageById(sentMsg, 2);
       expect(res).to.be.an('array');
       expect(res[0]).to.have.any.keys('message', 'id');
     });

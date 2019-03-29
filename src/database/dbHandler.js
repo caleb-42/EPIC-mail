@@ -58,7 +58,9 @@ class DbHandler {
   async getUsers(id) {
     /* get all contacts */
     try {
-      const { rows } = await this.pool.query('SELECT * FROM users WHERE id != $1', [id]);
+      const sender = await this.pool.query('SELECT users.firstname, users.lastname, users.email, users.phonenumber FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderid = $1', [id]);
+      const receiver = await this.pool.query('SELECT users.firstname, users.lastname, users.email, users.phonenumber FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE messages.receiverid = $1', [id]);
+      const rows = _.unionBy(sender.rows, receiver.rows, 'email');
       return rows;
     } catch (err) {
       winston.error(err);
@@ -80,7 +82,10 @@ class DbHandler {
   async getMessages(id) {
     /* get all received messages for a particular user */
     try {
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE (messages.receiverid = $1 AND messages.visible != $2) OR (messages.senderid = $3 AND messages.visible != $4);', [id, 'sender', id, 'receiver']);
+      const sender = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE messages.receiverid = $1 AND messages.visible != $2;', [id, 'sender']);
+      const receiver = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderid = $1 AND messages.visible != $2;', [id, 'receiver']);
+      const rows = [...sender.rows, ...receiver.rows];
+
       return rows;
     } catch (err) {
       winston.error(err);
@@ -118,20 +123,21 @@ class DbHandler {
     }
   }
 
-  async getMessageById(id, userId) {
+  async getMessageById(findMsg, userId) {
     /* get a particular message */
+    const fromTo = findMsg.receiverid === userId ? 'sender' : 'receiver';
     try {
       const { rows } = await this.pool.query(`SELECT messages.*, users.firstname, users.lastname FROM messages
-      INNER JOIN users ON (messages.receiverid = users.id)
-      WHERE messages.id = $1
-      AND ((messages.receiverid = $2 AND messages.visible != $3)
-      OR (messages.senderid = $4 AND messages.visible != $5))`,
-      [id, userId, 'sender', userId, 'receiver']);
+        INNER JOIN users ON (messages.${fromTo}id = users.id)
+        WHERE messages.id = $1
+        AND ((messages.receiverid = $2 AND messages.visible != $3)
+        OR (messages.senderid = $4 AND messages.visible != $5))`,
+      [findMsg.id, userId, 'sender', userId, 'receiver']);
 
       if (rows.length === 0) return rows;
       if (rows[0].receiverid === userId) {
         await this.pool.query(`UPDATE messages SET status = $1
-        WHERE (id = $2) RETURNING *`, ['read', id]);
+          WHERE (id = $2) RETURNING *`, ['read', findMsg.id]);
         rows[0].status = 'read';
       }
       return rows;

@@ -24,7 +24,7 @@ describe('AUTH MIDDLEWARE INTEGRATION TEST', () => {
   });
   const exec = token => request(server)
     .get('/api/v1/messages')
-    .set('x-auth-token', token);
+    .set('Cookie', [`token=${token}`]);
 
   it('should return 401 code if token is not provided', async () => {
     const token = '';
