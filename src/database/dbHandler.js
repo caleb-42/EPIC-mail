@@ -127,7 +127,7 @@ class DbHandler {
     /* get a particular message */
     const fromTo = findMsg.receiverid === userId ? 'sender' : 'receiver';
     try {
-      const { rows } = await this.pool.query(`SELECT messages.*, users.firstname, users.lastname FROM messages
+      const { rows } = await this.pool.query(`SELECT messages.*, users.firstname, users.lastname, users.email FROM messages
         INNER JOIN users ON (messages.${fromTo}id = users.id)
         WHERE messages.id = $1
         AND ((messages.receiverid = $2 AND messages.visible != $3)
@@ -140,6 +140,10 @@ class DbHandler {
           WHERE (id = $2) RETURNING *`, ['read', findMsg.id]);
         rows[0].status = 'read';
       }
+
+      const thread = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE ((messages.receiverid = $1 AND messages.visible != $2) OR (messages.senderid = $3 AND messages.visible != $4)) AND messages.parentmessageid = $5;', [userId, 'sender', userId, 'receiver', String(findMsg.id)]);
+
+      rows[0].thread = thread.rows;
       return rows;
     } catch (err) {
       winston.error(err);
