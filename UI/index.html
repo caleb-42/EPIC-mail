@@ -5,14 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Landing Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Lato|Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato|Nunito|Yesteryear" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="./css/landing.css">
     <link rel="stylesheet" href="./css/utilities.css"> 
 </head>
-<body>
-    <div class="wrapper">
+<body class="ws-100 hs-100">
+    <div class="wrapper w-100 h-100 ovflo-y">
         <header>
-            <div class="logo"></div>
+            <div class="logo anim"></div>
             <nav>
                 <a href = "./signIn.html" class = "anim signin">sign in</a>
                 <a href = "./signUp.html" class = "anim signup">sign up</a>
@@ -21,35 +22,76 @@
         </header>
         <main>
             <div class="carousel"></div>
-            <div class="content flexdiv flex-center">
-                <h1>Stay Connected</h1>
-                <p>Epic mail is an app that will cater for the messaging needs of users who sign up to it</p>
+            <div class="w-100">
+                <div class="mailsend centercon">
+                    <div class="center"></div>
+                </div>
+                <div class="content w-100 text-center opac-50">
+                    <h1>Stay Connected</h1>
+                    <p>Ever wanted a platform that allowed you send mails to your coworker and friends effortlessly? Well.... search no more. Epic mail is a sleek, efficient mailing application capable of having all your messaging needs met.</p>
+                </div>
+            </div>
+            <div class="features">
+                <div class="title"><h3>Features</h3></div>
+                <div>
+                    <div class="pointer multi-devices text-center anim">
+                        <div class="devices"></div>
+                        <div class="text-center">
+                            <h2 class="opac-70">Control from any device</h2>
+                            <p class="opac-50">The Epic mail application is properly designed to allow you view and send mails from your phones, tablets and desktop devices</p>
+                        </div>
+                    </div>
+                    <div class="pointer picture-upload text-center anim">
+                        <div class="upload"></div>
+                        <div class="text-center">
+                            <h2 class="opac-70">Picture upload</h2>
+                            <p class="opac-50">Place an image to that wonderful reputation of yours by Uploading a display picture </p>
+                        </div>
+                    </div>
+                    <div class="pointer password-reset text-center anim">
+                        <div class="reset"></div>
+                        <div class="text-center">
+                            <h2 class="opac-70">Password reset</h2>
+                            <p class="opac-50">Ever forgot your password and wondered how you could reset it... Epic mail to the rescue.</p>
+                        </div>
+                    </div>
+                    <div class="pointer sms-messaging text-center anim">
+                        <div class="sms"></div>
+                        <div class="text-center">
+                            <h2 class="opac-70">SMS Messaging</h2>
+                            <p class="opac-50">Get sms messages as an addon to your mail sending services</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
+        <footer>
+            <div class="offers">
+                <div class="title"><h3>what we offer</h3></div>
+                <div class = "offer">
+                    <div class="offercon inline-block">
+                        <div class="pointer anim centercon w-100">
+                            <div class="smart center"></div>
+                        </div>
+                        <h3 class="text-center w-100">Smart</h3>
+                    </div>
+                    <div class="offercon inline-block">
+                        <div class="pointer anim centercon w-100">
+                            <div class="speed center"></div>
+                        </div>
+                        <h3 class="text-center">Speed</h3>
+                    </div>
+                    <div class="offercon inline-block">
+                        <div class="pointer anim centercon w-100">
+                            <div class="support center"></div>
+                        </div>
+                        <h3 class="text-center">Support</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="title"><h3>Andela</h3></div>
+        </footer>
     </div>
-    <aside class="flexdiv flex-center">
-        <div>
-            <div class="title anim">
-                <h1>Features</h1>
-            </div>
-            <div>
-                <h2>Email Sending</h2>
-            </div>
-            <div>
-                <h2>Groups</h2>
-            </div>
-            <div>
-                <h2>Picture Upload</h2>
-            </div>
-            
-            <!-- <ul>
-                <li>Mail Sending</li>
-                <li>Picture Upload</li>
-                <li>Phone messaging</li>
-                <li>Group creation</li>
-            </ul> -->
-        </div>
-    </aside>
     <script src="landing.js"></script>
 </body>
 </html>
