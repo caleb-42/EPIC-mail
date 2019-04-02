@@ -1,116 +1,20 @@
+/* eslint-disable no-undef */
 (() => {
-  const authenticate = () => {
-    /* const email = localStorage.getItem('email');
-    const password = localStorage.getItem('password'); */
-    const signin = localStorage.getItem('email');
-    if (!signin) window.location.href = './signUp.html';
-  };
-  const dummyData = {
-    messages: [
-      {
-        id: 1,
-        createdOn: 'Sat 18th, Mar 2011',
-        subject: 'i just registered',
-        receiverId: 2,
-        senderId: 1,
-        mailerName: 'paul jekande',
-        message: 'its so wonderful to be part of this app',
-        parentMessageId: undefined,
-        status: 'unread',
-      },
-      {
-        id: 3,
-        createdOn: 'Sun 11th, Aug 2018',
-        receiverId: 1,
-        senderId: 2,
-        mailerName: 'fred delight',
-        subject: "get in the car, you're late",
-        message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-        parentMessageId: undefined,
-        status: 'sent',
-      },
-      {
-        id: 4,
-        createdOn: 'Thu 23rd, Jan 2019',
-        receiverId: 2,
-        senderId: 1,
-        mailerName: 'fred delight',
-        subject: 'hello, missed your call',
-        message: "I'm so sorry, i was at the inn when you called martins, Lorem Ipsum is simply dummy text",
-        parentMessageId: undefined,
-        status: 'read',
-      },
-      {
-        id: 6,
-        createdOn: 'Sat 23rd, Jun 2015',
-        receiverId: 1,
-        senderId: 2,
-        mailerName: 'kunle sambo',
-        subject: 'the staff meeting',
-        message: 'dont let the board members get on your nerves they have terrible manners',
-        parentMessageId: undefined,
-        status: 'draft',
-      },
-    ],
-    filtered: [],
-  };
   dummyData.filtered = dummyData.messages.filter(msg => msg.status === 'read' || msg.status === 'unread');
   /* let endpoint = 'http://localhost:3000/api/v1/messages'; */
-  authenticate();
-  const switchClass = (target, toggleClass, type = 'toggle') => {
-    try {
-      const navs = document.querySelectorAll(`${target}`);
-      navs.forEach((nav) => {
-        if (type === 'toggle')nav.classList.toggle(toggleClass);
-        if (type === 'add')nav.classList.add(toggleClass);
-        if (type === 'remove')nav.classList.remove(toggleClass);
-      });
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
-    return true;
-  };
-  const openCloseNav = () => {
-    switchClass('.side-nav .d-arrow', 'down');
-    switchClass('.side-nav .mail-types', 'open');
-    switchClass('.top-nav .mail-types', 'open');
-    switchClass('.main', 'open-sub-nav');
-  };
-  const switchTab = (nav, changeTab = true) => {
-    if (changeTab) {
-      switchClass('.tab.block', 'gone', 'add');
-      switchClass('.tab.block.gone', 'block', 'remove');
-      switchClass(`.${nav}.gone`, 'block', 'add');
-      switchClass(`.${nav}.gone.block`, 'gone', 'remove');
-    }
-    /* fetchData(nav); */
-  };
+
   document.querySelector('.d-arrow').addEventListener('click', openCloseNav);
   document.querySelector('.top-nav .d-arrow').addEventListener('click', openCloseNav);
 
-  const switchEvents = (target, arg) => {
-    document.querySelector(target)
-      .addEventListener('click', () => {
-        switchClass(arg[0], arg[1], arg[2]);
-      });
-  };
   switchEvents('.main .navicon', ['.main', 'open-nav', 'toggle']);
   switchEvents('.main-body', ['.main', 'open-nav', 'remove']);
 
-  const resetTab = () => {
-    switchClass('.wrapper .main', 'selected', 'remove');
-    setTimeout(() => {
-      switchClass('.tab.block .left-body.tab-content', 'display', 'remove');
-      switchClass('.tab.block .right-body.tab-content', 'display', 'add');
-    }, 500);
-  };
   document.querySelector('.backbtn').addEventListener('click', () => {
     resetTab();
   });
   document.querySelectorAll('.custom-modal').forEach((elem) => {
     elem.addEventListener('click', (evt) => {
-      if (evt.target.classList.contains('modal'))window.location.href = './index.html#';
+      if (evt.target.classList.contains('modal'))window.location.href = './app.html#';
     });
   });
   document.querySelector('.create-group-btn')
@@ -153,21 +57,7 @@
       switchClass('.tab.block .right-body.tab-content', 'display', 'remove');
     }, 500);
   };
-  /* const server = async (url = '', method = '', resolve = () => {}, headers = {
-    'Content-Type': 'application/json',
-    'x-auth-token': localStorage.getItem('token'),
-  }, reject = () => {}) => {
-    await fetch(url, {
-      method,
-      headers,
-    })
-      .then(resp => resp.json())
-      .then((res) => {
-        resolve(res);
-      }).catch(() => {
-        reject();
-      });
-  }; */
+
   const runDummy = () => {
     document.querySelector('.content-wrapper').innerHTML = '';
     dummyData.filtered.forEach((msg, index) => {
