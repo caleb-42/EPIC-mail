@@ -6,6 +6,7 @@ let server;
 let user;
 const user1 = {
   email: 'ewere@epicmail.com',
+  recoveryEmail: 'ewere@gmail.com',
   firstName: 'admin',
   lastName: 'user',
   confirmPassword: 'admin123',
@@ -14,6 +15,7 @@ const user1 = {
 };
 const user2 = {
   email: 'sam@epicmail.com',
+  recoveryEmail: 'sam@gmail.com',
   firstName: 'user',
   lastName: 'user',
   confirmPassword: 'user123',
@@ -22,6 +24,7 @@ const user2 = {
 };
 const user3 = {
   email: 'kal@epicmail.com',
+  recoveryEmail: 'kal@gmail.com',
   firstName: 'user',
   lastName: 'user',
   confirmPassword: 'user123',

@@ -75,3 +75,17 @@ const server = async (
       reject(err);
     });
 };
+const loader = document.querySelector('.loader');
+const resp = document.querySelector('.resp');
+const toggleLoader = () => {
+  if (loader.classList.contains('gone')) {
+    resp.textContent = '';
+    loader.classList.remove('gone');
+    resp.classList.add('gone');
+    document.querySelector('.submit').disabled = true;
+  } else {
+    loader.classList.add('gone');
+    resp.classList.remove('gone');
+    document.querySelector('.submit').disabled = false;
+  }
+};

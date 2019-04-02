@@ -1,18 +1,5 @@
 /* eslint-disable no-undef */
 (() => {
-  const loader = document.querySelector('.loader');
-  const resp = document.querySelector('.resp');
-  const toggleLoader = () => {
-    if (loader.classList.contains('gone')) {
-      loader.classList.remove('gone');
-      resp.classList.add('gone');
-      document.querySelector('.submit').disabled = true;
-    } else {
-      loader.classList.add('gone');
-      resp.classList.remove('gone');
-      document.querySelector('.submit').disabled = false;
-    }
-  };
   document.querySelector('button').addEventListener('click', () => {
     toggleLoader();
     const email = document.querySelector('input[name="email"]').value;

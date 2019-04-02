@@ -12,6 +12,7 @@ describe('USER API ENDPOINTS', () => {
     server = require('../../../src/index');
     user1 = {
       email: 'ewere@epicmail.com',
+      recoveryEmail: 'ewere@gmail.com',
       firstName: 'admin',
       lastName: 'user',
       confirmPassword: 'admin123',
@@ -20,6 +21,7 @@ describe('USER API ENDPOINTS', () => {
     };
     user2 = {
       email: 'sam@epicmail.com',
+      recoveryEmail: 'sam@gmail.com',
       firstName: 'sam',
       lastName: 'user',
       confirmPassword: 'user123',

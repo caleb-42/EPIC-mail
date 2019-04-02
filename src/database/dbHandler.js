@@ -39,13 +39,13 @@ class DbHandler {
 
   async createUser(newUser) {
     /* create user using in user table */
-    const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'password']);
+    const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'recoveryEmail']);
     try {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(user.password, salt);
       const { rows } = await this.pool.query(`INSERT INTO users (
-        firstName, lastName, email, phoneNumber, password) 
-        VALUES ($1, $2, $3, $4, $5) RETURNING *`, Object.values(user));
+        firstName, lastName, email, phoneNumber, password, recoveryEmail) 
+        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`, Object.values(user));
       const createdUser = rows[0];
       const token = helper.generateJWT(createdUser);
       return token;
@@ -390,6 +390,7 @@ class DbHandler {
       firstname VARCHAR(30),
       lastname VARCHAR(30),
       email VARCHAR(30),
+      recoveryemail VARCHAR(30),
       phonenumber VARCHAR(30),
       password TEXT
     );

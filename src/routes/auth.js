@@ -22,6 +22,7 @@ const validateLogIn = (user) => {
     lastName: joi.string().trim().min(3).max(15)
       .required(),
     email: joi.string().trim().email().required(),
+    recoveryEmail: joi.string().trim().email().required(),
     phoneNumber: joi.number().required(),
     password: joi.string().trim().min(5).max(255)
       .required(),
