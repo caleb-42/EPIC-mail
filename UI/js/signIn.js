@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 (() => {
   const loader = document.querySelector('.loader');
   const resp = document.querySelector('.resp');
@@ -16,14 +17,32 @@
     toggleLoader();
     const email = document.querySelector('input[name="email"]').value;
     const password = document.querySelector('input[name="password"]').value;
-    if (password === '') {
-      toggleLoader();
-      document.querySelector('.resp').textContent = 'empty password';
-      return;
-    }
     /* testing locally */
-    /* const endpoint = 'http://localhost:3000/api/v1/auth';
-    fetch(endpoint, {
+    server(
+      'auth/login',
+      'POST',
+      { email, password },
+      (res) => {
+        toggleLoader();
+        try {
+          const { firstName, lastName, email } = res.data[0];
+          resp.textContent = 'successfully signed in';
+          localStorage.setItem('login', 'yes');
+          localStorage.setItem('firstName', 'yes');
+          localStorage.setItem('lastName', 'yes');
+          localStorage.setItem('email', 'yes');
+          window.location.href = './app.html';
+        } catch (e) {
+          resp.textContent = res.error;
+        }
+      },
+      (err) => {
+        resp.textContent = 'Something went wrong';
+        console.log(err);
+        toggleLoader();
+      },
+    );
+    /* fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,9 +58,8 @@
         try {
           const { token, firstName } = res.data[0];
           resp.textContent = 'successfully signed in';
-          localStorage.setItem('token', token);
-          localStorage.setItem('name', firstName);
-          window.location.href = './index.html';
+          localStorage.setItem('login', 'yes');
+          window.location.href = './app.html';
         } catch (e) {
           resp.textContent = res.error;
         }
@@ -49,7 +67,7 @@
         resp.textContent = 'Something went wrong';
         toggleLoader();
       }); */
-    window.setTimeout(() => {
+    /* window.setTimeout(() => {
       toggleLoader();
       if (email === 'admin@gmail.com' && password === 'admin123') {
         localStorage.setItem('email', email);
@@ -58,7 +76,7 @@
         return;
       }
       document.querySelector('.resp').textContent = 'failed to signed in';
-    }, 3000);
+    }, 3000); */
   });
   const inputs = document.querySelectorAll('.input-group input');
 

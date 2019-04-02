@@ -136,7 +136,7 @@ body{
 .resp{
     margin:1.5rem auto 3rem;
     color: rgba(0, 0, 0, .5);
-    font-size: 1.1em;
+    font-size: 1.1rem;
 }
 @media (min-width: 576px) {
     .form-hd .input-group input{

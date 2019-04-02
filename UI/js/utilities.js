@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
-const authenticate = () => {
-  /* const email = localStorage.getItem('email');
-    const password = localStorage.getItem('password'); */
-  const signin = localStorage.getItem('email');
-  if (!signin) window.location.href = './signUp.html';
+const authenticate = (token) => {
+  if (localStorage.getItem('login') === 'yes') {
+    return true;
+  }
+  return false;
 };
-authenticate();
 const switchClass = (target, toggleClass, type = 'toggle') => {
   try {
     const navs = document.querySelectorAll(`${target}`);
@@ -48,18 +47,31 @@ const resetTab = () => {
     switchClass('.tab.block .right-body.tab-content', 'display', 'add');
   }, 500);
 };
-const server = async (url = '', method = '', resolve = () => {}, headers = {
-  'Content-Type': 'application/json',
-  'x-auth-token': localStorage.getItem('token'),
-}, reject = () => {}) => {
-  await fetch(url, {
+const inputs = document.querySelectorAll('.input-group input');
+inputs.forEach((input) => {
+  input.addEventListener('focusin', (event) => {
+    event.target.parentNode.querySelector('label').classList.add('show');
+  });
+  input.addEventListener('focusout', (event) => {
+    event.target.parentNode.querySelector('label').classList.remove('show');
+  });
+});
+const server = async (
+  url = '',
+  method = '',
+  body = {},
+  resolve = (res) => {},
+  reject = (err) => {}) => {
+  body = JSON.stringify(body);
+  await fetch(`https://epic-mail-application.herokuapp.com/api/v1/${url}`, {
     method,
-    headers,
+    headers: { 'Content-Type': 'application/json' },
+    body,
   })
     .then(resp => resp.json())
     .then((res) => {
       resolve(res);
-    }).catch(() => {
-      reject();
+    }).catch((err) => {
+      reject(err);
     });
 };
