@@ -7,6 +7,7 @@ let user;
 
 const user1 = {
   email: 'ewere@epicmail.com',
+  recoveryEmail: 'ewere@gmail.com',
   firstName: 'admin',
   lastName: 'user',
   confirmPassword: 'admin123',
@@ -16,6 +17,7 @@ const user1 = {
 
 const user2 = {
   email: 'sam@epicmail.com',
+  recoveryEmail: 'sam@gmail.com',
   firstName: 'sam',
   lastName: 'user',
   confirmPassword: 'sam123',

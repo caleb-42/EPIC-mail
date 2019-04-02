@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
   firstname VARCHAR(30),
   lastname VARCHAR(30),
   email VARCHAR(30),
+  recoveryemail VARCHAR(30),
   phonenumber VARCHAR(30),
   password TEXT
 );

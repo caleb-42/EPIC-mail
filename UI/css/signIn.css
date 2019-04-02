@@ -104,7 +104,8 @@ body {
 }
 .resp{
     margin:.3rem auto 1.5rem;
-    width: 50%;
+    width: 100%;
+    font-size: 1.1rem;
 }
 @media (min-width: 768px) {
     .form-hd{

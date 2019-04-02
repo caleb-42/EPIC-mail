@@ -16,6 +16,7 @@ describe('DATABASE METHODS', () => {
   beforeEach(() => {
     user1 = {
       email: 'ewere@epicmail.com',
+      recoveryEmail: 'ewere@gmail.com',
       firstName: 'admin',
       lastName: 'user',
       confirmPassword: 'admin123',
@@ -24,6 +25,7 @@ describe('DATABASE METHODS', () => {
     };
     user2 = {
       email: 'sam@epicmail.com',
+      recoveryEmail: 'sam@gmail.com',
       firstName: 'sam',
       lastName: 'user',
       confirmPassword: 'user123',

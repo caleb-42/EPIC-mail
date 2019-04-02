@@ -22,6 +22,7 @@ const validateLogIn = (user) => {
     lastName: joi.string().trim().min(3).max(15)
       .required(),
     email: joi.string().trim().email().required(),
+    recoveryEmail: joi.string().trim().email().required(),
     phoneNumber: joi.number().required(),
     password: joi.string().trim().min(5).max(255)
       .required(),
@@ -73,6 +74,8 @@ router.post('/login', async (req, res) => {
       {
         token,
         firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
       },
     ],
   });
@@ -111,7 +114,12 @@ router.post('/signup', async (req, res) => {
   res.cookie('token', token);
   return res.status(201).send({
     status: 201,
-    data: [{ token }],
+    data: [{
+      token,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+    }],
   });
 });
 export default router;
