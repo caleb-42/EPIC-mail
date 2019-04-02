@@ -6,10 +6,8 @@ body{
     padding: 0;
     margin: 0;
     overflow: hidden;
-    position: absolute;
-    width:100%;
-    height:100%;
     font-family: 'Lato', sans-serif;
+    background: rgba(246, 246, 233, 0.5);
 }
 .wrapper{
     height:100%;
@@ -28,7 +26,6 @@ body{
 .main{
     width:100%;
     height: 100%;
-    background: rgba(246, 246, 233, 0.5);
 }
 .main-body{
     padding:.5em;
@@ -37,16 +34,17 @@ body{
     text-align: center;
 }
 .main-body .title{
-    padding: .8em;
+    padding: .8rem;
+    height: fit-content;
     /* background: rgba(180, 29, 87, .8); */
-    margin: 1.7em auto;
+    margin: 1em auto 0;
     width:fit-content;
     border-radius: .5em;
 }
 .main-body .title p{
     color:rgba(180, 29, 87, .6);
     font-weight: 600;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
 }
 .loader{
     background-image: url('../UI-elements/loader.gif');
@@ -74,41 +72,48 @@ body{
     text-align: center;
 }
 .form-hd{
-    height: 60%;
+    height: fit-content;
     width: 100%;
-    margin: 1em auto;
+    margin: .3rem auto .5rem;
+}
+.btnresp{
+    height: 5%;
 }
 .form-hd .input-group{
-    margin:0 auto 1.2em;
+    margin:0 auto .8em;
     text-align: center;
 }
 .form-hd .input-sub-group{
-    width: 47%;
+    width: 100%;
+}
+.form-hd .input-sub-group:nth-child(1), .form-hd .input-sub-group:nth-child(4){
+    margin-bottom: 1rem;
 }
 .form-hd .input-group label{
     font-size: .8rem;
     color: rgba(0, 0, 0, 0.5);
     display: inline-block;
     font-weight: 600;
-    padding-bottom: .8em;
-    /*opacity: 0;
-    padding-bottom: -1.5em; */
+    /* padding-bottom: .8em; */
+    opacity: 0;
+    padding-bottom: -1.5em;
 }
 .form-hd .input-group label.show{
-   /*  padding-bottom: .5em; */
+    padding-bottom: .5em;
+    opacity: 1;
     color: rgba(40, 202, 94, 0.9);
     font-weight: 600;
 }
 .form-hd .input-group input{
     width:100%;
     text-align:center;
-    font-size: 1rem;
+    font-size: .8rem;
     border-radius: 2em;
     border-color: transparent;
     background: rgba(0,0,0, .1);
     margin:0 auto;
 }
-.form-hd button{
+.main-body .btnresp button{
     background: rgba(73, 192, 112, 0.9);
     color:rgba(255,255,255,.9);
     font-size: 1.1rem;
@@ -116,22 +121,60 @@ body{
     width:35%;
     padding:.5rem .7em;
 }
-.form-hd button:hover{
+.main-body .btnresp button:hover{
     background: rgba(43, 129, 71, 0.9);
 }
-.form-hd p{
+.main-body .btnresp p{
     margin-top: .9em;
     font-size: .9rem;
     color: rgba(0, 0, 0, .5);
     margin-bottom: 2.5em;
 }
-.form-hd p a{
+.main-body .btnresp p a{
     color: rgba(180, 29, 87, .6);
 }
 .resp{
-    margin:1.5em auto 1.3em;
+    margin:1.5rem auto 3rem;
     color: rgba(0, 0, 0, .5);
     font-size: 1.1em;
+}
+@media (min-width: 576px) {
+    .form-hd .input-group input{
+        font-size: 1rem;
+    }
+    .btnresp{
+        height: 20%;
+    }
+    .form-hd{
+        width:100%;
+        margin: 1em auto;
+    }
+    .main-body button{
+        width:25%;
+        font-size: 1.2rem;
+    }
+    .form-hd .input-sub-group{
+        width: 47%;
+    }
+    .form-hd .input-sub-group:nth-child(1), .form-hd .input-sub-group:nth-child(4){
+        margin-bottom: 0;
+    }
+    .form-hd .input-group label{
+        padding-bottom: .8em;
+        opacity: 1;
+    }
+    .form-hd .input-group label.show{
+        color: rgba(40, 202, 94, 0.9);
+        padding-bottom: .8em;
+    }
+    .form-hd .input-group input::placeholder {
+        opacity: 0 !important; 
+    }
+}
+@media (min-width: 768px) {
+    .form-hd{
+        width:80%;
+    }
 }
 @media (min-width: 992px) {
     .main{
@@ -142,20 +185,6 @@ body{
         display: block;
     }
     .form-hd{
-        width:70%;
-    }
-}
-@media (min-width: 768px) {
-    .form-hd{
-        width: 70%;
-    }
-}
-@media (min-width: 576px) {
-    .form-hd{
-        width:70%;
-    }
-    .form-hd button{
-        width:25%;
-        font-size: 1.2rem;
+        width:90%;
     }
 }

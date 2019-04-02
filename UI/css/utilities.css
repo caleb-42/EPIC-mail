@@ -34,6 +34,9 @@ input::placeholder {
 .fw-600{
     font-weight: 600;
 }
+.mx-auto{
+    margin: 0 auto;
+}
 .text-center{
     text-align: center;
 }

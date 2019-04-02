@@ -10,50 +10,56 @@
     <link rel="stylesheet" href="./css/utilities.css"> 
 </head>
     <body>
-        <div class="wrapper ovflo-y">
+        <div class="wrapper ws-100 hs-100">
             <div class = "sidebar float-left">
                 <div class="logo"></div>
                 <div class="pic"></div>
             </div>
-            <div class="main float-right flexdiv flex-center">
+            <div class="main float-right flexdiv flex-center ovflo-y">
                 <div class="main-body">
-                    <div class="title"><p>CREATE ACCOUNT</p></div>
+                    <div class="title"><p>Sign up</p></div>
                     <form class="form-hd text-center" action="" autocomplete="off">
                         <div class="input-group">
                             <span class="input-sub-group float-left">
                                 <label class="firstname anim">First Name</label>
-                                <input required type="text" id="firstName" class="inputs opac-70" name="firstName" />
+                                <input placeholder = "First Name" required type="text" id="firstName" class="inputs opac-70" name="firstName" />
                             </span>
                             <span class="input-sub-group float-right">
                                 <label class="lastName anim">Last Name</label>
-                                <input required type="text" id="lastName" class="inputs opac-70" name="lastName" />
+                                <input placeholder = "Last Name" required type="text" id="lastName" class="inputs opac-70" name="lastName" />
                             </span>
                             <div class="clr"></div>
                         </div>
                         <div class="input-group">
                             <label class="email anim">Email</label>
-                            <input required id="email" class="inputs opac-70" name="email" />
+                            <input placeholder = "Email" required id="email" class="inputs opac-70" name="email" />
+                        </div>
+                        <div class="input-group">
+                            <label class="recoveryemail anim">Recovery Email</label>
+                            <input placeholder = "Recovery Email" required id="recoveryemail" class="inputs opac-70" name="recoveryemail" />
                         </div>
                         <div class="input-group">
                             <span class="input-sub-group float-left">
                                 <label class="password anim">Password</label>
-                                <input required type = "password" id="password" class="inputs opac-70 w-100" name="password" />
+                                <input required type = "password" placeholder = "Password" id="password" class="inputs opac-70 w-100" name="password" />
                             </span>
                             <span class="input-sub-group float-right">
                                 <label class="confirm-password anim">Confirm Password</label>
-                                <input required type = "password" id="confirm_password" class="inputs opac-70 w-100" name="confirm_password" />
+                                <input required type = "password" placeholder = "Confirm Password" id="confirm_password" class="inputs opac-70 w-100" name="confirm_password" />
                             </span>
                             <div class="clr"></div>
                         </div>
                         <div class="input-group">
                             <label class="phoneNumber anim">Phone Number</label>
-                            <input required type="number" id="phoneNumber" onkeydown="javascript: return event.keyCode !=69 && event.keyCode !=189 && event.keyCode !=109 && event.keyCode !=190" class="inputs opac-70" name="phoneNumber" />
+                            <input placeholder = "Phone Number" required type="number" id="phoneNumber" onkeydown="javascript: return event.keyCode !=69 && event.keyCode !=189 && event.keyCode !=109 && event.keyCode !=190" class="inputs opac-70" name="phoneNumber" />
                         </div>
+                    </form>
+                    <div class="btnresp">
                         <button type="button" class="submit anim">sign up</button>
                         <p class="">have an account? <a href="./signIn.html" class = "fw-600 pointer">sign&nbsp;in</a></p>
-                        <h3 class="resp">&nbsp;</h3>
+                        <h3 class="resp"></h3>
                         <div class="loader gone"></div>
-                    </form>
+                    </div>
                 </div>
             </div>
             <div class="clr"></div>
