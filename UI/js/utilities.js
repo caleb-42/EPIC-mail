@@ -56,6 +56,10 @@ inputs.forEach((input) => {
     event.target.parentNode.querySelector('label').classList.remove('show');
   });
 });
+const getCookie = (name) => {
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+  if (match) return match[2];
+};
 const server = async (
   url = '',
   method = '',
@@ -63,11 +67,20 @@ const server = async (
   resolve = (res) => {},
   reject = (err) => {}) => {
   body = JSON.stringify(body);
-  await fetch(`https://epic-mail-application.herokuapp.com/api/v1/${url}`, {
+  console.log(document.cookie);
+  const payload = method !== 'GET' ? {
     method,
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body,
-  })
+  } : {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  };
+  const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`;
+  /* const endpoint = `http://localhost:3000/api/v1/${url}`; */
+  await fetch(endpoint, payload)
     .then(resp => resp.json())
     .then((res) => {
       resolve(res);
@@ -75,6 +88,7 @@ const server = async (
       reject(err);
     });
 };
+
 const loader = document.querySelector('.loader');
 const resp = document.querySelector('.resp');
 const toggleLoader = () => {
