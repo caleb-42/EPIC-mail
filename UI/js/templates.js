@@ -12,42 +12,49 @@ const selectPost = (evt) => {
   }, 500);
 };
 const generateMails = (msg, index) => {
+  let { status } = msg;
+  if (localStorage.getItem('id') === String(msg.senderid)) {
+    status = msg.status === 'read' ? 'seen' : 'delivered';
+  }
   const strHtml = `
-            <div id = 'post-${index}' class="post pointer anim" data-id = "${msg.id}">
+            <div id = 'post-${index}' class="post pointer anim" data-id = "msg-${msg.id}">
 
-                <div class="dp"></div>
+                <div class="dp" style = "background-image: url('../UI-elements/dp.png');"></div>
                 <div class="details">
                     <h4>${msg.firstname} ${msg.lastname}</h4>
                     <p class="subject">${msg.subject}</p>
-                    <div><span class="type">${msg.status}</span><span class="date">${msg.createdon}</span></div>
+                    <div><span class="type">${status}</span><span class="date">${msg.createdon}</span></div>
                 </div>
                 <div class="clr"></div>
             </div>
             `;
   document.querySelector('.content-wrapper').insertAdjacentHTML('beforeend', strHtml);
   document.querySelector(`#post-${index}`).addEventListener('click', async (evt) => {
-    /* console.log(evt);
-    selectPost(evt);
-    document.querySelector('.content-wrapper-bloated').innerHTML = `
-      <div class="post-bloated">
-          <h3>${msg.firstname} ${msg.lastname}</h3>
-          <p class="subject">${msg.subject}</p>
-          <p class="msg">${msg.message}</p>
-          <p class="date">${msg.createdon}</p>
-      </div>
-      `; */
     selectPost(evt);
     server(
       `messages/${msg.id}`, 'GET', {},
       (res) => {
         const msgById = res.data[0];
         console.log(msgById);
+        /* console.log(document.querySelector(`[data-nav = "${parentMenu}"] .type`).innerHTML); */
         document.querySelector('.content-wrapper-bloated').innerHTML = `
           <div class="post-bloated">
+              <div class = "dp" style = "background-image: url('../UI-elements/dp.png');"></div>
               <h3>${msgById.firstname} ${msgById.lastname}</h3>
               <p class="subject">${msgById.subject}</p>
-              <p class="msg">${msgById.message}</p>
-              <p class="date">${msgById.createdon}</p>
+              <div class= 'bodyhead'>
+                <span>Message</span>
+                <p class="date">${msgById.createdon}</p>
+                <div class="clr"></div>
+              </div>
+              <div class="msgcon">
+                <p class="msg">${msgById.message}</p>
+              </div>
+              <div class="msgaction">
+                <button class="btn ${localStorage.getItem('id') === String(msgById.senderid) && msgById.status === 'read' ? 'gone' : ''}">Update</button>
+                <button class="btn"> ${msgById.status === 'read' ? 'Delete' : 'Retract'}</button>
+                <button class="btn ${localStorage.getItem('id') === String(msgById.senderid) && msgById.thread.length === 0 ? 'gone' : ''}">${msgById.status === 'draft' ? 'Send' : 'Reply'}</button>
+              </div>
           </div>
           `;
       },

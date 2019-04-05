@@ -7,12 +7,15 @@
     padding: 1.5rem 1.5rem;
     /* margin:0 auto;
     font-weight: 600; */
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 1.1rem;
+    width: 1.1rem;
     border-radius: 3rem;
     bottom: 1.1rem;
     right: 1.1rem;
     box-shadow: .1rem .1rem .3rem rgba(0, 0, 0, 0.4);
+}
+.wrapper .main.selected .newMail{
+    display: none;
 }
 .custom-modal{
     background-color: rgba(0, 0, 0, .7);
@@ -21,7 +24,7 @@
     position: absolute;
     top:0;
     left: 0;
-    z-index: 10;
+    z-index: 30;
     opacity: 0;
     visibility: hidden;
 }
@@ -63,25 +66,27 @@
 }
 .custom-modal .modal-content .modal_heading{
     color: rgba(55, 174, 111, 0.8);
-    margin-bottom: 1rem;
-    padding-bottom: 1rem; 
+    /* margin-bottom: 1rem; */
+    font-size: 1.2rem;
+    padding-bottom: .6rem; 
     border-bottom: 1px rgba(0, 0, 0, .3) solid;
 }
 .form-hd .input-group{
-    margin:0 auto 1.2rem;
+    margin:0 auto .4rem;
     text-align: center;
 }
-.form-hd .input-group label, .form-hd .input-group textarea{
+.form-hd .input-group label{
     font-size: .8rem;
     color: rgba(0, 0, 0, 0.5);
     display: inline-block;
     font-weight: 600;
-    padding-bottom: .8em;
-    /*opacity: 0;
-    padding-bottom: -1.5em; */
+    /* padding-bottom: .8em; */
+    opacity: 0;
+    padding-bottom: -1.5em;
 }
-.form-hd .input-group label.show , .form-hd .input-group textarea.show{
-   /*  padding-bottom: .5em; */
+.form-hd .input-group label.show {
+    opacity: 1;
+    padding-bottom: .5em;
     color: rgba(40, 202, 94, 0.9);
     font-weight: 600;
 }
@@ -94,21 +99,22 @@
     background: rgba(0,0,0, .1);
     margin:0 auto;
 }
+.form-hd .input-group input {
+    font-size: .8rem;
+}
 .form-hd .input-group textarea{
     max-width: 100%;
     max-height: 11rem;
 }
 .form-hd .actionbtn{
-    margin-bottom: 1rem;
+    margin: 1rem auto;
+    width: 80%;
+    /* display: flex; */
 }
-.form-hd .actionbtn button:nth-child(1){
-    border: 1px rgba(0, 0, 0, .3) solid;
-}
-.form-hd .actionbtn button:nth-child(2){
-    border: 1px rgba(0, 0, 0, .3) solid;
-}
-.form-hd .actionbtn button:nth-child(3){
-    border: 1px rgba(0, 0, 0, .3) solid;
+.form-hd .actionbtn button{
+    font-size: .8rem;
+    width:40%;
+    /* flex-grow: 1; */
 }
 .create-group{
     height: 15rem;
@@ -160,6 +166,10 @@
 .create-group span {
     width: 100%;
 }
+.msgToCon{
+    margin: 1rem auto 0;
+    font-size: .8rem;
+}
 @media(min-width: 992px){
     .create-group a, .create-group button{
         font-size: 1.1rem;
@@ -168,11 +178,18 @@
     .create-group a{
         padding: .75rem .8rem;
     }
+    .newMail{
+        right: 34% !important;
+    }
 }
 @media(min-width: 768px){
     .custom-modal .modal-content{
         width: 50%;
-        height: 65%;
+        /* height: 65%; */
+    }
+    .msgToCon{
+        margin: 1.2rem auto .5rem;
+        font-size: 1rem;
     }
     .create-group a, .create-group button{
         font-size: 1rem;
@@ -182,5 +199,14 @@
     }
     .create-group a{
         padding: .75rem 1rem;
+    }
+    .newMail{
+        right: 42%;
+    }
+    [data-tab = 'settings'] .newMail{
+        right: 2rem !important;
+    }
+    .wrapper .main.selected .newMail{
+        display: block;
     }
 }

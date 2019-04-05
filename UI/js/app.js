@@ -59,6 +59,8 @@ const navig = (evt) => {
   switchClass(`[data-nav="${menu}"]`, 'active');
   document.querySelector('#tabname').textContent = menu;
   document.querySelector('.content-wrapper-bloated').innerHTML = '';
+  document.querySelector('.content-wrapper').innerHTML = '';
+  document.querySelector('.main').setAttribute('data-tab', menu);
   switchTab(menu);
   let endpoint;
   switch (menu) {
@@ -100,6 +102,8 @@ const subNavig = (evt) => {
   switchClass('.mail-types li.active', 'active');
   switchClass(`[data-nav="${menu}"]`, 'active');
   document.querySelector('.content-wrapper-bloated').innerHTML = '';
+  document.querySelector('.main').setAttribute('data-tab', parentMenu);
+  document.querySelector('.content-wrapper').innerHTML = '';
   switchTab(parentMenu);
   document.querySelector('#tabname').textContent = menu;
   server(

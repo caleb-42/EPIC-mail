@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 (() => {
+  localStorage.clear();
   document.querySelector('button').addEventListener('click', () => {
     toggleLoader();
     const emailAddress = document.querySelector('input[name="email"]').value;
@@ -13,12 +14,15 @@
         toggleLoader();
         try {
           // eslint-disable-next-line no-unused-vars
-          const { firstName, lastName, email } = res.data[0];
+          const {
+            firstName, lastName, email,
+            id,
+          } = res.data[0];
           resp.textContent = 'successfully signed in';
-          localStorage.setItem('login', 'yes');
-          localStorage.setItem('firstName', 'yes');
-          localStorage.setItem('lastName', 'yes');
-          localStorage.setItem('email', 'yes');
+          localStorage.setItem('firstName', firstName);
+          localStorage.setItem('lastName', lastName);
+          localStorage.setItem('email', email);
+          localStorage.setItem('id', id);
           window.location.href = './app.html';
         } catch (e) {
           resp.textContent = res.error;

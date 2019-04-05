@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="./css/app.css">
     <link rel="stylesheet" href="./css/tabs.css">
     <link rel="stylesheet" href="./css/utilities.css"> 
-    <script src="./js/utilities.js"></script>
     <script src="./js/authenticate.js"></script>  
 </head>
     <body>
@@ -18,20 +17,21 @@
             <aside class = "leftsidebar h-100">
                 <div class="logo"></div>
                 <ul class="side-nav navig w-100">
-                        <li><h3 data-nav = 'mails' class="active">Mails<span class="d-arrow anim down"></span></h3>
+                    <li><h3 data-nav = 'mails' class="active">Mails<span class="d-arrow anim down"></span></h3>
                         <ul class="mail-types anim w-100 open">
                             <li data-route = 'messages' data-parent-nav="mails" data-nav = 'inbox' class="active">Inbox</li>
+                            <li data-route = 'messages/unread' data-parent-nav="mails" data-nav = 'unread'>Unread</li>
                             <li data-route = 'messages/sent' data-parent-nav="mails" data-nav = 'sent'>Sent</li>
                             <li data-route = 'messages/draft' data-parent-nav="mails" data-nav = 'draft'>Draft</li>
                         </ul>
                     </li>
-                    <li><h3 data-nav = 'contacts'>Contacts</h3></li>
+                    <!-- <li><h3 data-nav = 'contacts'>Contacts</h3></li> -->
                     <li><h3 data-nav = 'groups'>Groups</h3></li>
                     <li><h3 data-nav = 'settings'>Settings</h3></li>
                     <li><h3 data-nav = 'signOut'>Sign Out</h3></li>
                 </ul>
             </aside>
-            <div class="main">
+            <div class="main" data-tab = "mails">
                 <div class="header">
                     <div class="backbtn"></div>
                     <h1 id = "tabname">Inbox</h1>
@@ -42,11 +42,12 @@
                     <li><h3 data-nav = 'mails' class="active">Mails<span class="d-arrow anim down"></span></h3>
                         <ul class="mail-types anim w-100 open">
                             <li data-route = 'messages' data-parent-nav="mails" data-nav = 'inbox' class="active">Inbox</li>
+                            <li data-route = 'messages/unread' data-parent-nav="mails" data-nav = 'unread'>Unread</li>
                             <li data-route = 'messages/sent' data-parent-nav="mails" data-nav = 'sent'>Sent</li>
                             <li data-route = 'messages/draft' data-parent-nav="mails" data-nav = 'draft'>Draft</li>
                         </ul>
                     </li>
-                    <li><h3 data-nav = 'contacts'>Contacts</h3></li>
+                    <!-- <li><h3 data-nav = 'contacts'>Contacts</h3></li> -->
                     <li><h3 data-nav = 'groups'>Groups</h3></li>
                     <li><h3 data-nav = 'settings'>Settings</h3></li>
                     <li><h3 data-nav = 'signOut'>Sign Out</h3></li>
@@ -103,30 +104,48 @@
                         <div class="clr"></div>
                     </div>
                 </div>
+                <a class="anim newMail wht modalopen" href="#modal">
+                   <!--  New Mail -->
+                </a>
             </div>
             <div class="clr"></div>
         </div>
-        <a class="newMail wht modalopen" href="#modal">
-           <!--  New Mail -->
-        </a>
         <div class="custom-modal modal anim" id = "modal">
             <div class="modal-content">
                 <a href="#" class="modal_close">&times;</a>
                 <h2 class="modal_heading">New Mail</h2>
                 <div class="modal-body">
                     <form class="form-hd text-center " action="" autocomplete="off">
+                        <div class="msgToCon horizon-spread">
+                            <span>
+                                <input class = "msgTo" type="radio" name = "msgto" value = "stranger" id="stranger"/>
+                                <label for="stranger" class="f-15 ml-2">Stranger</label>
+                            </span>
+                            <span>
+                                <input class = "msgTo" type="radio" name = "msgto" value = "contact" id="contact"/>
+                                <label for="contact" class="f-15 ml-2">Contact</label>
+                            </span>
+                            <span>
+                                <input class = "msgTo" type="radio" name = "group" value = "group"/>
+                                <label for="group" class="f-15 ml-2">Group</label>
+                            </span>
+                        </div>
                         <div class="input-group">
                             <label for="email" class="email anim ">Receiver</label>
-                            <input required type="text" id="email" class="inputs" placeholder = "Email / Group Name" name="email" />
+                            <input required type="text" id="email" class="inputs" placeholder = "Email" name="email" />
                         </div>
                         <div class="input-group">
-                            <label for="password" class="password anim ">Message</label>
-                            <textarea rows = 8 required type="password" id="password" class="inputs" placeholder = "Message" name="password"></textarea>
+                            <label for="subject" class="subject anim ">Subject</label>
+                            <input required type="text" id="subject" class="inputs" placeholder = "Subject" name="subject" />
+                        </div>
+                        <div class="input-group">
+                            <label for="message" class="message anim ">Message</label>
+                            <textarea rows = 8 required type="message" id="password" class="inputs" placeholder = "Message" name="password"></textarea>
                         </div>
                         <div class="actionbtn w-100">
-                            <button type="button" class="actionMail send anim">send</button>
-                            <button type="button" class="actionMail save anim">save</button>
-                            <button type="button" class="actionMail cancel anim">cancel</button>
+                            <button type="button" class="actionMail send anim float-right">send</button>
+                            <button type="button" class="actionMail save anim float-left">save</button>
+                            <div class="clr"></div>
                         </div>
                         <h4 class="mail-resp res opac-70">&nbsp;</h4>
                     </form>
@@ -162,6 +181,7 @@
             </div>
         </div>
     </body>   
+    <script src="./js/utilities.js"></script>
     <script src="./js/templates.js"></script>  
     <script src="./js/app.js"></script>  
     <script src="./js/events.js"></script> 

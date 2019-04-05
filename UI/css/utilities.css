@@ -120,6 +120,14 @@ button{
     bottom:0;
     margin: auto;
 }
+.horizon-spread div, .horizon-spread span, .horizon-spread input{
+    flex-grow: 1;
+}
+.horizon-spread{
+    display: flex;
+    margin-right: -.8rem;
+    margin-left: -.8rem;
+}
 .flexdiv{
   display: -webkit-box;
   display: -webkit-flex;

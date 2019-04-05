@@ -7,7 +7,7 @@ const router = express.Router();
 
 const validate = (msg) => {
   const schema = {
-    subject: joi.string().trim().max(32).required(),
+    subject: joi.string().trim().max(35).required(),
     email: joi.string().email().trim().required(),
     message: joi.string().trim().required(),
     parentMessageId: joi.number().optional(),
@@ -18,7 +18,7 @@ const validate = (msg) => {
 const updateValidate = (msg) => {
   const schema = {
     email: joi.string().email().trim().optional(),
-    subject: joi.string().trim().max(32).required(),
+    subject: joi.string().trim().max(35).required(),
     message: joi.string().trim().required(),
   };
   return joi.validate(msg, schema);
@@ -27,7 +27,7 @@ const updateValidate = (msg) => {
 const draftValidate = (msg) => {
   const schema = {
     email: joi.string().email().trim().optional(),
-    subject: joi.string().trim().max(32).required(),
+    subject: joi.string().trim().max(35).required(),
     message: joi.string().trim().required(),
     parentMessageId: joi.number().optional(),
   };

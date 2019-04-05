@@ -14,11 +14,28 @@ import groups from './routes/groups';
 dotenv.config();
 const app = express();
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(cors());
+const allowedOrigins = ['http://localhost:3000',
+  'https://caleb-42.github.io/EPIC-mail/'];
+app.use(cors({
+  origin(origin, callback) {
+    // allow requests with no origin
+    // (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not '
+                + 'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+
+    return callback(null, true);
+  },
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('UI')); /* testing locally */
+/* app.use(express.static('UI')); */ /* testing locally */
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
 app.use('/api/v1/messages', mails);

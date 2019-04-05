@@ -42,7 +42,7 @@ body{
     border-radius: .5em;
 }
 .main-body .title p{
-    color:rgba(180, 29, 87, .6);
+    color: rgba(199, 138, 97, .8);
     font-weight: 600;
     font-size: 1.5rem;
 }
@@ -131,7 +131,7 @@ body{
     margin-bottom: 2.5em;
 }
 .main-body .btnresp p a{
-    color: rgba(180, 29, 87, .6);
+    color: rgba(179, 114, 71, 0.8);
 }
 .resp{
     margin:1.5rem auto 3rem;

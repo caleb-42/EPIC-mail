@@ -31,10 +31,10 @@
     overflow: hidden;
 }
 .main.open-nav .top-nav{
-    height: 24.5rem;
+    height: 23.6rem;
 }
 .main.open-sub-nav.open-nav .top-nav{
-    height: 16.5rem;
+    height: 13.1rem;
 }
 .main .top-nav > li{
     border-bottom: 1px rgba(255, 255, 255, .1) solid;
@@ -57,7 +57,7 @@
     overflow: hidden;
 }
 .main .top-nav .mail-types.open{
-    height: 8rem;
+    height: 10.5rem;
 }
 .top-nav .mail-types li{
     color: rgba(255, 255 ,255, .8);
@@ -97,7 +97,7 @@
         overflow:hidden;
     }
     .leftsidebar .side-nav .mail-types.open{
-        height: 10rem;
+        height: 13.5rem;
     }
     .leftsidebar .side-nav .mail-types li{
         text-align: left;

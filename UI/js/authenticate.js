@@ -1,2 +1,2 @@
 /* eslint-disable no-undef */
-if (!authenticate('login')) window.location.href = './signIn.html';
+if (!localStorage.getItem('id')) window.location.href = './signIn.html';
