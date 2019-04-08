@@ -34,6 +34,7 @@ const user3 = {
 let sentMsg;
 const updateMsg = {
   subject: 'i just changed again',
+  email: 'sam@epicmail.com',
   message: 'its so exiting to be part of this app',
 };
 describe('MAILS API ENDPOINTS', () => {
@@ -242,16 +243,6 @@ describe('MAILS API ENDPOINTS', () => {
       const resp = await request(server).post('/api/v1/messages/d').send(user).set('Cookie', [`token=${token}`]);
       error(resp, 400, 'param IDs must be numbers');
     });
-    it('should not send draft mail if there is no receiver', async () => {
-      const res = await request(server).post('/api/v1/auth/signup').send(user1);
-      await request(server).post('/api/v1/auth/signup').send(user2);
-      const { token } = res.body.data[0];
-      delete sentMsg.email;
-      const draftMsg = await request(server).post('/api/v1/messages/save').send(sentMsg).set('Cookie', [`token=${token}`]);
-      /* console.log(draftMsg.body); */
-      const sentDraftMsg = await request(server).post(`/api/v1/messages/${draftMsg.body.data[0].id}`).set('Cookie', [`token=${token}`]);
-      error(sentDraftMsg, 400, 'message must have receiver');
-    });
     it('should send draft mail if user has valid token', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
@@ -301,7 +292,7 @@ describe('MAILS API ENDPOINTS', () => {
       const delMessage = sentMessages.body.data[0];
       const deleteMessages = await request(server).delete(`/api/v1/messages/${delMessage.id}`).set('Cookie', [`token=${token}`]);
       success(deleteMessages, 200);
-      expect(deleteMessages.body.data[0].message).to.include('message has been deleted');
+      expect(deleteMessages.body.data[0].message).to.include('message has been retracted');
     });
     it('should not delete mail if message id is invalid', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);

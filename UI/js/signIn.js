@@ -1,69 +1,39 @@
 /* eslint-disable no-undef */
 (() => {
+  localStorage.clear();
   document.querySelector('button').addEventListener('click', () => {
     toggleLoader();
-    const email = document.querySelector('input[name="email"]').value;
+    const emailAddress = document.querySelector('input[name="email"]').value;
     const password = document.querySelector('input[name="password"]').value;
-    /* testing locally */
+
     server(
       'auth/login',
       'POST',
-      { email, password },
+      { email: emailAddress, password },
       (res) => {
         toggleLoader();
         try {
-          const { firstName, lastName, email } = res.data[0];
-          resp.textContent = 'successfully signed in';
-          localStorage.setItem('login', 'yes');
-          localStorage.setItem('firstName', 'yes');
-          localStorage.setItem('lastName', 'yes');
-          localStorage.setItem('email', 'yes');
+          // eslint-disable-next-line no-unused-vars
+          const {
+            firstName, lastName, email,
+            id,
+          } = res.data[0];
+          document.querySelector('.resp').textContent = 'successfully signed in';
+          localStorage.setItem('firstName', firstName);
+          localStorage.setItem('lastName', lastName);
+          localStorage.setItem('email', email);
+          localStorage.setItem('id', id);
           window.location.href = './app.html';
         } catch (e) {
-          resp.textContent = res.error;
+          document.querySelector('.resp').textContent = res.error;
         }
       },
       (err) => {
-        resp.textContent = 'Something went wrong';
+        document.querySelector('.resp').textContent = 'Something went wrong';
         console.log(err);
         toggleLoader();
       },
     );
-    /* fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    })
-      .then(response => response.json())
-      .then((res) => {
-        toggleLoader();
-        try {
-          const { token, firstName } = res.data[0];
-          resp.textContent = 'successfully signed in';
-          localStorage.setItem('login', 'yes');
-          window.location.href = './app.html';
-        } catch (e) {
-          resp.textContent = res.error;
-        }
-      }).catch(() => {
-        resp.textContent = 'Something went wrong';
-        toggleLoader();
-      }); */
-    /* window.setTimeout(() => {
-      toggleLoader();
-      if (email === 'admin@gmail.com' && password === 'admin123') {
-        localStorage.setItem('email', email);
-        document.querySelector('.resp').textContent = 'successfully signed in';
-        window.location.href = './app.html';
-        return;
-      }
-      document.querySelector('.resp').textContent = 'failed to signed in';
-    }, 3000); */
   });
   const inputs = document.querySelectorAll('.input-group input');
 
