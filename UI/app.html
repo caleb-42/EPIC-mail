@@ -104,29 +104,29 @@
                         <div class="clr"></div>
                     </div>
                 </div>
-                <a class="anim newMail wht modalopen" href="#modal">
+                <a class="anim newMail wht modalopen" data-mail = "send">
                    <!--  New Mail -->
                 </a>
             </div>
             <div class="clr"></div>
         </div>
-        <div class="custom-modal modal anim" id = "modal">
+        <div class="custom-modal modal anim newMailModal" id = "newMailModal" data-mail = "send">
             <div class="modal-content">
-                <a href="#" class="modal_close">&times;</a>
+                <a class="modal_close">&times;</a>
                 <h2 class="modal_heading">New Mail</h2>
                 <div class="modal-body">
                     <form class="form-hd text-center " action="" autocomplete="off">
                         <div class="msgToCon horizon-spread">
-                            <span>
-                                <input class = "msgTo" type="radio" name = "msgto" value = "stranger" id="stranger"/>
+                            <span class="stranger">
+                                <input class = "msgTo" checked type="radio" name = "msgto" value = "stranger" id="stranger"/>
                                 <label for="stranger" class="f-15 ml-2">Stranger</label>
                             </span>
-                            <span>
+                            <span class="contact">
                                 <input class = "msgTo" type="radio" name = "msgto" value = "contact" id="contact"/>
                                 <label for="contact" class="f-15 ml-2">Contact</label>
                             </span>
-                            <span>
-                                <input class = "msgTo" type="radio" name = "group" value = "group"/>
+                            <span class="group">
+                                <input class = "msgTo" type="radio" name = "msgto" value = "group" id="group"/>
                                 <label for="group" class="f-15 ml-2">Group</label>
                             </span>
                         </div>
@@ -140,43 +140,30 @@
                         </div>
                         <div class="input-group">
                             <label for="message" class="message anim ">Message</label>
-                            <textarea rows = 8 required type="message" id="password" class="inputs" placeholder = "Message" name="password"></textarea>
+                            <textarea rows = 8 required type="message" id="message" class="inputs" placeholder = "Message" name="message"></textarea>
                         </div>
                         <div class="actionbtn w-100">
-                            <button type="button" class="actionMail send anim float-right">send</button>
-                            <button type="button" class="actionMail save anim float-left">save</button>
-                            <div class="clr"></div>
+                            <button type="button" class="actionMail save anim">save</button>
+                            <button type="button" class="actionMail update anim">update</button>
+                            <button type="button" class="actionMail send anim">send</button>
+                            <button type="button" class="actionMail reply anim">reply</button>
                         </div>
                         <h4 class="mail-resp res opac-70">&nbsp;</h4>
+                        <div class="loader gone"></div>
                     </form>
                 </div>
             </div>
         </div>
-        <div class="custom-modal modal anim" id = "addUsermodal">
+        <div class="custom-modal modal anim alertModal" id = "alertModal" data-mail = "send">
             <div class="modal-content">
-                <a href="#" class="modal_close">&times;</a>
-                <h2 class="modal_heading">Add user to Group</h2>
+                <a class="modal_close">&times;</a>
+                <h2 class="modal_heading">Alert</h2>
                 <div class="modal-body">
-                    <form class="form-hd text-center " action="" autocomplete="off">
-                        <div class="input-group">
-                            <select class="inputs" name="group" id="group">
-                                <option disabled selected value="">Select user</option>
-                                <option value="fred">fred delight</option>
-                                <option value="john">john doe</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <select class="inputs" name="group" id="group">
-                                <option disabled selected value="">Select group</option>
-                                <option value="genuis">genuis</option>
-                                <option value="bootcampers">bootcampers</option>
-                            </select>
-                        </div>
-                        <div class="actionbtn w-100">
-                            <button type="button" class="addgroup add anim">add</button>
-                        </div>
-                        <h4 class="add-user-resp res opac-70">&nbsp;</h4>
-                    </form>
+                    <h3 class="mail-resp res opac-70">&nbsp;</h3>
+                    <div class="loader gone"></div>
+                </div>
+                <div class="okbtncon">
+                    <button type="button" class="okbtn modal_close anim">OK</button>
                 </div>
             </div>
         </div>

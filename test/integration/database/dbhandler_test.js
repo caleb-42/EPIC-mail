@@ -119,7 +119,7 @@ describe('DATABASE METHODS', () => {
       const res = await dbHandler.deleteMessage(sentMsg, user);
       expect(res).to.be.an('array');
       expect(res[0]).to.have.any.keys('message');
-      expect(res[0].message).to.include('message has been deleted');
+      expect(res[0].message).to.include('message has been retracted');
     });
   });
   describe('Save Message', () => {

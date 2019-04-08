@@ -40,7 +40,7 @@ router.post('/', auth, async (req, res) => {
   if (group === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (group) {
@@ -56,7 +56,7 @@ router.post('/', auth, async (req, res) => {
   if (newgroup === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   return res.status(201).send({
@@ -70,7 +70,7 @@ router.get('/', auth, async (req, res) => {
   if (msg === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   res.status(200).send({
@@ -98,7 +98,7 @@ router.post('/:id/users', auth, async (req, res) => {
   if (user === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (!user) {
@@ -111,7 +111,7 @@ router.post('/:id/users', auth, async (req, res) => {
   if (groupuser === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (groupuser) {
@@ -124,7 +124,7 @@ router.post('/:id/users', auth, async (req, res) => {
   if (group === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (!group) {
@@ -138,7 +138,7 @@ router.post('/:id/users', auth, async (req, res) => {
   if (msg === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   return res.status(201).send({
@@ -166,7 +166,7 @@ router.patch('/:id/name', auth, async (req, res) => {
   if (group === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (!group) {
@@ -179,7 +179,7 @@ router.patch('/:id/name', auth, async (req, res) => {
   if (group === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (group) {
@@ -192,7 +192,7 @@ router.patch('/:id/name', auth, async (req, res) => {
   if (msg === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   return res.status(200).send({
@@ -213,7 +213,7 @@ router.delete('/:id', auth, async (req, res) => {
   if (group === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (!group) {
@@ -233,7 +233,7 @@ router.delete('/:id', auth, async (req, res) => {
   if (msg === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   return res.status(200).send({
@@ -255,7 +255,7 @@ router.delete('/:groupid/users/:userid', auth, async (req, res) => {
   if (group === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (!group) {
@@ -268,7 +268,7 @@ router.delete('/:groupid/users/:userid', auth, async (req, res) => {
   if (user === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (!user) {
@@ -281,7 +281,7 @@ router.delete('/:groupid/users/:userid', auth, async (req, res) => {
   if (msg === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   return res.status(200).send({
@@ -298,18 +298,11 @@ router.post('/:id/messages', auth, async (req, res) => {
       error: 'param IDs must be numbers',
     });
   }
-  const { error } = validateSendMessage(req.body);
-  if (error) {
-    return res.status(400).send({
-      status: 400,
-      error: error.details[0].message,
-    });
-  }
   const group = await dbHandler.find('groups', { id }, 'id');
   if (group === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (!group) {
@@ -318,13 +311,20 @@ router.post('/:id/messages', auth, async (req, res) => {
       error: 'Group ID does not exist',
     });
   }
+  const { error } = validateSendMessage(req.body);
+  if (error) {
+    return res.status(400).send({
+      status: 400,
+      error: error.details[0].message,
+    });
+  }
   req.body.groupid = id;
   req.body.senderid = req.user.id;
   const msg = await dbHandler.groupSendMsg(req.body);
   if (msg === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   return res.status(201).send({

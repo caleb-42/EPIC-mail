@@ -13,6 +13,7 @@ CREATE TYPE _status as enum('read', 'unread', 'draft');
 CREATE TABLE IF NOT EXISTS messages (
   id SERIAL PRIMARY KEY,
   createdon VARCHAR(30),
+  senttime VARCHAR(30),
   message TEXT,
   parentmessageid VARCHAR(30),
   receiverid INTEGER,

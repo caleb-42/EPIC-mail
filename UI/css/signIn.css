@@ -21,7 +21,7 @@ body {
     margin:0 auto;
 } */
 .wrapper{
-    height: max-content;
+    height: 85%;
 }
 .loader{
     background-image: url('../UI-elements/loader.gif');
@@ -119,7 +119,7 @@ body {
         font-size: 1.1rem;
     }
     .wrapper{
-        height: fit-content;
+        height: 85%;
     }
 }
 @media (min-width: 992px) {

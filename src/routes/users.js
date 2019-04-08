@@ -9,7 +9,7 @@ router.get('/contacts', auth, async (req, res) => {
   if (users === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   return res.status(200).send({

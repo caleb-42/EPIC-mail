@@ -18,18 +18,18 @@
             firstName, lastName, email,
             id,
           } = res.data[0];
-          resp.textContent = 'successfully signed in';
+          document.querySelector('.resp').textContent = 'successfully signed in';
           localStorage.setItem('firstName', firstName);
           localStorage.setItem('lastName', lastName);
           localStorage.setItem('email', email);
           localStorage.setItem('id', id);
           window.location.href = './app.html';
         } catch (e) {
-          resp.textContent = res.error;
+          document.querySelector('.resp').textContent = res.error;
         }
       },
       (err) => {
-        resp.textContent = 'Something went wrong';
+        document.querySelector('.resp').textContent = 'Something went wrong';
         console.log(err);
         toggleLoader();
       },

@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
   if (user === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (!user) {
@@ -58,7 +58,7 @@ router.post('/login', async (req, res) => {
   if (token === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (!token) {
@@ -96,7 +96,7 @@ router.post('/signup', async (req, res) => {
   if (userPresent === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   if (userPresent) {
@@ -109,7 +109,7 @@ router.post('/signup', async (req, res) => {
   if (token === 500) {
     return res.status(500).send({
       status: 500,
-      data: 'Internal server error',
+      error: 'Internal server error',
     });
   }
   const user = await dbHandler.find('users', req.body, 'email');

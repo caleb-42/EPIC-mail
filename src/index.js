@@ -15,7 +15,7 @@ dotenv.config();
 const app = express();
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 const allowedOrigins = ['http://localhost:3000',
-  'https://caleb-42.github.io/EPIC-mail/'];
+  'https://caleb-42.github.io'];
 app.use(cors({
   origin(origin, callback) {
     // allow requests with no origin

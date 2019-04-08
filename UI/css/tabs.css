@@ -28,18 +28,31 @@
     opacity: 0;
     visibility: hidden;
 }
-#modal:target{
+#newMailModal.target{
     opacity: 1;
     visibility:visible;
 }
-#addUsermodal:target{
+#newMailModal.target[data-mail = 'update'] .group, 
+#newMailModal.target[data-mail = 'update'] .actionMail.reply, #newMailModal.target[data-mail = 'update'] .actionMail.send, #newMailModal.target[data-mail = 'update'] .actionMail.save{
+    display: none;
+}
+#newMailModal.target[data-mail = 'reply'] .msgToCon span, 
+#newMailModal.target[data-mail = 'reply'] .actionMail.send,#newMailModal.target[data-mail = 'reply'] .actionMail.update, #newMailModal.target[data-mail = 'reply'] .actionMail.save{
+    display: none;
+}
+#newMailModal.target[data-mail = 'reply'] #email, #newMailModal.target[data-mail = 'reply'] #subject {
+    pointer-events:none;
+}
+#newMailModal.target[data-mail = 'send'] .actionMail.update,
+#newMailModal.target[data-mail = 'send'] .actionMail.reply{
+    display: none;
+}
+#alertModal.target{
     opacity: 1;
     visibility:visible;
 }
 .custom-modal .modal-content{
     background-color: rgb(246, 246, 246);
-    width: 70%;
-    height: 75%;
     position: absolute;
     top:50%;
     left: 50%;
@@ -48,16 +61,40 @@
     border-radius: .7rem;
     padding: 2rem;
 }
+#newMailModal .modal-content{
+    width: 70%;
+    height: 75%;
+}
+#alertModal .modal-content{
+    width: 60%;
+    height: 25%;
+    top:40%;
+}
+#alertModal .modal-body{
+    height: 60%;
+    text-align: center;
+    padding: .4rem;
+}
+#alertModal .okbtncon{
+    width:40%;
+    margin: 0 auto;
+    position: relative;
+    bottom: 0;
+}
+.okbtn{
+    width: 100%;
+}
 .custom-modal .userlist{
     background-color: rgb(251, 251, 251);
     height: 13rem;
     border-radius: .5rem;
 }
-.custom-modal select{
-    margin: 4rem auto;
-    width: 70%;
+.newMailModal select{
+    margin: 1rem auto 1rem;
+    font-size: .8rem;
+    width: 60%;
 }
-.custom-modal .modal-content .modal_close{
+.custom-modal .modal-content a.modal_close{
     font-size: 2rem;
     color: #555;
     position: absolute;
@@ -108,13 +145,13 @@
 }
 .form-hd .actionbtn{
     margin: 1rem auto;
-    width: 80%;
-    /* display: flex; */
+    display: flex;
 }
 .form-hd .actionbtn button{
     font-size: .8rem;
-    width:40%;
-    /* flex-grow: 1; */
+    /* width:40%; */
+    flex-grow: 1;
+    margin: auto .5rem;
 }
 .create-group{
     height: 15rem;
@@ -167,7 +204,7 @@
     width: 100%;
 }
 .msgToCon{
-    margin: 1rem auto 0;
+    margin: 1rem auto 2rem;
     font-size: .8rem;
 }
 @media(min-width: 992px){
@@ -183,13 +220,13 @@
     }
 }
 @media(min-width: 768px){
-    .custom-modal .modal-content{
+    #newMailModal .modal-content{
         width: 50%;
         /* height: 65%; */
     }
-    .msgToCon{
-        margin: 1.2rem auto .5rem;
-        font-size: 1rem;
+    #alertModal .modal-content{
+        width: 30%;
+        height: 25%;
     }
     .create-group a, .create-group button{
         font-size: 1rem;
