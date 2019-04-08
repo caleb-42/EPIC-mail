@@ -6,16 +6,6 @@ const dummyData = {
   selected: [],
 };
 
-const createGroup = () => {
-  document.querySelector('.group-resp').textContent = '';
-  console.log(document.querySelector('.create-group .inputs').value);
-  if (document.querySelector('.create-group .inputs').value === '') {
-    document.querySelector('.group-resp').textContent = 'group name is empty';
-    return;
-  }
-  document.querySelector('.group-resp').textContent = 'new group created';
-};
-
 const addContactToGroup = () => {
   document.querySelector('.add-user-resp').textContent = '';
   console.log(document.querySelector('#group').value);

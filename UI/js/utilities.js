@@ -13,15 +13,25 @@ const switchClass = (target, toggleClass, type = 'toggle') => {
   }
   return true;
 };
+const selectPost = (evt) => {
+  switchClass('.wrapper .main', 'selected', 'add');
+  switchClass('.mails .post', 'active', 'remove');
+  switchClass('.mails .post', 'opac-70', 'add');
+  evt.currentTarget.classList.add('active');
+  switchClass('.mails .post.active', 'opac-70', 'remove');
+  setTimeout(() => {
+    switchClass('.tab.block .left-body.tab-content', 'display', 'add');
+    switchClass('.tab.block .right-body.tab-content', 'display', 'remove');
+  }, 500);
+};
 const openCloseNav = () => {
-  switchClass('.side-nav .d-arrow', 'down');
+  /* switchClass('.side-nav .d-arrow', 'down'); */
   switchClass('.side-nav .mail-types', 'open');
   switchClass('.top-nav .mail-types', 'open');
   switchClass('.main', 'open-sub-nav');
 };
 const formToJson = (form) => {
   const inputs = [].slice.call(form.elements);
-  console.log(inputs);
   const val = {};
   inputs.forEach((input) => {
     if (['checkbox', 'radio'].indexOf(input.type) !== -1 && input.name !== '') {

@@ -1,0 +1,179 @@
+.post{
+  padding: 1rem;
+  border-radius: .5rem;
+  box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2);
+  margin: 1rem 0;
+}
+.post.active{
+  transform: scale(1.05);
+}
+.post .dp{
+  height:4rem;
+  width: 30%;
+}
+.post .details{
+  width: 70%;
+}
+.datecreated{
+  opacity: .3;
+  padding: 1rem 0 .3rem;
+}
+.datecreated span{
+  padding: .5rem;
+  font-size: .8rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.post h4{
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: .6rem; 
+}
+.post p.subject{
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 1rem;
+  margin-bottom: .8rem; 
+  font-family: Nunito;
+}
+.post span.date, .post span.type{
+  color: rgb(199, 138, 97);
+  font-size: .8rem;
+}
+.post-bloated .dp{
+  width:5rem;
+  height:5rem;
+}
+.post-bloated .bodyhead{
+  border-bottom: .05rem rgb(197, 155, 128) solid;
+}
+.post-bloated .bodyhead span{
+  font-size: .8rem;
+  border-radius: .2rem .2rem 0 0;
+  padding: .4rem .7rem;
+  background: rgb(197, 155, 128);
+}
+.post-bloated .bodyhead p.date{
+  color: rgba(0, 0, 0, .6);
+  font-size: .8rem;
+  margin: .4rem 0 .2rem;
+}
+.post-bloated h3{
+  color: rgba(73, 192, 112, 0.9);
+  font-size: 1.2rem;
+  width: fit-content;
+  margin: .9rem auto .8rem; 
+}
+.post-bloated p.subject{
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-family: Nunito;
+}
+.post-bloated .thread{
+  margin: 2rem -2rem 1rem;
+}
+.post-bloated .thread .head{
+  margin: 2rem auto 0;
+  padding: .8rem 2rem;
+  box-shadow: .2rem 0 .5rem rgba(109, 109, 109, 0.2);
+}
+.post-bloated .thread .head h5{
+  color: rgba(0, 0, 0, .5);
+  font-weight: 200;
+  font-size: 1.5rem;
+}
+.post-bloated .thread .body .reply{
+  max-width: 70%;
+  padding: .5rem;
+  font-size: .8rem;
+  margin: 1.5rem 0 0;
+  color: rgba(0, 0, 0, .7);
+  border: none;
+  background: rgba(246, 246, 233, 0.5);
+}
+.post-bloated .thread .body .reply h3{
+  font-size: 1.2rem;
+  margin: 0 0 .5rem;
+}
+.post-bloated .thread .body .reply.sender{
+  padding-left: 2rem;
+  box-shadow: .1rem .1rem .3rem rgba(109, 109, 109, 0.3);
+  border-top-right-radius: .3rem;
+  border-bottom-right-radius: .3rem;
+}
+.post-bloated .thread .body .reply.receiver{
+  padding-right: 2rem;
+  box-shadow: -.1rem .1rem .3rem rgba(109, 109, 109, 0.3);
+  border-top-left-radius: .3rem;
+  border-bottom-left-radius: .3rem;
+}
+.post-bloated .thread .head span{
+  color: rgba(73, 192, 112, 0.9);
+  font-size: 1.2rem;
+  font-weight: 200;
+}
+.post-bloated .msgcon{
+  color: rgba(0, 0, 0, 0.75);
+  font-size: .8rem;
+  text-align: justify;
+  padding: .8rem 0;
+  min-height: 5rem;
+  max-height: 9rem;
+  font-family: Nunito;
+  border-bottom: .05rem rgb(197, 155, 128) solid;
+}
+.post-bloated button {
+  margin-top: .8rem;
+  transform: scale(0.8);
+  font-family: 'Lato';
+  width: 80%;
+  opacity: .7;
+}
+.post-bloated button:hover {
+  opacity: .9;
+}
+.post-bloated button:nth-child(1) {
+  background: rgba(101, 173, 209, 1);
+}
+.post-bloated button:nth-child(2) {
+  background: rgba(226, 36, 55, 1);
+}
+.post-bloated button:nth-child(3) {
+  background: rgba(73, 192, 112, 1);
+}
+@media(min-width: 992px){
+    .post-bloated .msgcon{
+        max-height: 17rem !important;
+    }
+}
+@media(min-width: 768px){
+    .post-bloated .dp{
+        display: none !important;
+    }
+    .post-bloated h3{
+        font-size: 1.8rem;
+        margin: 0 auto 1.2rem; 
+    }
+    .post-bloated p.subject, .post p.subject {
+        font-size: 1.2rem;
+    }
+    .post-bloated .msgcon{
+        max-height: 12rem;
+    }
+    .post-bloated .thread .body .reply.receiver, .post-bloated .thread .body .reply.sender{
+        box-shadow: none;
+        border: .1rem rgba(0, 0, 0, .07) solid;
+    }
+    .post-bloated .thread .body .reply.receiver{
+        border-width: .2rem 0 .2rem .2rem;
+    }
+    .post-bloated .thread .body .reply.sender{
+        border-width: .2rem .2rem .2rem 0rem;
+    }
+}
+@media(min-width: 567px){
+    .post .dp{
+        width: 20%;
+    }
+    .post .details{
+        width: 80%;
+    }
+}

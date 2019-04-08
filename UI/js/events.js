@@ -3,7 +3,6 @@
   document.querySelector('.d-arrow').addEventListener('click', openCloseNav);
   document.querySelector('.top-nav .d-arrow').addEventListener('click', openCloseNav);
   document.querySelector('.backbtn').addEventListener('click', resetTab);
-  document.querySelector('.create-group-btn').addEventListener('click', createGroup);
   document.querySelectorAll('.navig h3').forEach((nav) => {
     nav.addEventListener('click', navig);
   });

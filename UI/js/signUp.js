@@ -3,26 +3,19 @@
   localStorage.clear();
   document.querySelector('button').addEventListener('click', () => {
     toggleLoader();
-    const fName = document.querySelector('input[name="firstName"]').value;
+    const formObj = formToJson(document.querySelector('.form-hd'));
+    /* const fName = document.querySelector('input[name="firstName"]').value;
     const lName = document.querySelector('input[name="lastName"]').value;
     const phoneNumber = document.querySelector('input[name="phoneNumber"]').value;
     const emailAddress = document.querySelector('input[name="email"]').value;
     const recoveryEmail = document.querySelector('input[name="recoveryemail"]').value;
     const password = document.querySelector('input[name="password"]').value;
-    const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
+    const confirmPassword = document.querySelector('input[name="confirm_password"]').value; */
 
     server(
       'auth/signup',
       'POST',
-      {
-        firstName: fName,
-        lastName: lName,
-        email: emailAddress,
-        phoneNumber,
-        password,
-        confirmPassword,
-        recoveryEmail,
-      },
+      formObj,
       (res) => {
         toggleLoader();
         try {
