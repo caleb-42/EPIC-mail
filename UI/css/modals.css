@@ -27,15 +27,15 @@
     opacity: 1;
     visibility:visible;
 }
-#newMailModal.target[data-mail = 'update'] .group, 
-#newMailModal.target[data-mail = 'update'] .actionMail.reply, #newMailModal.target[data-mail = 'update'] .actionMail.send, #newMailModal.target[data-mail = 'update'] .actionMail.save,
-#newMailModal.target[data-mail = 'send'] .actionMail.update,
-#newMailModal.target[data-mail = 'send'] .actionMail.reply,
-#newMailModal.target[data-mail = 'reply'] .msgToCon span, 
-#newMailModal.target[data-mail = 'reply'] .actionMail.send,#newMailModal.target[data-mail = 'reply'] .actionMail.update, #newMailModal.target[data-mail = 'reply'] .actionMail.save{
+#newMailModal.target[data-action = 'update'] .group, 
+#newMailModal.target[data-action = 'update'] .actionMail.reply, #newMailModal.target[data-action = 'update'] .actionMail.send, #newMailModal.target[data-action = 'update'] .actionMail.save,
+#newMailModal.target[data-action = 'send'] .actionMail.update,
+#newMailModal.target[data-action = 'send'] .actionMail.reply,
+#newMailModal.target[data-action = 'reply'] .msgToCon span, 
+#newMailModal.target[data-action = 'reply'] .actionMail.send,#newMailModal.target[data-action = 'reply'] .actionMail.update, #newMailModal.target[data-action = 'reply'] .actionMail.save{
     display: none;
 }
-#newMailModal.target[data-mail = 'reply'] #email, #newMailModal.target[data-mail = 'reply'] #subject {
+#newMailModal.target[data-action = 'reply'] #email, #newMailModal.target[data-action = 'reply'] #subject {
     pointer-events:none;
 }
 .custom-modal .modal-content{
