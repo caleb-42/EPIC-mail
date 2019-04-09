@@ -1,0 +1,167 @@
+.newMail{
+    background-image: url('../UI-elements/newmail.png');
+    position: absolute;
+    padding: 1.5rem;
+    height: 1.1rem;
+    width: 1.1rem;
+    border-radius: 3rem;
+    bottom: 1.1rem;
+    right: 1.1rem;
+    box-shadow: .1rem .1rem .3rem rgba(0, 0, 0, 0.4);
+}
+.wrapper .main.selected .newMail{
+    display: none;
+}
+.custom-modal{
+    background-color: rgba(0, 0, 0, .7);
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top:0;
+    left: 0;
+    z-index: 30;
+    opacity: 0;
+    visibility: hidden;
+}
+#newMailModal.target, #alertModal.target{
+    opacity: 1;
+    visibility:visible;
+}
+#newMailModal.target[data-action = 'update'] .group, 
+#newMailModal.target[data-action = 'update'] .actionMail.reply, #newMailModal.target[data-action = 'update'] .actionMail.send, #newMailModal.target[data-action = 'update'] .actionMail.save,
+#newMailModal.target[data-action = 'send'] .actionMail.update,
+#newMailModal.target[data-action = 'send'] .actionMail.reply,
+#newMailModal.target[data-action = 'reply'] .msgToCon span, 
+#newMailModal.target[data-action = 'reply'] .actionMail.send,#newMailModal.target[data-action = 'reply'] .actionMail.update, #newMailModal.target[data-action = 'reply'] .actionMail.save{
+    display: none;
+}
+#newMailModal.target[data-action = 'reply'] #email, #newMailModal.target[data-action = 'reply'] #subject {
+    pointer-events:none;
+}
+.custom-modal .modal-content{
+    background-color: rgb(246, 246, 246);
+    position: relative;
+    top:50%;
+    left: 50%;
+    z-index: 40;
+    transform: translate(-50%, -50%);
+    border-radius: .7rem;
+    padding: 2rem;
+    width: 70%;
+    height: 75%;
+}
+#alertModal .modal-content{
+    width: 60%;
+    /* height: 30%; */
+    height: 11rem;
+    top:40%;
+}
+#alertModal .modal-body{
+    height: 60%;
+    padding: .4rem;
+}
+#alertModal .okbtncon{
+    width:40%;
+    position: relative;
+    bottom: 1rem;
+}
+.newMailModal select{
+    margin: 1rem auto 0;
+    width: 60%;
+}
+.custom-modal .modal-content a.modal_close{
+    font-size: 2rem;
+    color: #555;
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+}
+.custom-modal .modal-content .modal_heading{
+    color: rgba(55, 174, 111, 0.8);
+    font-size: 1.2rem;
+    padding-bottom: .6rem; 
+    border-bottom: 1px rgba(0, 0, 0, .3) solid;
+}
+.form-hd .input-group{
+    margin:0 auto .4rem;
+}
+.form-hd .input-group label{
+    color: rgba(0, 0, 0, 0.5);
+    display: inline-block;
+    font-weight: 600;
+    opacity: 0;
+    padding-bottom: -1.5em;
+}
+.form-hd .input-group label.show {
+    opacity: 1;
+    padding: .5em 0;
+    color: rgba(40, 202, 94, 0.9);
+    font-weight: 600;
+}
+.form-hd .input-group input,
+.form-hd .input-group textarea {
+    width:100%;
+    text-align:center;
+    font-size: 1rem;
+    border-radius: .5em;
+    border-color: transparent;
+    background: rgba(0,0,0, .1);
+    margin:0 auto;
+}
+.form-hd .input-group input, 
+.form-hd .actionbtn button,
+.msgToCon,
+.newMailModal select
+.form-hd .input-group label {
+    font-size: .8rem;
+}
+.form-hd .input-group textarea {
+    max-width: 100%;
+    max-height: 7rem;
+}
+.form-hd .actionbtn button{
+    margin: 1rem;
+    background: rgba(0, 0, 0, 0.4);
+}
+.dp-image {
+    height: 10rem;
+    padding: 1em;
+    margin: 0 0 3rem;
+}
+.dp-image .dp{
+    background-image: url('../UI-elements/dp.png');
+    width:100px;
+    height:100px;
+}
+.dp-image button{
+    margin: 1rem auto;
+}
+.msgToCon{
+    margin: 1rem auto .5rem;
+}
+@media(min-width: 992px){
+    .newMail{
+        right: 34% !important;
+    }
+}
+@media(min-width: 768px){
+    .form-hd .input-group textarea{
+        height: 10rem;
+    }
+    #newMailModal .modal-content{
+        width: 50%;
+    }
+    #alertModal .modal-content{
+        width: 30%;
+        height: 25%;
+    }
+    .newMail{
+        right: 42%;
+    }
+    [data-tab = 'settings'] .newMail{
+        right: 2rem !important;
+    }
+    .wrapper .main.selected .newMail{
+        display: block;
+    }
+}

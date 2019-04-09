@@ -13,15 +13,8 @@ const switchClass = (target, toggleClass, type = 'toggle') => {
   }
   return true;
 };
-const openCloseNav = () => {
-  switchClass('.side-nav .d-arrow', 'down');
-  switchClass('.side-nav .mail-types', 'open');
-  switchClass('.top-nav .mail-types', 'open');
-  switchClass('.main', 'open-sub-nav');
-};
 const formToJson = (form) => {
   const inputs = [].slice.call(form.elements);
-  console.log(inputs);
   const val = {};
   inputs.forEach((input) => {
     if (['checkbox', 'radio'].indexOf(input.type) !== -1 && input.name !== '') {
@@ -87,8 +80,8 @@ const server = async (
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   };
-  const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`;
-  /* const endpoint = `http://localhost:3000/api/v1/${url}`; */
+  /* const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`; */
+  const endpoint = `http://localhost:3000/api/v1/${url}`;
   await fetch(endpoint, payload)
     .then(resp => resp.json())
     .then((res) => {

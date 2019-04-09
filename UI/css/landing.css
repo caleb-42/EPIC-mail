@@ -228,15 +228,6 @@ footer > div:nth-child(2){
     text-align: center;
     background: rgba(0, 0, 0, 0.8);
 }
-/* .offer > .div{
-    height: 10rem;
-    background: rgba(0,0,0, .5);
-} */
-/* .features h3{
-    display: inline-block;
-    width:30%;
-    text-align: center;
-} */
 @media (min-width: 576px) {
     p{
         padding: 0 2rem;

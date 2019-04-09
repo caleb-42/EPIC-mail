@@ -1,92 +1,76 @@
-/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-const selectPost = (evt) => {
-  switchClass('.wrapper .main', 'selected', 'add');
-  switchClass('.mails .post', 'active', 'remove');
-  switchClass('.mails .post', 'opac-70', 'add');
-  evt.currentTarget.classList.add('active');
-  switchClass('.mails .post.active', 'opac-70', 'remove');
-  setTimeout(() => {
-    switchClass('.tab.block .left-body.tab-content', 'display', 'add');
-    switchClass('.tab.block .right-body.tab-content', 'display', 'remove');
-  }, 500);
+const strangerEmailField = `<label for="email" class="email anim ">Receiver</label>
+<input required type="text" id="email" class="inputs" placeholder = "Email" name="email" />`;
+
+const contactEmailField = (optionData = []) => {
+  let str = '<select class="inputs email" name="email"><option value="" selected disabled>Select Contact</option>';
+  optionData.forEach((elem) => {
+    str += `<option value="${elem.email}">${elem.firstname} ${elem.lastname}</option>`;
+  });
+  str += '</select>';
+  return str;
 };
-let datecreated;
-const generateMails = (msg, index) => {
-  let { status } = msg;
-  if (localStorage.getItem('id') === String(msg.senderid) && msg.status !== 'draft') {
-    status = msg.status === 'read' ? 'seen' : 'delivered';
-  }
-  let strHtml = msg.createdon !== datecreated || index === 0 ? `<div class="w-100 datecreated"><hr/><span>${msg.createdon}</span><hr/></div>` : '';
-  datecreated = msg.createdon;
-  strHtml += `
-    <div id = 'post-${index}' class="post pointer anim" data-id = "${msg.id}">
-        <div class="dp" style = "background-image: url('../UI-elements/dp.png');"></div>
-        <div class="details">
-            <h4>${msg.firstname} ${msg.lastname}</h4>
-            <p class="subject">${msg.subject}</p>
-            <div><span class="type">${status}</span><span class="date">${msg.senttime}</span></div>
+
+const groupIdField = (optionData = []) => {
+  let str = '<select class="inputs groupid" name=groupid><option value=0 selected disabled>Select Group</option>';
+  optionData.forEach((elem) => {
+    str += `<option value="${elem.id}">${elem.name}</option>`;
+  });
+  str += '</select>';
+  return str;
+};
+
+const mailPost = (msg, index, datecreated, status) => {
+  let str = msg.createdon !== datecreated || index === 0 ? `<div class="w-100 datecreated"><hr class="w-20 inline-block"/><span class="w-20 text-center">${msg.createdon}</span><hr class="w-20 inline-block"/></div>` : '';
+  str += `
+    <div id = 'post-${index}' class="post wht block pointer anim" data-id = "${msg.id}">
+        <div class="dp img-con mx-auto float-left" style = "background-image: url('../UI-elements/dp.png');"></div>
+        <div class="details float-right">
+            <h4 class="text-left">${msg.firstname} ${msg.lastname}</h4>
+            <p class="subject text-left">${msg.subject}</p>
+            <div><span class="type w-20 float-left text-left">${status}</span><span class="date w-80 float-right text-right">${msg.senttime}</span></div>
         </div>
         <div class="clr"></div>
     </div>
     `;
-  document.querySelector('.content-wrapper').insertAdjacentHTML('beforeend', strHtml);
-  document.querySelector(`#post-${index}`).addEventListener('click', async (evt) => {
-    dummyData.selected = dummyData.data.find(elem => Number(elem.id) === Number(evt.currentTarget.getAttribute('data-id')));
-    console.log(dummyData.selected);
-    selectPost(evt);
-    server(
-      `messages/${msg.id}`, 'GET', {},
-      (res) => {
-        const msgById = res.data[0];
-        let msgstatus = msgById.status;
-        if (localStorage.getItem('id') === String(msgById.senderid) && msgById.status !== 'draft') {
-          msgstatus = msgById.status === 'read' ? 'seen' : 'delivered';
-        }
-        console.log(msgById);
-        /* console.log(document.querySelector(`[data-nav = "${parentMenu}"] .type`).innerHTML); */
-        let bloatedMsg = `
-          <div class="post-bloated">
-              <div class = "dp" style = "background-image: url('../UI-elements/dp.png');"></div>
-              <h3>${msgById.firstname} ${msgById.lastname}</h3>
-              <p class="subject">${msgById.subject}</p>
-              <div class= 'bodyhead'>
-                <span>${msgstatus}</span>
-                <p class="date">${msgById.createdon} | ${msgById.senttime}</p>
-                <div class="clr"></div>
-              </div>
-              <div class="msgcon">
-                <p class="msg">${msgById.message}</p>
-              </div>
-              <div class="msgaction">
-                <button class="centercon modalopen btn ${(localStorage.getItem('id') === String(msgById.senderid) && msgById.status === 'read') || (localStorage.getItem('id') !== String(msgById.senderid)) ? 'gone' : ''}"><a class = "center wht updateMail h-100" data-mail = "update">Update</a></button>
-                <button data-mail="delete" class="centercon alertopen btn"> ${msgById.status !== 'unread' ? 'Delete' : 'Retract'}</button>
-                <button class="${msgById.status === 'draft' ? 'alertopen' : 'modalopen'} btn ${localStorage.getItem('id') === String(msgById.senderid) && msgById.thread.length === 0 && msgById.status !== 'draft' ? 'gone' : ''}"><a class = "center wht sendReplyMail h-100" data-mail = "${msgById.status === 'draft' ? 'send' : 'reply'}">${msgById.status === 'draft' ? 'Send' : 'Reply'}</a></button>
-              </div>
-              <div class="thread">
-                <div class="head">
-                  <h5 class="float-left">Replies</h5>
-                  <span class="float-right">${msgById.thread.length}</span>
-                  <div class="clr"></div>
-                </div>
-                <div class="w-100 body">`;
-        console.log(msgById.thread);
-        msgById.thread.forEach((elem) => {
-          bloatedMsg += `
-            <div class="reply ${elem.email === localStorage.getItem('email') ? 'sender' : 'receiver'}" id="reply-${elem.id}">
-            <h3 class="txt">${elem.email === localStorage.getItem('email') ? 'me' : elem.firstname}</h3>
-            <p class="txt">${elem.message}</p>
-            </div>
-            <div class="clr"></div>
-          `;
-        });
-        bloatedMsg += '</div></div></div>';
-        document.querySelector('.content-wrapper-bloated').innerHTML = bloatedMsg;
-        modalActivate();
-      },
-      (err) => {
-        console.log(err);
-      },
-    );
+  return str;
+};
+
+const mailPostBloated = (msgById, msgstatus) => {
+  let bloatedMsg = `
+  <div class="post-bloated">
+      <div class = "dp img-con mx-auto" style = "background-image: url('../UI-elements/dp.png');"></div>
+      <h3>${msgById.firstname} ${msgById.lastname}</h3>
+      <p class="subject fw-600 text-center">${msgById.subject}</p>
+      <div class= 'bodyhead'>
+        <span class="fw-600 wht float-left text-center">${msgstatus}</span>
+        <p class="date fw-600 float-right text-center">${msgById.createdon} | ${msgById.senttime}</p>
+        <div class="clr"></div>
+      </div>
+      <div class="msgcon w-100 ovflo-y h-fit">
+        <p class="msg">${msgById.message}</p>
+      </div>
+      <div class="msgaction horizon-spread">
+        <button data-modal = "#newMailModal" data-action = "update" class="wht fw-600 anim updateMail modalopen btn ${(localStorage.getItem('id') === String(msgById.senderid) && msgById.status === 'read') || (localStorage.getItem('id') !== String(msgById.senderid)) ? 'gone' : ''}">Update</button>
+        <button data-action="delete" class="wht fw-600 anim alertopen btn"> ${msgById.status !== 'unread' ? 'Delete' : 'Retract'}</button>
+        <button ${msgById.status === 'draft' ? '' : 'data-modal = "#newMailModal"'} data-action = "${msgById.status === 'draft' ? 'send' : 'reply'}" class="wht fw-600 sendReplyMail anim ${msgById.status === 'draft' ? 'alertopen' : 'modalopen'} btn ${localStorage.getItem('id') === String(msgById.senderid) && msgById.thread.length === 0 && msgById.status !== 'draft' ? 'gone' : ''}">${msgById.status === 'draft' ? 'Send' : 'Reply'}</button>
+      </div>
+      <div class="thread">
+        <div class="head">
+          <h5 class="float-left">Replies</h5>
+          <span class="float-right vt-center">${msgById.thread.length}</span>
+          <div class="clr"></div>
+        </div>
+        <div class="w-100 body">`;
+  msgById.thread.forEach((elem) => {
+    bloatedMsg += `
+      <div class="reply block ${elem.email === localStorage.getItem('email') ? 'sender float-left text-left' : 'receiver float-right text-right'}" id="reply-${elem.id}">
+      <h3 class="txt w-100">${elem.email === localStorage.getItem('email') ? 'me' : elem.firstname}</h3>
+      <p class="txt">${elem.message}</p>
+      </div>
+      <div class="clr"></div>
+    `;
   });
+  bloatedMsg += '</div></div></div>';
+  return bloatedMsg;
 };

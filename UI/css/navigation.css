@@ -1,7 +1,5 @@
 .navicon{
     background-image: url('../UI-elements/hambuger.png');
-    background-size: contain;
-    background-repeat: no-repeat;
     width:3rem;
     height:2rem;
     position: absolute;
@@ -11,8 +9,6 @@
 }
 .d-arrow{
     background-image: url('../UI-elements/arrow.png');
-    background-size: contain;
-    background-repeat: no-repeat;
     width:40px;
     height:50px;
     margin-top: -.2rem;
@@ -68,14 +64,8 @@
     color: #fff;
 }
 @media(min-width: 992px){
-    .navicon{
+    .navicon, .main .top-nav{
         display: none;
-    }
-    .main .top-nav {
-        display: none;
-    }
-    .side-nav .side-nav > li{
-        border-bottom: .3rem rgba(255, 255, 255, .2) solid;
     }
     .side-nav h3{
         position: relative;

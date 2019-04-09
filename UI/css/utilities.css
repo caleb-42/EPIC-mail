@@ -40,11 +40,32 @@ input::placeholder {
 .text-center{
     text-align: center;
 }
+.text-right{
+    text-align: right;
+}
+.text-left{
+    text-align: left;
+}
+.text-justify{
+    text-align: justify;
+}
 button:focus, li:focus, input:focus, textarea:focus {
     outline: none !important; 
 }
 .w-100{
     width:100% !important;
+}
+.w-80{
+    width:80% !important;
+}
+.w-70{
+    width:70% !important;
+}
+.w-30{
+    width:30% !important;
+}
+.w-20{
+    width:20% !important;
 }
 .h-100{
     height:100% !important;
@@ -100,6 +121,24 @@ li, a {
 .clr {
     clear: both; 
 }
+.res, .resp{
+    margin-top: 1.5rem;
+}
+.loader{
+    padding-top: -1.8rem;
+}
+.vt-center{
+    display: inline-block;
+    vertical-align: middle;
+}
+.img-con{
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.img-cov{
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 button{
   display: inline-block;
   font-weight: normal;
@@ -123,8 +162,12 @@ button{
     bottom:0;
     margin: auto;
 }
-.horizon-spread div, .horizon-spread span, .horizon-spread input{
+.horizon-spread div,
+.horizon-spread span,
+.horizon-spread button,
+.horizon-spread input{
     flex-grow: 1;
+    align-self: center;
 }
 .horizon-spread{
     display: flex;
