@@ -1,4 +1,14 @@
 /* eslint-disable no-unused-vars */
+const dummyData = {
+  data: [],
+  filtered: [],
+  selected: [],
+  route: '',
+  menu: {
+    type: '',
+    name: '',
+  },
+};
 const switchClass = (target, toggleClass, type = 'toggle') => {
   try {
     const navs = document.querySelectorAll(`${target}`);
@@ -46,6 +56,7 @@ const resetTab = () => {
     switchClass('.tab.block .right-body.tab-content', 'display', 'add');
   }, 500);
 };
+
 const labelShow = () => {
   const inputs = document.querySelectorAll('.input-group .inputs');
   inputs.forEach((input) => {
@@ -80,17 +91,17 @@ const server = async (
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   };
-  /* const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`; */
-  const endpoint = `http://localhost:3000/api/v1/${url}`;
+  const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`;
+  /* const endpoint = `http://localhost:3000/api/v1/${url}`; */
+  // eslint-disable-next-line no-undef
   await fetch(endpoint, payload)
     .then(resp => resp.json())
     .then((res) => {
-      setTimeout(() => { resolve(res); }, 0);
+      setTimeout(() => { resolve(res); }, 1000);
     }).catch((err) => {
       reject(err);
     });
 };
-
 
 const toggleLoader = (btn = '.submit', res = '.resp', loadr = '.loader') => {
   const loader = document.querySelector(loadr);
