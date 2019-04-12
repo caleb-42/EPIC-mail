@@ -45,7 +45,7 @@
 }
 .main .top-nav h3.active{
     background: rgba(0, 0 ,0, .7);
-    pointer-events:none;
+    /* pointer-events:none; */
 }
 .top-nav .mail-types{
     height: 0;
@@ -63,7 +63,7 @@
 .main .top-nav .mail-types li.active{
     background: rgba(248, 233, 14, 0.7);
     color: #fff;
-    pointer-events:none; 
+    /* pointer-events:none;  */
 }
 @media(min-width: 992px){
     .navicon, .main .top-nav{
@@ -79,7 +79,7 @@
     }
     .side-nav h3.active{
         background: rgba(0, 0 ,0, .7);
-        pointer-events:none; 
+        /* pointer-events:none;  */
     }
     .d-arrow{
         margin-top: -.5rem;
@@ -101,6 +101,6 @@
     .leftsidebar .side-nav .mail-types li.active{
         background: rgba(248, 233, 14, 0.7);
         color: #fff;
-        pointer-events:none; 
+        /* pointer-events:none;  */
     }
 }

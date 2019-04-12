@@ -1,5 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
+const reconnect = (cback) => {
+  document.querySelectorAll('.tryagain').forEach((elem) => {
+    elem.addEventListener('click', (evt) => {
+      cback();
+    });
+  });
+};
 modalActivate = () => {
   document.querySelectorAll('.modalopen').forEach((modalopener) => {
     modalopener.addEventListener('click', (evt) => {
@@ -13,9 +20,6 @@ modalActivate = () => {
     alertopener.addEventListener('click', (evt) => {
       activateAlerts(evt.target);
       console.log(alertopener);
-     /*  document.querySelectorAll('.res').forEach((resp) => {
-        resp.textContent = '';
-      }); */
     });
   });
   document.querySelectorAll('.custom-modal, .modal_close').forEach((elem) => {

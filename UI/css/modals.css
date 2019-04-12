@@ -20,7 +20,7 @@
     font-size: 1rem;
     opacity: .8;
 }
-.wrapper .main .selected.newgroupmember{
+.wrapper .main.selected .newgroupmember{
     background: rgba(101, 173, 209, 1);
     display: block;
     margin-left: -3.7rem;

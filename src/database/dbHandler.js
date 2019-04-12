@@ -185,7 +185,10 @@ class DbHandler {
       const { rows } = await this.pool.query(`UPDATE messages SET message = $1, receiverid = $2, subject = $3
       WHERE (id = $4) RETURNING *`,
       [message, receiverId, subject, msg.id]);
-      return rows;
+
+      const msgId = await this.getMessageById(rows[0], rows[0].senderid);
+
+      return msgId;
     } catch (err) {
       winston.error(err);
       return 500;
@@ -323,9 +326,10 @@ class DbHandler {
   async groupAddUser(payload) {
     /* create user using in user table */
     try {
-      const { rows } = await this.pool.query(`INSERT INTO groupmembers (
+      await this.pool.query(`INSERT INTO groupmembers (
         groupid, userid, role) 
         VALUES ($1, $2, $3) RETURNING *`, [payload.groupid, payload.id, 'user']);
+      const rows = await this.getGroupMembers(payload.groupid);
       return rows;
     } catch (err) {
       winston.error(err);
