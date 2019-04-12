@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-const modalActivate = () => {
+modalActivate = () => {
   document.querySelectorAll('.modalopen').forEach((modalopener) => {
     modalopener.addEventListener('click', (evt) => {
       activateModals(evt.target);
@@ -12,10 +12,14 @@ const modalActivate = () => {
   document.querySelectorAll('.alertopen').forEach((alertopener) => {
     alertopener.addEventListener('click', (evt) => {
       activateAlerts(evt.target);
-      document.querySelectorAll('.res').forEach((resp) => {
+      console.log(alertopener);
+     /*  document.querySelectorAll('.res').forEach((resp) => {
         resp.textContent = '';
-      });
+      }); */
     });
+  });
+  document.querySelectorAll('.custom-modal, .modal_close').forEach((elem) => {
+    elem.addEventListener('click', (evt) => { closeModal(evt.target); });
   });
 };
 
@@ -28,9 +32,6 @@ const modalActivate = () => {
       navig(evt.currentTarget);
     });
   });
-  document.querySelectorAll('.custom-modal, .modal_close').forEach((elem) => {
-    elem.addEventListener('click', (evt) => { closeModal(evt.target); });
-  });
   document.querySelectorAll('.msgToCon input').forEach((elem) => {
     elem.addEventListener('change', (evt) => { msgReceiver(evt.currentTarget); });
   });
@@ -42,9 +43,9 @@ const modalActivate = () => {
       subNavig(evt.currentTarget);
     });
   });
-  document.querySelectorAll('.actionMail').forEach((btn) => {
+  document.querySelectorAll('.actionMail, .actionGroup, .actionGroupMember').forEach((btn) => {
     btn.addEventListener('click', (evt) => {
-      actionMail(evt.target);
+      actionModal(evt.target);
     });
   });
   modalActivate();

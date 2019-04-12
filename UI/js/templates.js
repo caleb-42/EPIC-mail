@@ -36,6 +36,42 @@ const mailPost = (msg, index, datecreated, status) => {
   return str;
 };
 
+const groupPost = (group, index) => {
+  const str = `
+    <div id = 'post-${index}' class="post wht block pointer anim" data-id = "${group.id}">
+        <div class="dp img-con mx-auto float-left" style = "background-image: url('../UI-elements/dpgroup.png');"></div>
+        <div class="details float-right">
+            <h4 class="text-left">${group.name}</h4>
+        </div>
+        <div class="clr"></div>
+        <div class="post-actions float-right">
+        <div class="trash alertopen anim img-con opac-70" data-post-id = ${group.id} data-action="deletegroup"></div>
+        <div class="edit anim modalopen img-con" data-post-id = ${group.id} data-action="editgroup" data-modal="#newGroupModal"></div>
+        <div class="clr"></div>
+        </div>
+    </div>
+    `;
+  return str;
+};
+
+const groupPostBloated = (member, index, i) => {
+  const str = `
+    <div id = 'post-${i}-${index}' class="post wht block pointer anim" data-id = "${index}">
+        <div class="dp img-con mx-auto float-left" style = "background-image: url('../UI-elements/dp.png');"></div>
+        <div class="details float-right">
+            <h4 class="text-left">${member.firstname} ${member.lastname}</h4>
+            <p class="subject text-left">${member.email}</p>
+        </div>
+        <div class="clr"></div>
+        <div class="post-actions float-right">
+        <div class="trash alertopen anim img-con opac-70" data-action = "deletegroupmember" data-group-id = ${member.groupid} data-post-id = ${member.id}></div>
+        <div class="clr"></div>
+        </div>
+    </div>
+    `;
+  return str;
+};
+
 const mailPostBloated = (msgById, msgstatus) => {
   let bloatedMsg = `
   <div class="post-bloated">

@@ -4,8 +4,8 @@ const switchClass = (target, toggleClass, type = 'toggle') => {
     const navs = document.querySelectorAll(`${target}`);
     navs.forEach((nav) => {
       if (type === 'toggle')nav.classList.toggle(toggleClass);
-      if (type === 'add')nav.classList.add(toggleClass);
-      if (type === 'remove')nav.classList.remove(toggleClass);
+      if (type === 'add' && !nav.classList.contains(toggleClass))nav.classList.add(toggleClass);
+      if (type === 'remove' && nav.classList.contains(toggleClass))nav.classList.remove(toggleClass);
     });
   } catch (e) {
     console.error(e);
@@ -85,7 +85,7 @@ const server = async (
   await fetch(endpoint, payload)
     .then(resp => resp.json())
     .then((res) => {
-      resolve(res);
+      setTimeout(() => { resolve(res); }, 0);
     }).catch((err) => {
       reject(err);
     });
@@ -94,15 +94,15 @@ const server = async (
 
 const toggleLoader = (btn = '.submit', res = '.resp', loadr = '.loader') => {
   const loader = document.querySelector(loadr);
-  const resp = document.querySelector(res);
+  const resp = document.querySelectorAll(res);
   if (loader.classList.contains('gone')) {
-    resp.textContent = '';
+    resp.forEach((elem) => { elem.textContent = ''; });
     loader.classList.remove('gone');
-    resp.classList.add('gone');
-    document.querySelector(btn).disabled = true;
+    switchClass(res, 'gone', 'add');
+    document.querySelectorAll(btn).forEach((elem) => { elem.disabled = true; });
   } else {
     loader.classList.add('gone');
-    resp.classList.remove('gone');
-    document.querySelector(btn).disabled = false;
+    switchClass(res, 'gone', 'remove');
+    document.querySelectorAll(btn).forEach((elem) => { elem.disabled = false; });
   }
 };

@@ -9,10 +9,31 @@
 }
 .post .dp{
   height:4rem;
-  width: 30%;
+  width: 35%;
+}
+.post .post-actions div{
+  display: inline-block;
+  position: relative;
+  float: right;
+  bottom: 1.3rem;
+}
+.post .post-actions div:hover{
+  transform: scale(1.2);
+}
+.post .post-actions .trash{
+  background-image: url('../UI-elements/trash-red.png');
+  height:2rem;
+  width: 2rem;
+  right: .1rem;
+}
+.post .post-actions .edit{
+  background-image: url('../UI-elements/edit.png');
+  height:2rem;
+  width: 2rem;
+  right: .5rem;
 }
 .post .details{
-  width: 70%;
+  width: 65%;
 }
 .datecreated{
   opacity: .3;
@@ -27,11 +48,26 @@
   color: rgba(0, 0, 0, 0.7);
   margin-bottom: .6rem; 
 }
+.groups .left-body .post .details{
+  font-size: 1.2rem;
+  position: relative;
+  top: 1.1rem;
+}
 .post p.subject{
   color: rgba(0, 0, 0, 0.4);
   font-size: 1rem;
   margin-bottom: .8rem; 
   font-family: Nunito;
+}
+.groups .right-body .post p.subject{
+  font-size: .8rem;
+}
+.groups .right-body .post .details{
+  font-size: 1.2rem;
+  margin-top: .5rem;
+}
+.right-body .post p.subject{
+  font-size: .7rem;
 }
 .post span.date, .post span.type{
   color: rgb(199, 138, 97);
@@ -127,8 +163,8 @@
   width: 80%;
   opacity: .7;
 }
-.post-bloated button:hover {
-  opacity: .9;
+.post-bloated button:hover, .newgroup:hover {
+  opacity: 1;
 }
 .post-bloated button:nth-child(1) {
   background: rgba(101, 173, 209, 1);
@@ -142,6 +178,13 @@
 @media(min-width: 992px){
     .post-bloated .msgcon{
         max-height: 17rem !important;
+    }
+    .groups .right-body .post .dp{
+      height:4.2rem;
+      width: 30% !important;
+    }
+    .groups .right-body .post .details{
+      width: 70% !important;
     }
 }
 @media(min-width: 768px){
@@ -158,6 +201,13 @@
     .post-bloated .msgcon{
         max-height: 12rem;
     }
+    .groups .right-body .post .dp{
+      height:4.2rem;
+      width: 40%;
+    }
+    .groups .right-body .post .details{
+      width: 60%;
+    }
     .post-bloated .thread .body .reply.receiver, .post-bloated .thread .body .reply.sender{
         box-shadow: none;
         border: .1rem rgba(0, 0, 0, .07) solid;
@@ -170,6 +220,10 @@
     }
 }
 @media(min-width: 567px){
+    .groups .left-body .post .details{
+      font-size: 1.5rem;
+      top: .8rem;
+    }
     .post .dp{
         width: 20%;
     }

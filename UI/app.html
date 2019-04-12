@@ -53,30 +53,21 @@
                 <div class="w-100 h-100 main-body">
                     <div class="mails tab anim block">
                         <div class="left-body anim-ease tab-content flexdiv flex-center">
-                            <div class="content-wrapper">
-                                
-                            </div>
+                            <div class="content-wrapper"></div>
                         </div>
                         <div class="right-body anim-ease tab-content display flexdiv flex-center">
                             <div class="content-wrapper-bloated"></div>
                         </div>
                         <div class="clr"></div>
                     </div>
-                    <div class="contacts tab anim gone">
-                        <div class="left-body anim-ease tab-content flexdiv flex-center">
-                            <h3>Panels displaying details in contacts</h3>
-                        </div>
-                        <div class="right-body anim-ease tab-content display flexdiv flex-center">
-                            <h6>Panel showing all messages from the selected contact</h6>
-                        </div>
-                        <div class="clr"></div>
-                    </div>
                     <div class="groups tab anim gone">
-                        <div class="left-body anim-ease tab-content flexdiv flex-center">
-                            <h3>Groups in a list layout</h3>
+                        <div class="left-body anim-ease tab-content centercon flexdiv flex-center">
+                            <button class="anim modalopen fw-600 btn newgroup" data-action="creategroup" data-modal="#newGroupModal">New group</button>
+                            <div class="content-wrapper"></div>
                         </div>
-                        <div class="right-body anim-ease tab-content display flexdiv flex-center">
-                            <h6>Panel showing all messages from user and to user and their delivery date</h6>
+                        <div class="right-body anim-ease tab-content display flexdiv flex-center centercon">
+                            <button class="anim modalopen fw-600 btn newgroupmember" data-action="creategroupmember" data-modal="#newGroupMemberModal">Add member</button>
+                            <div class="content-wrapper-bloated"></div>
                         </div>
                         <div class="clr"></div>
                     </div>
@@ -139,6 +130,51 @@
                         </div>
                         <h4 class="mail-resp res opac-70">&nbsp;</h4>
                         <div class="loader gone"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="custom-modal modal anim newGroupModal ovflo-y" id = "newGroupModal" data-action = "creategroup">
+            <div class="modal-content">
+                <a class="modal_close">&times;</a>
+                <h2 class="modal_heading">New Group</h2>
+                <div class="modal-body">
+                    <form class="form-hd text-center " action="" autocomplete="off">
+                        <div class="input-group text-center">
+                            <label for="name" class="name anim ">Group Name</label>
+                            <input required type="text" id="name" class="inputs" placeholder = "Group Name" name="name" />
+                        </div>
+                        <div class="input-group text-center">
+                            <label for="name" class="name anim ">New Group Name</label>
+                            <input required type="text" id="name" class="inputs" placeholder = "New Group Name" name="newname" />
+                        </div>
+                        <h4 class="mail-resp res opac-70">&nbsp;</h4>
+                        <div class="loader gone"></div>
+                        <div class="groupactionbtn horizon-spread">
+                            <button type="button" class="wht actionGroup edit anim">edit group</button>
+                            <button type="button" class="wht actionGroup create anim">create group</button>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="custom-modal modal anim newGroupMemberModal ovflo-y" id = "newGroupMemberModal" data-action = "creategroupmember">
+            <div class="modal-content">
+                <a class="modal_close">&times;</a>
+                <h2 class="modal_heading">Add Member to Group</h2>
+                <div class="modal-body">
+                    <form class="form-hd text-center " action="" autocomplete="off">
+                        <div class="input-group text-center">
+                            <label for="email" class="email anim ">User Email</label>
+                            <input required type="text" id="email" class="inputs" placeholder = "Email" name="memberemail" />
+                        </div>
+                        <h4 class="mail-resp res opac-70">&nbsp;</h4>
+                        <div class="loader gone"></div>
+                        <div class="groupmemberactionbtn horizon-spread">
+                            <button type="button" class="wht actionGroupMember add anim">add user</button>
+                        </div>
+                        
                     </form>
                 </div>
             </div>
