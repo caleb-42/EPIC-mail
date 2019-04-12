@@ -106,6 +106,9 @@ li, a {
 .pointer {
     cursor: pointer; 
 }
+.inactive {
+    pointer-events:none; 
+}
 .wht {
     color: white !important; 
 }
@@ -126,10 +129,6 @@ li, a {
 }
 .loader{
     padding-top: -1.8rem;
-}
-.vt-center{
-    display: inline-block;
-    vertical-align: middle;
 }
 .img-con{
   background-size: contain;

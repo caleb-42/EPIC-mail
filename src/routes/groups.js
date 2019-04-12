@@ -14,7 +14,7 @@ const validate = (user) => {
 
 const validateAddUser = (user) => {
   const schema = {
-    id: joi.number().required(),
+    email: joi.string().email().trim().required(),
   };
   return joi.validate(user, schema);
 };
@@ -79,6 +79,27 @@ router.get('/', auth, async (req, res) => {
   });
 });
 
+router.get('/:id/users', auth, async (req, res) => {
+  const { id } = req.params;
+  if (isNaN(id)) {
+    return res.status(400).send({
+      status: 400,
+      error: 'param IDs must be numbers',
+    });
+  }
+  const getGroupMembers = await dbHandler.getGroupMembers(id);
+  if (getGroupMembers === 500) {
+    return res.status(500).send({
+      status: 500,
+      error: 'Internal server error',
+    });
+  }
+  res.status(200).send({
+    status: 200,
+    data: getGroupMembers,
+  });
+});
+
 router.post('/:id/users', auth, async (req, res) => {
   const { id } = req.params;
   if (isNaN(id)) {
@@ -94,7 +115,7 @@ router.post('/:id/users', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
-  const user = await dbHandler.find('users', { id: req.body.id }, 'id');
+  const user = await dbHandler.find('users', { email: req.body.email }, 'email');
   if (user === 500) {
     return res.status(500).send({
       status: 500,
@@ -107,17 +128,11 @@ router.post('/:id/users', auth, async (req, res) => {
       error: 'User ID does not exist',
     });
   }
-  const groupuser = await dbHandler.find('groupmembers', { userid: req.body.id }, 'userid');
-  if (groupuser === 500) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Internal server error',
-    });
-  }
-  if (groupuser) {
+  console.log(user.id, req.user.id);
+  if (user.id === req.user.id) {
     return res.status(400).send({
       status: 400,
-      error: 'User Already in group',
+      error: 'You cannot be a member of a group you created',
     });
   }
   const group = await dbHandler.find('groups', { id }, 'id');
@@ -133,7 +148,21 @@ router.post('/:id/users', auth, async (req, res) => {
       error: 'Group ID does not exist',
     });
   }
+  const groupuser = await dbHandler.findArray('groupmembers', { userid: user.id, groupid: group.id }, ['userid', 'groupid']);
+  if (groupuser === 500) {
+    return res.status(500).send({
+      status: 500,
+      error: 'Internal server error',
+    });
+  }
+  if (groupuser) {
+    return res.status(400).send({
+      status: 400,
+      error: 'User Already in group',
+    });
+  }
   req.body.groupid = id;
+  req.body.id = user.id;
   const msg = await dbHandler.groupAddUser(req.body);
   if (msg === 500) {
     return res.status(500).send({
@@ -321,6 +350,12 @@ router.post('/:id/messages', auth, async (req, res) => {
   req.body.groupid = id;
   req.body.senderid = req.user.id;
   const msg = await dbHandler.groupSendMsg(req.body);
+  if (msg.length < 1) {
+    return res.status(400).send({
+      status: 400,
+      error: 'Group has no members',
+    });
+  }
   if (msg === 500) {
     return res.status(500).send({
       status: 500,

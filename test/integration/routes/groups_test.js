@@ -104,21 +104,31 @@ describe('GROUPS API ENDPOINTS', () => {
     it('should not add user to a group if new group user ID is not valid', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
-      const resp = await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('Cookie', [`token=${token}`]);
+      const resp = await request(server).post('/api/v1/groups/1/users').send({ email: 'john@epicmail.com' }).set('Cookie', [`token=${token}`]);
       error(resp, 404, 'User ID does not exist');
     });
     it('should not add user to a group if new user is already in group', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('Cookie', [`token=${token}`]);
-      await request(server).post('/api/v1/groups/1/users').send({ id: 1 }).set('Cookie', [`token=${token}`]);
-      const resp = await request(server).post('/api/v1/groups/1/users').send({ id: 1 }).set('Cookie', [`token=${token}`]);
+      await request(server).post('/api/v1/groups/1/users').send({ email: 'sam@epicmail.com' }).set('Cookie', [`token=${token}`]);
+      const resp = await request(server).post('/api/v1/groups/1/users').send({ email: 'sam@epicmail.com' }).set('Cookie', [`token=${token}`]);
       error(resp, 400, 'User Already in group');
+    });
+    it('should not add admin user of group to a group', async () => {
+      const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      const { token } = res.body.data[0];
+      await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('Cookie', [`token=${token}`]);
+      await request(server).post('/api/v1/groups/1/users').send({ email: 'ewere@epicmail.com' }).set('Cookie', [`token=${token}`]);
+      const resp = await request(server).post('/api/v1/groups/1/users').send({ email: 'ewere@epicmail.com' }).set('Cookie', [`token=${token}`]);
+      error(resp, 400, 'You cannot be a member of a group you created');
     });
     it('should not add user to a group if group name does not  exist', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
+      await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      const resp = await request(server).post('/api/v1/groups/1/users').send({ id: 1 }).set('Cookie', [`token=${token}`]);
+      const resp = await request(server).post('/api/v1/groups/1/users').send({ email: 'sam@epicmail.com' }).set('Cookie', [`token=${token}`]);
       error(resp, 404, 'Group ID does not exist');
     });
     it('should create group if user has valid token and group exist', async () => {
@@ -126,7 +136,7 @@ describe('GROUPS API ENDPOINTS', () => {
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('Cookie', [`token=${token}`]);
-      const resp = await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('Cookie', [`token=${token}`]);
+      const resp = await request(server).post('/api/v1/groups/1/users').send({ email: 'sam@epicmail.com' }).set('Cookie', [`token=${token}`]);
       success(resp, 201);
     });
   });
@@ -159,7 +169,7 @@ describe('GROUPS API ENDPOINTS', () => {
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('Cookie', [`token=${token}`]);
-      await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('Cookie', [`token=${token}`]);
+      await request(server).post('/api/v1/groups/1/users').send({ email: 'sam@epicmail.com' }).set('Cookie', [`token=${token}`]);
       const resp = await request(server).delete('/api/v1/groups/1/users/2').set('Cookie', [`token=${token}`]);
       success(resp, 200);
     });
@@ -185,7 +195,7 @@ describe('GROUPS API ENDPOINTS', () => {
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('Cookie', [`token=${token}`]);
-      await request(server).post('/api/v1/groups/1/users').send({ id: 2 }).set('Cookie', [`token=${token}`]);
+      await request(server).post('/api/v1/groups/1/users').send({ email: 'sam@epicmail.com' }).set('Cookie', [`token=${token}`]);
       const resp = await request(server).post('/api/v1/groups/1/messages').send(sentMsg).set('Cookie', [`token=${token}`]);
       success(resp, 201);
     });

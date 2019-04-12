@@ -37,6 +37,26 @@ class DbHandler {
     }
   }
 
+  async findArray(table, body, query, key = null) {
+    /* find any record in database */
+    try {
+      const param = [];
+      if (!key) key = query;
+      let str = `SELECT * FROM ${table} WHERE`;
+      query.forEach((elem, index) => {
+        str += ` ${elem} = $${index + 1}`;
+        if (query.length - 1 > index) str += ' AND';
+        param.push(body[key[index]]);
+      });
+      const { rows } = await this.pool.query(str, param);
+      console.log(rows);
+      return rows[0];
+    } catch (e) {
+      winston.error(e);
+      return 500;
+    }
+  }
+
   async createUser(newUser) {
     /* create user using in user table */
     const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'recoveryEmail']);
@@ -114,7 +134,9 @@ class DbHandler {
       if (type === 'draft') {
         const withReceiver = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND messages.status = $2 AND messages.visible != $3 ORDER BY id DESC', [id, 'draft', 'receiver']);
 
-        /* const noReceiver = await this.pool.query('SELECT messages.* FROM messages WHERE messages.senderId = $1 AND messages.status = $2 AND messages.visible != $3', [id, 'draft', 'receiver']); */
+        /* const noReceiver = await this.pool.query(`SELECT messages.* FROM messages
+         WHERE messages.senderId = $1 AND messages.status = $2 AND messages.visible != $3`,
+          [id, 'draft', 'receiver']); */
         return [...withReceiver.rows];
       }
       const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3) AND messages.visible != $4 ORDER BY id DESC', [id, 'unread', 'read', 'receiver']);
@@ -175,7 +197,7 @@ class DbHandler {
     try {
       const now = new Date();
       msg.createdOn = date.format(now, 'ddd MMM DD YYYY');
-      msg.sentTime = date.format(now, 'hh:mm');
+      msg.sentTime = date.format(now, 'HH:mm');
       msg.status = 'unread';
       if (msg.parentMessageId) {
         await this.pool.query('UPDATE messages SET status = $1 WHERE (id = $2) RETURNING *',
@@ -202,7 +224,7 @@ class DbHandler {
   async sendDraftMessage(msg) {
     const now = new Date();
     const createdOn = date.format(now, 'ddd MMM DD YYYY');
-    const sentTime = date.format(now, 'hh:mm');
+    const sentTime = date.format(now, 'HH:mm');
     try {
       const { rows } = await this.pool.query('UPDATE messages SET status = $1, createdOn = $2, sentTime = $3, visible = $4 WHERE (id = $5) RETURNING *',
         ['unread', createdOn, sentTime, 'all', msg.id]);
@@ -219,7 +241,7 @@ class DbHandler {
     try {
       const now = new Date();
       msg.createdOn = date.format(now, 'ddd MMM DD YYYY');
-      msg.sentTime = date.format(now, 'hh:mm');
+      msg.sentTime = date.format(now, 'HH:mm');
       msg.status = 'draft';
       msg.parentMessageId = msg.parentMessageId || null;
       msg.receiverId = msg.receiverId || null;
@@ -315,8 +337,8 @@ class DbHandler {
     /* delete a draft message......... or convert unread message to draft */
     try {
       await this.pool.query('DELETE FROM groupmembers WHERE (userid = $1 AND groupid = $2) RETURNING *',
-        [member.id, group.id]);
-      return [{ messages: `${member.firstname} ${member.lastname} has been deleted from ${group.name}` }];
+        [member.userid, group.id]);
+      return [{ message: `member has been deleted from ${group.name}` }];
     } catch (err) {
       winston.error(err);
       return 500;
@@ -327,8 +349,8 @@ class DbHandler {
     /* get all contacts */
     try {
       const { rows } = await this.pool.query(`
-      SELECT groupmembers.*, groups.*, users.firstname,
-      users.lastname FROM groupmembers
+      SELECT users.id, groupmembers.groupid, users.firstname,
+      users.lastname, users.email FROM groupmembers
       INNER JOIN groups ON (groupmembers.groupid = groups.id) 
       INNER JOIN users ON (groupmembers.userid = users.id) 
       WHERE groupmembers.groupid = $1
@@ -357,21 +379,23 @@ class DbHandler {
     try {
       const now = new Date();
       const createdOn = date.format(now, 'ddd MMM DD YYYY');
+      msg.sentTime = date.format(now, 'HH:mm');
       msg.createdOn = createdOn;
       msg.status = 'unread';
       msg.parentMessageId = msg.parentMessageId || null;
 
       let result;
       const groupMembers = await this.getGroupMembers(msg.groupid);
+      console.log(groupMembers);
       if (groupMembers.length === 0) return [];
       for (let i = 0; i < groupMembers.length; i += 1) {
         // eslint-disable-next-line no-await-in-loop
         result = await this.pool.query(`INSERT INTO messages (
           createdOn, message, parentMessageId,
-          receiverid, subject, senderid, status
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+          receiverid, subject, senderid, status, senttime, visible
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         [msg.createdOn, msg.message, msg.parentMessageId,
-          groupMembers[i].userid, msg.subject, msg.senderid, msg.status]);
+          groupMembers[i].id, msg.subject, msg.senderid, msg.status, msg.sentTime, 'all']);
       }
       const message = _.pick(result.rows[0], ['id', 'createdOn', 'message', 'parentMessageId', 'subject', 'status']);
       return [message];

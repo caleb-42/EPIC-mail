@@ -186,7 +186,7 @@ describe('DATABASE METHODS', () => {
       const deleteGroupUser = await dbHandler
         .groupDeleteUser(groupuser, newGroup[0]);
       expect(deleteGroupUser).to.be.a('array');
-      expect(deleteGroupUser[0]).to.have.any.keys('messages');
+      expect(deleteGroupUser[0]).to.have.any.keys('message');
     });
   });
   describe('Send Message to group', () => {

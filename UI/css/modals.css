@@ -9,7 +9,23 @@
     right: 1.1rem;
     box-shadow: .1rem .1rem .3rem rgba(0, 0, 0, 0.4);
 }
-.wrapper .main.selected .newMail{
+.newgroup, .newgroupmember{
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    margin-left: -3.3rem;
+    background: rgba(199, 138, 97, 1);
+    color: rgba(255, 255, 255, 1);
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    opacity: .8;
+}
+.wrapper .main .selected.newgroupmember{
+    background: rgba(101, 173, 209, 1);
+    display: block;
+    margin-left: -3.7rem;
+}
+.wrapper .main.selected .newMail, .newgroupmember{
     display: none;
 }
 .custom-modal{
@@ -23,11 +39,17 @@
     opacity: 0;
     visibility: hidden;
 }
-#newMailModal.target, #alertModal.target{
+#newMailModal.target,
+#newGroupModal.target,
+#newGroupMemberModal.target,
+#alertModal.target{
     opacity: 1;
     visibility:visible;
 }
 #newMailModal.target[data-action = 'update'] .group, 
+#newGroupModal.target[data-action = 'creategroup'] .input-group:nth-child(2), 
+#newGroupModal.target[data-action = 'creategroup'] .groupactionbtn .edit, 
+#newGroupModal.target[data-action = 'editgroup'] .groupactionbtn .create, 
 #newMailModal.target[data-action = 'update'] .actionMail.reply, #newMailModal.target[data-action = 'update'] .actionMail.send, #newMailModal.target[data-action = 'update'] .actionMail.save,
 #newMailModal.target[data-action = 'send'] .actionMail.update,
 #newMailModal.target[data-action = 'send'] .actionMail.reply,
@@ -35,7 +57,9 @@
 #newMailModal.target[data-action = 'reply'] .actionMail.send,#newMailModal.target[data-action = 'reply'] .actionMail.update, #newMailModal.target[data-action = 'reply'] .actionMail.save{
     display: none;
 }
-#newMailModal.target[data-action = 'reply'] #email, #newMailModal.target[data-action = 'reply'] #subject {
+#newMailModal.target[data-action = 'reply'] #email,
+#newGroupModal.target[data-action = 'editgroup'] .input-group:nth-child(1),
+#newMailModal.target[data-action = 'reply'] #subject {
     pointer-events:none;
 }
 .custom-modal .modal-content{
@@ -52,9 +76,16 @@
 }
 #alertModal .modal-content{
     width: 60%;
-    /* height: 30%; */
     height: 11rem;
     top:40%;
+}
+#newGroupModal .modal-content, #newGroupMemberModal .modal-content{
+    width: 70%;
+    height: 14rem;
+    top: 40%;
+}
+#newGroupModal[data-action="editgroup"] .modal-content{
+    height: 18rem;
 }
 #alertModal .modal-body{
     height: 60%;
@@ -64,6 +95,22 @@
     width:40%;
     position: relative;
     bottom: 1rem;
+}
+#newGroupModal .groupactionbtn, #newGroupMemberModal .groupmemberactionbtn{
+    width:5rem;
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    margin-left: -4.8rem;
+}
+#newGroupModal[data-action="editgroup"] .groupactionbtn{
+    margin-left: -4rem;
+}
+#newGroupMemberModal .groupmemberactionbtn{
+    margin-left: -3.8rem;
+}
+#newGroupModal .input-group, #newGroupMemberModal .input-group{
+    margin-top: 1rem;
 }
 .newMailModal select{
     margin: 1rem auto 0;
@@ -119,7 +166,9 @@
     max-width: 100%;
     max-height: 7rem;
 }
-.form-hd .actionbtn button{
+.form-hd .actionbtn button,
+#newGroupModal .groupactionbtn button,
+#newGroupMemberModal .groupmemberactionbtn button{
     margin: 1rem;
     background: rgba(0, 0, 0, 0.4);
 }
@@ -154,6 +203,9 @@
     #alertModal .modal-content{
         width: 30%;
         height: 25%;
+    }
+    #newGroupModal .modal-content, #newGroupMemberModal .modal-content{
+        width: 30%;
     }
     .newMail{
         right: 42%;
