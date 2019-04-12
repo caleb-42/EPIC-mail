@@ -1,6 +1,23 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
+
 const strangerEmailField = `<label for="email" class="email anim ">Receiver</label>
 <input required type="text" id="email" class="inputs" placeholder = "Email" name="email" />`;
+
+const failedResponse = `<div class="emptyResp waitdiv centercon">
+    <div class= "wait">
+      <h4>Bad Network Connection</h4>
+      <button class="btn tryagain center">Try Again</button>
+    </div>
+</div>`;
+
+const loading = `<div class="waitdiv loading w-100 h-100 centercon">
+    <div class="loader center"></div>
+</div>`;
+
+const htmlServerResponse = (msg = 'Empty Response') => `<div class="waitdiv loading w-100 h-100 centercon">
+    <h4 class="opac-70 center">${msg}<h4>
+  </div>`;
 
 const contactEmailField = (optionData = []) => {
   let str = '<select class="inputs email" name="email"><option value="" selected disabled>Select Contact</option>';
@@ -21,9 +38,10 @@ const groupIdField = (optionData = []) => {
 };
 
 const mailPost = (msg, index, datecreated, status) => {
+  console.log(dummyData.selected.id, msg.id);
   let str = msg.createdon !== datecreated || index === 0 ? `<div class="w-100 datecreated"><hr class="w-20 inline-block"/><span class="w-20 text-center">${msg.createdon}</span><hr class="w-20 inline-block"/></div>` : '';
   str += `
-    <div id = 'post-${index}' class="post wht block pointer anim" data-id = "${msg.id}">
+    <div id = 'post-${index}' class="post ${dummyData.selected.id === msg.id ? 'active' : ''} wht block pointer anim" data-id = "${msg.id}">
         <div class="dp img-con mx-auto float-left" style = "background-image: url('../UI-elements/dp.png');"></div>
         <div class="details float-right">
             <h4 class="text-left">${msg.firstname} ${msg.lastname}</h4>
@@ -38,7 +56,7 @@ const mailPost = (msg, index, datecreated, status) => {
 
 const groupPost = (group, index) => {
   const str = `
-    <div id = 'post-${index}' class="post wht block pointer anim" data-id = "${group.id}">
+    <div id = 'post-${index}' class="post ${dummyData.selected.id === group.id ? 'active' : ''} wht block pointer anim" data-id = "${group.id}">
         <div class="dp img-con mx-auto float-left" style = "background-image: url('../UI-elements/dpgroup.png');"></div>
         <div class="details float-right">
             <h4 class="text-left">${group.name}</h4>
@@ -72,7 +90,11 @@ const groupPostBloated = (member, index, i) => {
   return str;
 };
 
-const mailPostBloated = (msgById, msgstatus) => {
+const mailPostBloated = (msgById) => {
+  let msgstatus = msgById.status;
+  if (localStorage.getItem('id') === String(msgById.senderid) && msgById.status !== 'draft') {
+    msgstatus = msgById.status === 'read' ? 'seen' : 'delivered';
+  }
   let bloatedMsg = `
   <div class="post-bloated">
       <div class = "dp img-con mx-auto" style = "background-image: url('../UI-elements/dp.png');"></div>

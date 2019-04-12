@@ -54,6 +54,10 @@ body{
     width:100%;
     height: 100%;
 }
+.waitdiv h4, .waitdiv .wait{
+    height: 2rem;
+    height: fit-content;
+}
 .wrapper .main .groups.tab .left-body.tab-content > div, .wrapper .main .groups.tab .right-body.tab-content > div{
     padding: 4rem 2rem;
 }

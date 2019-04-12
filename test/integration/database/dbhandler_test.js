@@ -171,8 +171,7 @@ describe('DATABASE METHODS', () => {
       const newGroupUser = await dbHandler
         .groupAddUser({ groupid: newGroup[0].id, id: newGroup[0].userid });
       expect(newGroupUser).to.be.an('array');
-      expect(newGroupUser[0]).to.have.any.keys('groupid', 'userid', 'role');
-      expect(newGroupUser[0]).to.include({ userid: newGroup[0].userid });
+      expect(newGroupUser[0]).to.have.any.keys('id', 'firstname', 'lastname', 'email');
     });
   });
   describe('Delete user from Group', () => {
