@@ -58,6 +58,12 @@ body{
     height: 2rem;
     height: fit-content;
 }
+.waitdiv button {
+    margin-top: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    color: rgba(255,255,255, .8);
+    font-family: 'Lato', sans-serif;
+}
 .wrapper .main .groups.tab .left-body.tab-content > div, .wrapper .main .groups.tab .right-body.tab-content > div{
     padding: 4rem 2rem;
 }

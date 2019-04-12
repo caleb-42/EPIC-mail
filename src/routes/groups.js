@@ -115,6 +115,7 @@ router.post('/:id/users', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
+  req.body.email = req.body.email.toLowerCase();
   const user = await dbHandler.find('users', { email: req.body.email }, 'email');
   if (user === 500) {
     return res.status(500).send({

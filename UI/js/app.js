@@ -59,6 +59,10 @@ const getPageData = (route, page, subpage) => {
       generateTemplates(page, subpage);
     },
     (err) => {
+      fillPage(failedResponse);
+      reconnect(() => {
+        getPageData(route, page, subpage);
+      });
       console.log(err);
     },
   );

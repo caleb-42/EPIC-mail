@@ -174,6 +174,7 @@ router.post('/', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
+  req.body.email = req.body.email.toLowerCase();
   const user = await dbHandler.find('users', req.body, 'email');
   if (user === 500) {
     return res.status(500).send({
@@ -218,6 +219,7 @@ router.post('/save', auth, async (req, res) => {
       error: error.details[0].message,
     });
   }
+  req.body.email = req.body.email.toLowerCase();
   if (req.body.email) {
     const user = await dbHandler.find('users', req.body, 'email');
     if (user === 500) {

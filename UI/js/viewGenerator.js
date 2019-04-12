@@ -27,6 +27,10 @@ const generateBloatedMails = (obj, msg) => {
       modalActivate();
     },
     (err) => {
+      fillSubPage(failedResponse);
+      reconnect(() => {
+        generateBloatedMails(obj, msg);
+      });
       console.log(err);
     },
   );
@@ -75,6 +79,10 @@ const generateBloatedGroups = (obj, group, evt, index) => {
       modalActivate();
     },
     (err) => {
+      fillSubPage(failedResponse);
+      reconnect(() => {
+        generateBloatedGroups(obj, group, evt, index);
+      });
       console.log(err);
     },
   );

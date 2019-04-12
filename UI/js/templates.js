@@ -4,10 +4,10 @@
 const strangerEmailField = `<label for="email" class="email anim ">Receiver</label>
 <input required type="text" id="email" class="inputs" placeholder = "Email" name="email" />`;
 
-const failedResponse = `<div class="emptyResp waitdiv centercon">
-    <div class= "wait">
-      <h4>Bad Network Connection</h4>
-      <button class="btn tryagain center">Try Again</button>
+const failedResponse = `<div class="emptyResp waitdiv w-100 h-100 centercon">
+    <div class= "opac-70 wait center">
+      <h4>Error in Connection</h4>
+      <button class="btn tryagain">Try Again</button>
     </div>
 </div>`;
 
