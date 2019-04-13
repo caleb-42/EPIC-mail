@@ -15,7 +15,7 @@ const auth = async (req, res, next) => {
     });
   }
   const decoded = jwt.verify(token, process.env.jwtPrivateKey);
-  const user = await dbHandler.find('users', { id: decoded.id }, 'id');
+  const user = await dbHandler.find('users', { id: decoded.id }, ['id']);
   if (!user) {
     return res.status(404).send({
       status: 401,

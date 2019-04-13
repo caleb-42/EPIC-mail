@@ -256,7 +256,7 @@ describe('GROUPS API ENDPOINTS', () => {
       const unauthtoken = unauth.body.data[0].token;
       await request(server).post('/api/v1/groups/').send({ name: 'caleb' }).set('Cookie', [`token=${token}`]);
       const resp = await request(server).delete('/api/v1/groups/1').set('Cookie', [`token=${unauthtoken}`]);
-      error(resp, 401, 'You are not authorized to delete this group');
+      error(resp, 401, 'You are not authorized to access this Group');
     });
     it('should delete a group if user is admin', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);

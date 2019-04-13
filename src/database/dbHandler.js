@@ -28,18 +28,6 @@ class DbHandler {
   async find(table, body, query, key = null) {
     /* find any record in database */
     try {
-      if (!key) key = query;
-      const { rows } = await this.pool.query(`SELECT * FROM ${table} WHERE ${query} = $1`, [body[key]]);
-      return rows[0];
-    } catch (e) {
-      winston.error(e);
-      return 500;
-    }
-  }
-
-  async findArray(table, body, query, key = null) {
-    /* find any record in database */
-    try {
       const param = [];
       if (!key) key = query;
       let str = `SELECT * FROM ${table} WHERE`;
@@ -49,7 +37,6 @@ class DbHandler {
         param.push(body[key[index]]);
       });
       const { rows } = await this.pool.query(str, param);
-      console.log(rows);
       return rows[0];
     } catch (e) {
       winston.error(e);
@@ -133,10 +120,6 @@ class DbHandler {
     try {
       if (type === 'draft') {
         const withReceiver = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND messages.status = $2 AND messages.visible != $3 ORDER BY id DESC', [id, 'draft', 'receiver']);
-
-        /* const noReceiver = await this.pool.query(`SELECT messages.* FROM messages
-         WHERE messages.senderId = $1 AND messages.status = $2 AND messages.visible != $3`,
-          [id, 'draft', 'receiver']); */
         return [...withReceiver.rows];
       }
       const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3) AND messages.visible != $4 ORDER BY id DESC', [id, 'unread', 'read', 'receiver']);
@@ -311,11 +294,7 @@ class DbHandler {
       const { rows } = await this.pool.query(`INSERT INTO groups (
         name, role, userid) 
         VALUES ($1, $2, $3) RETURNING *`, [group.name, group.role, group.userid]);
-      /* console.log(rows, group);
-      const members = await this.pool.query(`INSERT INTO groupmembers (
-        groupid, role, userid)
-        VALUES ($1, $2, $3) RETURNING *`, [rows[0].id, group.role, group.userid]);
-      console.log(members); */
+
       return rows;
     } catch (err) {
       winston.error(err);
@@ -390,7 +369,6 @@ class DbHandler {
 
       let result;
       const groupMembers = await this.getGroupMembers(msg.groupid);
-      console.log(groupMembers);
       if (groupMembers.length === 0) return [];
       for (let i = 0; i < groupMembers.length; i += 1) {
         // eslint-disable-next-line no-await-in-loop
