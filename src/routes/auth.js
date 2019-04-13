@@ -1,74 +1,36 @@
-import joi from 'joi';
 import express from 'express';
 import bcrypt from 'bcrypt';
 import helper from '../utilities';
+import error from '../middleware/error';
 import dbHandler from '../database/dbHandler';
 
 const router = express.Router();
 
-const validate = (user) => {
-  const schema = {
-    /* id: joi.number().equal(0), */
-    email: joi.string().email().required(),
-    password: joi.string().min(5).max(255).required(),
-  };
-  return joi.validate(user, schema);
-};
+const invalidMailPassword = { status: 400, error: 'Invalid email or password' };
+const userAlreadyRegistered = { status: 400, error: 'User already registered' };
 
-const validateLogIn = (user) => {
-  const schema = {
-    firstName: joi.string().trim().min(3).max(15)
-      .required(),
-    lastName: joi.string().trim().min(3).max(15)
-      .required(),
-    email: joi.string().trim().email().required(),
-    recoveryEmail: joi.string().trim().email().required(),
-    phoneNumber: joi.number().required(),
-    password: joi.string().trim().min(5).max(255)
-      .required(),
-    confirmPassword: joi.any().valid(joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match with password' } } }),
-  };
-  return joi.validate(user, schema);
-};
-
-router.post('/login', async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) {
-    return res.send({
-      status: 400,
-      error: error.details[0].message,
-    });
+router.post('/login', async (req, res, next) => {
+  const err = helper.validateLogIn(req.body).error;
+  if (err) {
+    req.error = { status: 400, error: err.details[0].message };
+    return next();
   }
   req.body.email = req.body.email.toLowerCase();
-  const user = await dbHandler.find('users', req.body, 'email');
-  if (user === 500) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Internal server error',
-    });
-  }
+  const user = await dbHandler.find('users', req.body, ['email']);
+  if (user === 500) return next();
   if (!user) {
-    return res.status(400).send({
-      status: 400,
-      error: 'Invalid email or password',
-    });
+    req.error = invalidMailPassword;
+    return next();
   }
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   const token = validPassword ? helper.generateJWT(user) : false;
-  if (token === 500) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Internal server error',
-    });
-  }
+  if (token === 500) return next();
   if (!token) {
-    return res.status(400).send({
-      status: 400,
-      error: 'Invalid email or password',
-    });
+    req.error = invalidMailPassword;
+    return next();
   }
   res.cookie('token', token);
-  return res.status(200).send({
+  return res.status(200).json({
     status: 200,
     data: [
       {
@@ -80,41 +42,27 @@ router.post('/login', async (req, res) => {
       },
     ],
   });
-});
+}, error);
 
-router.post('/signup', async (req, res) => {
-  const { error } = validateLogIn(req.body);
-  if (error) {
-    return res.status(400).send({
-      status: 400,
-      error: error.details[0].message,
-    });
+router.post('/signup', async (req, res, next) => {
+  const err = helper.validateSignUp(req.body).error;
+  if (err) {
+    req.error = { status: 400, error: err.details[0].message };
+    return next();
   }
   const email = String(req.body.email);
   req.body.email = `${email.toLowerCase().substring(0, email.indexOf('@'))}@epicmail.com`;
-  const userPresent = await dbHandler.find('users', req.body, 'email');
-  if (userPresent === 500) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Internal server error',
-    });
-  }
+  const userPresent = await dbHandler.find('users', req.body, ['email']);
+  if (userPresent === 500) return next();
   if (userPresent) {
-    return res.status(400).send({
-      status: 400,
-      error: 'User already registered',
-    });
+    req.error = userAlreadyRegistered;
+    return next();
   }
   const token = await dbHandler.createUser(req.body);
-  if (token === 500) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Internal server error',
-    });
-  }
-  const user = await dbHandler.find('users', req.body, 'email');
+  if (token === 500) return next();
+  const user = await dbHandler.find('users', req.body, ['email']);
   res.cookie('token', token);
-  return res.status(201).send({
+  return res.status(201).json({
     status: 201,
     data: [{
       token,
@@ -124,5 +72,5 @@ router.post('/signup', async (req, res) => {
       id: user.id,
     }],
   });
-});
+}, error);
 export default router;

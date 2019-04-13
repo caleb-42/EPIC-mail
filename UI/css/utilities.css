@@ -112,6 +112,9 @@ li, a {
 .wht {
     color: white !important; 
 }
+.blac {
+    color: black !important; 
+}
 .float-left{
     float: left;
 }

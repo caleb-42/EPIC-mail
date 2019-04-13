@@ -97,7 +97,7 @@ const server = async (
   await fetch(endpoint, payload)
     .then(resp => resp.json())
     .then((res) => {
-      setTimeout(() => { resolve(res); }, 1000);
+      setTimeout(() => { resolve(res); }, 0);
     }).catch((err) => {
       reject(err);
     });

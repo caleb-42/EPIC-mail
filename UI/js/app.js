@@ -6,17 +6,15 @@ const fillPage = (html, page = 'recreate') => {
   document.querySelectorAll(`${page} .content-wrapper`).forEach((elem) => { elem.innerHTML = html; });
 };
 
-const wipePage = (page, subpage = null, loadPage = true) => {
+const wipePage = (page, subpage = null, loadPage = true, wipeRightMenu = true) => {
   switchClass('.newgroupmember', 'selected', 'remove');
   switchClass('.navig h3.active', 'active');
   switchClass('.mail-types li.active', 'active');
   switchClass(`[data-nav="${page}"]`, 'active');
   if (subpage) switchClass(`[data-nav="${subpage}"]`, 'active');
   switchTab(page);
-  if (loadPage) {
-    fillPage(loading, page);
-    document.querySelectorAll('.content-wrapper-bloated').forEach((elem) => { elem.innerHTML = ''; });
-  }
+  if (loadPage) fillPage(loading, page);
+  if (wipeRightMenu) document.querySelectorAll('.content-wrapper-bloated').forEach((elem) => { elem.innerHTML = ''; });
   document.querySelector('#tabname').textContent = page;
   document.querySelector('.main').setAttribute('data-tab', page);
 };
@@ -47,7 +45,6 @@ const getPageData = (route, page, subpage) => {
     dummyData.route = '';
     return;
   }
-  wipePage(page, subpage);
   dummyData.route = route;
   server(
     route, 'GET', {},
@@ -76,6 +73,7 @@ const navig = (obj, leaveSubMenu = true) => {
   if (dummyData.menu.name !== page) dummyData.selected = [];
   dummyData.menu.type = 'menu';
   dummyData.menu.name = page;
+  if (route) wipePage(page, null, true, leaveSubMenu);
 };
 
 const subNavig = (obj, leaveSubMenu = true) => {
@@ -87,6 +85,7 @@ const subNavig = (obj, leaveSubMenu = true) => {
   if (dummyData.menu.name !== subpage) dummyData.selected = [];
   dummyData.menu.type = 'submenu';
   dummyData.menu.name = subpage;
+  if (route) wipePage(page, subpage, true, leaveSubMenu);
 };
 
 const resetPage = (leaveSubMenu) => {

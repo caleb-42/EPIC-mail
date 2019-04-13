@@ -70,7 +70,7 @@ describe('DATABASE METHODS', () => {
   });
   describe('Get all Messages', () => {
     it('should return all messages if user id is valid', async () => {
-      const user = await dbHandler.find('users', { id: 1 }, 'id');
+      const user = await dbHandler.find('users', { id: 1 }, ['id']);
       const res = await dbHandler.getMessages(user.id);
       expect(res).to.be.an('array');
       expect(res).to.have.lengthOf(1);
@@ -78,7 +78,7 @@ describe('DATABASE METHODS', () => {
   });
   describe('Get Sent Messages', () => {
     it('should return Sent messages if user id is valid', async () => {
-      const user = await dbHandler.find('users', { id: 2 }, 'id');
+      const user = await dbHandler.find('users', { id: 2 }, ['id']);
       const res = await dbHandler.getOutboxMessages(user.id, 'sent');
       expect(res).to.be.an('array');
       expect(res).to.have.lengthOf(1);
@@ -86,7 +86,7 @@ describe('DATABASE METHODS', () => {
   });
   describe('Get Recieved Messages', () => {
     it('should return all Recieved messages if user id is valid and type is not set', async () => {
-      const user = await dbHandler.find('users', { id: 1 }, 'id');
+      const user = await dbHandler.find('users', { id: 1 }, ['id']);
       const res = await dbHandler.getInboxMessages(user.id);
       expect(res).to.be.an('array');
       expect(res).to.have.lengthOf(1);
@@ -133,7 +133,7 @@ describe('DATABASE METHODS', () => {
   });
   describe('Get Draft Messages', () => {
     it('should return Draft messages if user id is valid', async () => {
-      const user = await dbHandler.find('users', { id: 2 }, 'id');
+      const user = await dbHandler.find('users', { id: 2 }, ['id']);
       const res = await dbHandler.getOutboxMessages(user.id, 'draft');
       expect(res).to.be.an('array');
       expect(res).to.have.lengthOf(2);
@@ -181,7 +181,7 @@ describe('DATABASE METHODS', () => {
       const userToken = jwt.verify(res, process.env.jwtPrivateKey);
       const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: userToken.id });
       await dbHandler.groupAddUser({ groupid: newGroup[0].id, id: newGroup[0].userid });
-      const groupuser = await dbHandler.find('users', { id: userToken.id }, 'id');
+      const groupuser = await dbHandler.find('users', { id: userToken.id }, ['id']);
       const deleteGroupUser = await dbHandler
         .groupDeleteUser(groupuser, newGroup[0]);
       expect(deleteGroupUser).to.be.a('array');
