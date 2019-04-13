@@ -91,13 +91,13 @@ const server = async (
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   };
-  /* const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`; */
-  const endpoint = `http://localhost:3000/api/v1/${url}`;
+  const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`;
+  /* const endpoint = `http://localhost:3000/api/v1/${url}`; */
   // eslint-disable-next-line no-undef
   await fetch(endpoint, payload)
     .then(resp => resp.json())
     .then((res) => {
-      setTimeout(() => { resolve(res); }, 1000);
+      setTimeout(() => { resolve(res); }, 0);
     }).catch((err) => {
       reject(err);
     });

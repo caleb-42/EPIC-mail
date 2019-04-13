@@ -162,7 +162,7 @@ describe('MAILS API ENDPOINTS', () => {
       const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
       const mgs = sentMessage.body.data[0];
       const singleMessage = await request(server).get(`/api/v1/messages/${mgs.id}`).set('Cookie', [`token=${wrongUserToken}`]);
-      error(singleMessage, 401, 'you are not authorized to get this message');
+      error(singleMessage, 401, 'you are not authorized to access this message');
     });
     it('should release single mails for valid user', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
@@ -250,7 +250,7 @@ describe('MAILS API ENDPOINTS', () => {
       const draftMsg = await request(server).post('/api/v1/messages/save').send(sentMsg).set('Cookie', [`token=${token}`]);
       /* console.log(draftMsg.body); */
       const sentDraftMsg = await request(server).post(`/api/v1/messages/${draftMsg.body.data[0].id}`).set('Cookie', [`token=${token}`]);
-      success(sentDraftMsg, 201);
+      success(sentDraftMsg, 200);
     });
   });
   describe('Update Single Mails by ID api/v1/messages/id', () => {
