@@ -20,13 +20,16 @@
         toggleLoader();
         try {
           const {
-            firstName, lastName, email, id,
+            firstName, lastName, email, id, dp, phoneNumber, recoveryEmail,
           } = res.data[0];
           document.querySelector('.resp').textContent = 'created account successfully';
           localStorage.setItem('firstName', firstName);
           localStorage.setItem('lastName', lastName);
           localStorage.setItem('email', email);
           localStorage.setItem('id', id);
+          localStorage.setItem('dp', dp);
+          localStorage.setItem('phoneNumber', phoneNumber);
+          localStorage.setItem('recoveryEmail', recoveryEmail);
           window.location.href = './app.html';
         } catch (e) {
           document.querySelector('.resp').textContent = res.error;

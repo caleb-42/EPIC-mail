@@ -111,6 +111,7 @@ router.post('/save', auth, async (req, res, next) => {
   }
   req.body.email = req.body.email.toLowerCase();
   const user = await dbHandler.find('users', req.body, ['email']);
+  console.log(req.body, user);
   if (user === 500) return next();
   if (!user) {
     req.error = receiverNotfound;
@@ -152,6 +153,7 @@ router.patch('/:id', auth, async (req, res, next) => {
     req.error = paramIdMustBeNumber;
     return next();
   }
+  req.body.email = req.body.email.toLowerCase();
   const err = validator.updateMsgValidate(req.body).error;
   if (err) {
     req.error = { status: 400, error: err.details[0].message };

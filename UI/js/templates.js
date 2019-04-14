@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 
-const strangerEmailField = `<label for="email" class="email anim ">Receiver</label>
+const strangerEmailField = `<label for="email" class="email anim ">Email</label>
 <input required type="text" id="email" class="inputs" placeholder = "Email" name="email" />`;
 
 const failedResponse = `<div class="emptyResp waitdiv w-100 h-100 centercon">
@@ -42,7 +42,7 @@ const mailPost = (msg, index, datecreated, status) => {
   let str = msg.createdon !== datecreated || index === 0 ? `<div class="w-100 datecreated"><hr class="w-20 inline-block"/><span class="w-20 text-center">${msg.createdon}</span><hr class="w-20 inline-block"/></div>` : '';
   str += `
     <div id = 'post-${index}' class="post ${dummyData.selected.id === msg.id ? 'active' : ''} wht block pointer anim" data-id = "${msg.id}">
-        <div class="dp img-con mx-auto float-left" style = "background-image: url('../UI-elements/dp.png');"></div>
+        <div class="dp img-con mx-auto float-left" style = "background-image: url('${msg.dp}');"></div>
         <div class="details float-right">
             <h4 class="text-left">${msg.firstname} ${msg.lastname}</h4>
             <p class="subject text-left">${msg.subject}</p>
@@ -55,9 +55,11 @@ const mailPost = (msg, index, datecreated, status) => {
 };
 
 const groupPost = (group, index) => {
+  const url = 'https://epic-mail-application.herokuapp.com/uploads/2019-04-14dpgroup.png';
+  /* const url = 'http://localhost:3000/uploads/2019-04-14dpgroup.png'; */
   const str = `
     <div id = 'post-${index}' class="post ${dummyData.selected.id === group.id ? 'active' : ''} wht block pointer anim" data-id = "${group.id}">
-        <div class="dp img-con mx-auto float-left" style = ""></div>
+        <div class="dp img-con mx-auto float-left" style = "background-image: url('${url}');"></div>
         <div class="details float-right">
             <h4 class="text-left">${group.name}</h4>
         </div>
@@ -75,7 +77,7 @@ const groupPost = (group, index) => {
 const groupPostBloated = (member, index, i) => {
   const str = `
     <div id = 'post-${i}-${index}' class="post wht block pointer anim" data-id = "${index}">
-        <div class="dp img-con mx-auto float-left" style = "background-image: url('../UI-elements/dp.png');"></div>
+        <div class="dp img-con mx-auto float-left" style = "background-image: url('${member.dp}');"></div>
         <div class="details float-right">
             <h4 class="text-left">${member.firstname} ${member.lastname}</h4>
             <p class="subject text-left">${member.email}</p>
@@ -97,7 +99,7 @@ const mailPostBloated = (msgById) => {
   }
   let bloatedMsg = `
   <div class="post-bloated">
-      <div class = "dp img-con mx-auto" style = ""></div>
+      <div class = "dp img-con mx-auto" style = "background-image: url('${msgById.dp}');"></div>
       <h3>${msgById.firstname} ${msgById.lastname}</h3>
       <h5>${msgById.email}</h5>
       <p class="subject fw-600 text-center">${msgById.subject}</p>

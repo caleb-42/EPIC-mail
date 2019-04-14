@@ -46,18 +46,20 @@ class DbHandler {
 
   async createUser(newUser) {
     /* create user using in user table */
-    const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'recoveryEmail']);
+    newUser.dp = 'https://epic-mail-application.herokuapp.com/uploads/2019-04-14dp.png';
+    /* newUser.dp = 'http://localhost:3000/uploads/2019-04-14dp.png'; */
+    const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'recoveryEmail', 'dp']);
     try {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(user.password, salt);
       const { rows } = await this.pool.query(`INSERT INTO users (
-        firstName, lastName, email, phoneNumber, password, recoveryEmail) 
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`, Object.values(user));
+        firstName, lastName, email, phoneNumber, password, recoveryEmail, dp) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`, Object.values(user));
       const createdUser = rows[0];
       const token = helper.generateJWT(createdUser);
       return token;
     } catch (err) {
-      winston.error(err);
+      console.log(err);
       return 500;
     }
   }
@@ -68,6 +70,28 @@ class DbHandler {
       const sender = await this.pool.query('SELECT users.firstname, users.lastname, users.email, users.phonenumber FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderid = $1 ORDER BY users.firstname DESC', [id]);
       const receiver = await this.pool.query('SELECT users.firstname, users.lastname, users.email, users.phonenumber FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE messages.receiverid = $1 ORDER BY users.firstname DESC', [id]);
       const rows = _.unionBy(sender.rows, receiver.rows, 'email');
+      return rows;
+    } catch (err) {
+      winston.error(err);
+      return 500;
+    }
+  }
+
+  async storeUserDp(id, path) {
+    if (path) {
+      try {
+        const { rows } = await this.pool.query(`UPDATE users SET dp = $1
+        WHERE (id = $2) RETURNING users.firstname, users.lastname, users.email, users.phonenumber`,
+        [path, id]);
+        /* delete rows[0].password; */
+        return rows;
+      } catch (err) {
+        winston.error(err);
+        return 500;
+      }
+    }
+    try {
+      const { rows } = await this.pool.query('SELECT users.firstname, users.lastname, users.email, users.phonenumber FROM users WHERE  (id = $1)', [id]);
       return rows;
     } catch (err) {
       winston.error(err);
@@ -89,8 +113,8 @@ class DbHandler {
   async getMessages(id) {
     /* get all received messages for a particular user */
     try {
-      const sender = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE messages.receiverid = $1 AND messages.visible != $2 ORDER BY id DESC;', [id, 'sender']);
-      const receiver = await this.pool.query('SELECT messages.*, users.firstname, users.lastname FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderid = $1 AND messages.visible != $2 ORDER BY id DESC;', [id, 'receiver']);
+      const sender = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.dp FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE messages.receiverid = $1 AND messages.visible != $2 ORDER BY id DESC;', [id, 'sender']);
+      const receiver = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.dp FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderid = $1 AND messages.visible != $2 ORDER BY id DESC;', [id, 'receiver']);
       const rows = [...sender.rows, ...receiver.rows];
 
       return rows;
@@ -104,10 +128,10 @@ class DbHandler {
     /* get all messages for a particular user */
     try {
       if (type === 'all') {
-        const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND messages.visible != $2 ORDER BY id DESC', [id, 'sender']);
+        const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email, users.dp FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND messages.visible != $2 ORDER BY id DESC', [id, 'sender']);
         return rows;
       }
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND status = $2 AND messages.visible != $3 ORDER BY id DESC', [id, type, 'sender']);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email, users.dp FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND status = $2 AND messages.visible != $3 ORDER BY id DESC', [id, type, 'sender']);
       return rows;
     } catch (err) {
       winston.error(err);
@@ -119,10 +143,10 @@ class DbHandler {
     /* get either draft or sent messages */
     try {
       if (type === 'draft') {
-        const withReceiver = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND messages.status = $2 AND messages.visible != $3 ORDER BY id DESC', [id, 'draft', 'receiver']);
+        const withReceiver = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email, users.dp FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND messages.status = $2 AND messages.visible != $3 ORDER BY id DESC', [id, 'draft', 'receiver']);
         return [...withReceiver.rows];
       }
-      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3) AND messages.visible != $4 ORDER BY id DESC', [id, 'unread', 'read', 'receiver']);
+      const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email, users.dp FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3) AND messages.visible != $4 ORDER BY id DESC', [id, 'unread', 'read', 'receiver']);
       return rows;
     } catch (err) {
       winston.error(err);
@@ -134,7 +158,7 @@ class DbHandler {
     /* get a particular message */
     const fromTo = findMsg.receiverid === userId ? 'sender' : 'receiver';
     try {
-      const { rows } = await this.pool.query(`SELECT messages.*, users.firstname, users.lastname, users.email FROM messages
+      const { rows } = await this.pool.query(`SELECT messages.*, users.firstname, users.lastname, users.email, users.dp FROM messages
         INNER JOIN users ON (messages.${fromTo}id = users.id)
         WHERE messages.id = $1
         AND ((messages.receiverid = $2 AND messages.visible != $3)
@@ -148,7 +172,7 @@ class DbHandler {
         rows[0].status = 'read';
       }
 
-      const thread = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE ((messages.receiverid = $1 AND messages.visible != $2) OR (messages.senderid = $3 AND messages.visible != $4)) AND messages.parentmessageid = $5 ORDER BY id DESC;', [userId, 'sender', userId, 'receiver', String(findMsg.id)]);
+      const thread = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email, users.dp FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE ((messages.receiverid = $1 AND messages.visible != $2) OR (messages.senderid = $3 AND messages.visible != $4)) AND messages.parentmessageid = $5 ORDER BY id DESC;', [userId, 'sender', userId, 'receiver', String(findMsg.id)]);
 
       rows[0].thread = thread.rows;
       return rows;
@@ -162,7 +186,13 @@ class DbHandler {
     /* update a particular message */
     try {
       const message = req.message || msg.message;
-      const receiverId = req.receiverId || msg.receiverid;
+      let receiverId;
+      if (req.email) {
+        const receiver = await this.find('users', { email: req.email }, ['email']);
+        receiverId = receiver.id;
+      } else {
+        receiverId = msg.receiverid;
+      }
       const subject = req.subject || msg.subject;
 
       const { rows } = await this.pool.query(`UPDATE messages SET message = $1, receiverid = $2, subject = $3
@@ -185,12 +215,7 @@ class DbHandler {
       msg.createdOn = date.format(now, 'ddd MMM DD YYYY');
       msg.sentTime = date.format(now, 'HH:mm');
       msg.status = 'unread';
-      if (msg.parentMessageId) {
-        await this.pool.query('UPDATE messages SET status = $1 WHERE (id = $2) RETURNING *',
-          ['read', Number(msg.parentMessageId)]);
-      } else {
-        msg.parentMessageId = null;
-      }
+      if (!msg.parentMessageId) msg.parentMessageId = null;
       msg.visible = 'all';
 
       const message = _.pick(msg, ['createdOn', 'sentTime', 'message', 'parentMessageId', 'receiverId', 'subject', 'senderId', 'status', 'visible']);
@@ -199,6 +224,15 @@ class DbHandler {
         receiverid, subject, senderid, status, visible
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
       Object.values(message));
+
+      if (msg.parentMessageId) {
+        const parentMsgRes = await this.pool.query('UPDATE messages SET status = $1 WHERE (id = $2) RETURNING *',
+          ['read', Number(msg.parentMessageId)]);
+        const parentMsg = parentMsgRes.rows;
+        const msgId = await this.getMessageById(parentMsg[0], rows[0].senderid);
+        return msgId;
+      }
+
       const sentMsg = rows[0];
       return [sentMsg];
     } catch (err) {
@@ -333,7 +367,7 @@ class DbHandler {
     try {
       const { rows } = await this.pool.query(`
       SELECT users.id, groupmembers.groupid, users.firstname,
-      users.lastname, users.email FROM groupmembers
+      users.lastname, users.email, users.dp FROM groupmembers
       INNER JOIN groups ON (groupmembers.groupid = groups.id) 
       INNER JOIN users ON (groupmembers.userid = users.id) 
       WHERE groupmembers.groupid = $1
@@ -415,6 +449,7 @@ class DbHandler {
       email VARCHAR(30),
       recoveryemail VARCHAR(30),
       phonenumber VARCHAR(30),
+      dp TEXT,
       password TEXT
     );
     CREATE TYPE _status as enum('read', 'unread', 'draft');

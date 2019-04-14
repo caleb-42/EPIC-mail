@@ -84,6 +84,9 @@
     height: 14rem;
     top: 40%;
 }
+#newGroupMemberModal .modal-content{
+    height: 16rem;
+}
 #newGroupModal[data-action="editgroup"] .modal-content{
     height: 18rem;
 }
@@ -109,10 +112,10 @@
 #newGroupMemberModal .groupmemberactionbtn{
     margin-left: -3.8rem;
 }
-#newGroupModal .input-group, #newGroupMemberModal .input-group{
+#newGroupModal .input-group, #newGroupMemberModal .input-group, .contactOptions{
     margin-top: 1rem;
 }
-.newMailModal select{
+.modal-content select{
     margin: 1rem auto 0;
     width: 60%;
 }
@@ -177,13 +180,26 @@
     padding: 1em;
     margin: 0 0 3rem;
 }
-.dp-image .dp{
-    background-image: url('../UI-elements/dp.png');
-    width:100px;
-    height:100px;
+.dp-image .userdp{
+    width:10rem;
+    height:10rem;
+    background-size: contain;
+    display: block;
+    border-radius:5rem;
+    margin: 1rem auto 1.5rem;
 }
-.dp-image button{
-    margin: 1rem auto;
+.dp-image .actionupload button {
+    margin: 1rem;
+}
+.dp-image .userDetails {
+    margin: 3rem auto 1rem;
+}
+.dp-image .userDetails h2 {
+    margin: 2rem auto 1rem;
+    color: rgba(199, 138, 97, 1);
+}
+.dp-image .userDetails p {
+    margin: 1rem auto .3rem;
 }
 .msgToCon{
     margin: 1rem auto .5rem;
@@ -196,6 +212,9 @@
 @media(min-width: 768px){
     .form-hd .input-group textarea{
         height: 10rem;
+    }
+    .dp-image {
+        width:30%;
     }
     #newMailModal .modal-content{
         width: 50%;
