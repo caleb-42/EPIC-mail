@@ -109,8 +109,12 @@ const actionModalServer = (endpoint, method, payload, response, action) => {
 
 const newMailAction = (obj, formObj) => {
   let endpoint = 'messages';
-  const { email, subject, message } = formObj;
-  let payload = { email, subject, message };
+  const {
+    email, subject, message, sendsms,
+  } = formObj;
+  let payload = {
+    email, subject, message, sendsms,
+  };
   let response = 'messages sent successfully';
   let method = 'POST';
   switch (obj.textContent) {
@@ -165,6 +169,7 @@ const actionModal = (obj) => {
   const modalClass = obj.getAttribute('modal-class');
   const formObj = formToJson(document.querySelector(`.${modalClass} .form-hd`));
   toggleLoader(`.${modalClass} button`, `.${modalClass} .res`);
+  console.log(formObj);
   if (modalClass === 'newMailModal') newMailAction(obj, formObj);
   if (modalClass === 'newGroupModal') groupAction(obj, formObj);
   if (modalClass === 'newGroupMemberModal') groupMemberAction(obj, formObj);

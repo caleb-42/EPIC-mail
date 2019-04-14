@@ -47,8 +47,9 @@ https://caleb-42.github.io/EPIC-mail/UI
 - POST https://epic-mail-application.herokuapp.com/api/v1/auth/signup - Create a new user / Signs up a new user
 - POST https://epic-mail-application.herokuapp.com/api/v1/auth/login - Signs in a user
 
-##Contacts
+### Contacts
 - GET https://epic-mail-application.herokuapp.com/api/v1/users/contacts - Gets a contacts for a user
+- PATCH https://epic-mail-application.herokuapp.com/api/v1/users/save - update user details
 
 ### Messages
 - GET https://epic-mail-application.herokuapp.com/api/v1/messages - List all received messages

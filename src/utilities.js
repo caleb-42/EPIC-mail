@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import joi from 'joi';
+import twilio from 'twilio';
+import naijaMobile from 'naija-phone-number';
 
 dotenv.config();
 
@@ -14,6 +16,7 @@ const helpers = {
       subject: joi.string().trim().max(35).required(),
       message: joi.string().trim().required(),
       parentMessageId: joi.number().optional(),
+      sendsms: joi.boolean().optional(),
     };
     return joi.validate(msg, schema);
   },
@@ -73,6 +76,27 @@ const helpers = {
       confirmPassword: joi.any().valid(joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match with password' } } }),
     };
     return joi.validate(user, schema);
+  },
+
+  sendsms: async (phoneNumber, req) => {
+    if (!naijaMobile.isValid(phoneNumber)) return false;
+    const stripZero = phoneNumber.substring(1);
+    console.log(process.env.twilioAccountSid, process.env.twilioAuthToken);
+    const accountSid = process.env.twilioAccountSid;
+    const authToken = process.env.twilioAuthToken;
+    const client = twilio(accountSid, authToken);
+    try {
+      const msgRes = await client.messages
+        .create({
+          body: `${req.subject} - ${req.message}`,
+          from: '+12027592246',
+          to: `+234${stripZero}`,
+        });
+      console.log(msgRes);
+      return true;
+    } catch (e) {
+      console.log(e);
+    }
   },
 };
 

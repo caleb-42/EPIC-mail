@@ -2,7 +2,7 @@ import express from 'express';
 import auth from '../middleware/auth';
 import error from '../middleware/error';
 import dbHandler from '../database/dbHandler';
-import validator from '../utilities';
+import utility from '../utilities';
 
 const router = express.Router();
 
@@ -79,7 +79,7 @@ router.get('/:id', auth, async (req, res, next) => {
 
 /* send message */
 router.post('/', auth, async (req, res, next) => {
-  const err = validator.validateMsg(req.body).error;
+  const err = utility.validateMsg(req.body).error;
   if (err) {
     req.error = { status: 400, error: err.details[0].message };
     return next();
@@ -99,12 +99,19 @@ router.post('/', auth, async (req, res, next) => {
   req.body.senderId = req.user.id;
   const msg = await dbHandler.sendMessage(req.body);
   if (msg === 500) return next();
+  if (req.body.sendsms) {
+    const sms = await utility.sendsms(user.phonenumber, req.body);
+    if (!sms) {
+      req.error = { status: 400, error: 'receiver has an invalid phone number' };
+      return next();
+    }
+  }
   res.status(201).json({ status: 201, data: msg });
 }, error);
 
 /* save message as draft */
 router.post('/save', auth, async (req, res, next) => {
-  const err = validator.validateMsg(req.body).error;
+  const err = utility.validateMsg(req.body).error;
   if (err) {
     req.error = { status: 400, error: err.details[0].message };
     return next();
@@ -154,7 +161,7 @@ router.patch('/:id', auth, async (req, res, next) => {
     return next();
   }
   req.body.email = req.body.email.toLowerCase();
-  const err = validator.updateMsgValidate(req.body).error;
+  const err = utility.updateMsgValidate(req.body).error;
   if (err) {
     req.error = { status: 400, error: err.details[0].message };
     return next();
