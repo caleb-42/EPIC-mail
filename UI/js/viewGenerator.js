@@ -9,6 +9,7 @@ let datecreated;
 const loadBloatedMails = (msgById) => {
   console.log(msgById);
   document.querySelector('.mails .content-wrapper-bloated').innerHTML = mailPostBloated(msgById);
+  modalActivate();
 };
 
 const generateBloatedMails = (obj, msg) => {

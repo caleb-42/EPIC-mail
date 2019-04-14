@@ -28,6 +28,15 @@ modalActivate = () => {
 };
 
 (() => {
+  document.querySelector('.uploader').addEventListener('click', () => {
+    document.querySelector('.uploaddp').click();
+    switchClass('.dp-image .dpname', 'gone', 'add');
+    switchClass('.dp-image .loader', 'gone', 'remove');
+    setTimeout(() => {
+      switchClass('.dp-image .dpname', 'gone', 'remove');
+      switchClass('.dp-image .loader', 'gone', 'add');
+    }, 2500);
+  });
   document.querySelector('.d-arrow').addEventListener('click', openCloseNav);
   document.querySelector('.top-nav .d-arrow').addEventListener('click', openCloseNav);
   document.querySelector('.backbtn').addEventListener('click', resetTab);
@@ -36,8 +45,8 @@ modalActivate = () => {
       navig(evt.currentTarget);
     });
   });
-  document.querySelectorAll('.msgToCon input').forEach((elem) => {
-    elem.addEventListener('change', (evt) => { msgReceiver(evt.currentTarget); });
+  document.querySelectorAll('.contactOptions input').forEach((elem) => {
+    elem.addEventListener('change', (evt) => { contactOptions(evt.currentTarget); });
   });
   document.querySelectorAll('[data-nav="signOut"]').forEach((elem) => {
     elem.addEventListener('click', signOut);

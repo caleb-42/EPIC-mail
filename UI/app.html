@@ -74,10 +74,24 @@
                     <div class="settings tab anim gone">
                         <div class="left-body anim-ease tab-content w-100 flexdiv flex-center">
                             <div class="content-wrapper">
-                                <div class="dp-image">
-                                    <div class="dp mx-auto img-con"></div>
-                                    <button class="btn">Upload</button>
-                                    <p class="opac-70">Upload photo here</p>
+                                <div class="dp-image mx-auto">
+                                    <!-- <div class="dp mx-auto img-con"></div> -->
+                                    <img class="text-center userdp" src="./UI-elements/dp.png" />
+                                    <form class="dpForm">
+                                        <input onchange= "displayImage(this)" type="file" name = "userDp" class="gone uploaddp"/>
+                                    </form>
+                                    <div class="actionupload horizon-spread">
+                                        <button class="btn uploader">Upload</button>
+                                        <button onclick="saveImage();" class="btn savedp">Save</button>
+                                    </div>
+                                    <p class="opac-70 dpname">Size: (512px x 512px) Limit: 5mb</p>
+                                    <div class="loader gone"></div>
+                                    <div class="mx-auto userDetails">
+                                        <h2>Your Details</h2>
+                                        <p class="opac-70 userEmail"></p>
+                                        <p class="opac-70 userPhone"></p>
+                                        <p class="opac-70 userRecoveryEmail"></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -96,17 +110,17 @@
                 <h2 class="modal_heading">New Mail</h2>
                 <div class="modal-body">
                     <form class="form-hd text-center " action="" autocomplete="off">
-                        <div class="msgToCon horizon-spread">
+                        <div class="msgToCon contactOptions horizon-spread">
                             <span class="stranger">
-                                <input class = "msgTo" checked type="radio" name = "msgto" value = "stranger" id="stranger"/>
+                                <input modal-class = "newMailModal" checked type="radio" name = "msgto" value = "stranger" id="stranger"/>
                                 <label for="stranger" class="f-15 ml-2">Stranger</label>
                             </span>
                             <span class="contact">
-                                <input class = "msgTo" type="radio" name = "msgto" value = "contact" id="contact"/>
+                                <input modal-class = "newMailModal" type="radio" name = "msgto" value = "contact" id="contact"/>
                                 <label for="contact" class="f-15 ml-2">Contact</label>
                             </span>
                             <span class="group">
-                                <input class = "msgTo" type="radio" name = "msgto" value = "group" id="group"/>
+                                <input modal-class = "newMailModal" type="radio" name = "msgto" value = "group" id="group"/>
                                 <label for="group" class="f-15 ml-2">Group</label>
                             </span>
                         </div>
@@ -123,10 +137,10 @@
                             <textarea rows = 8 required type="message" id="message" class="inputs" placeholder = "Message" name="message"></textarea>
                         </div>
                         <div class="actionbtn horizon-spread">
-                            <button type="button" class="wht actionMail save anim">save</button>
-                            <button type="button" class="wht actionMail update anim">update</button>
-                            <button type="button" class="wht actionMail send anim">send</button>
-                            <button type="button" class="wht actionMail reply anim">reply</button>
+                            <button modal-class = "newMailModal" type="button" class="wht actionMail save anim">save</button>
+                            <button modal-class = "newMailModal" type="button" class="wht actionMail update anim">update</button>
+                            <button modal-class = "newMailModal" type="button" class="wht actionMail send anim">send</button>
+                            <button modal-class = "newMailModal" type="button" class="wht actionMail reply anim">reply</button>
                         </div>
                         <h4 class="mail-resp res opac-70">&nbsp;</h4>
                         <div class="loader gone"></div>
@@ -151,8 +165,8 @@
                         <h4 class="mail-resp res opac-70">&nbsp;</h4>
                         <div class="loader gone"></div>
                         <div class="groupactionbtn horizon-spread">
-                            <button type="button" class="wht actionGroup edit anim">edit group</button>
-                            <button type="button" class="wht actionGroup create anim">create group</button>
+                            <button modal-class = "newGroupModal" type="button" class="wht actionGroup edit anim">edit group</button>
+                            <button modal-class = "newGroupModal" type="button" class="wht actionGroup create anim">create group</button>
                         </div>
                         
                     </form>
@@ -165,14 +179,24 @@
                 <h2 class="modal_heading">Add Member to Group</h2>
                 <div class="modal-body">
                     <form class="form-hd text-center " action="" autocomplete="off">
+                        <div class="contactOptions horizon-spread">
+                            <span class="stranger">
+                                <input modal-class = "newGroupMemberModal" checked type="radio" name = "memberOption" value = "stranger" id="strangers"/>
+                                <label for="strangers" class="f-15 ml-2">Stranger</label>
+                            </span>
+                            <span class="contact">
+                                <input modal-class = "newGroupMemberModal" type="radio" name = "memberOption" value = "contact" id="contacts"/>
+                                <label for="contacts" class="f-15 ml-2">Contact</label>
+                            </span>
+                        </div>
                         <div class="input-group text-center">
-                            <label for="email" class="email anim ">User Email</label>
-                            <input required type="text" id="email" class="inputs" placeholder = "Email" name="memberemail" />
+                            <label for="email" class="email anim ">Email</label>
+                            <input required type="text" id="email" class="inputs" placeholder = "Email" name="email" />
                         </div>
                         <h4 class="mail-resp res opac-70">&nbsp;</h4>
                         <div class="loader gone"></div>
                         <div class="groupmemberactionbtn horizon-spread">
-                            <button type="button" class="wht actionGroupMember add anim">add user</button>
+                            <button modal-class = "newGroupMemberModal" type="button" class="wht actionGroupMember add anim">add user</button>
                         </div>
                         
                     </form>

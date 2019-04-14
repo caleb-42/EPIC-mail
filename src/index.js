@@ -36,6 +36,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 /* app.use(express.static('UI')); */ /* testing locally */
+app.use('/uploads', express.static('uploads'));
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
 app.use('/api/v1/messages', mails);

@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   firstname VARCHAR(30),
   lastname VARCHAR(30),
+  dp TEXT,
   email VARCHAR(30),
   recoveryemail VARCHAR(30),
   phonenumber VARCHAR(30),
