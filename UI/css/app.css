@@ -100,6 +100,16 @@ body{
     text-transform:capitalize;
     font-size: 1.7rem;
 }
+.smsSend {
+    font-size: 1rem;
+    margin: 1rem auto;
+}
+.smsSend input{
+    transform: scale(1.2);
+}
+.smsSend label{
+    margin-left: .5rem;
+}
 .main.selected .header h1{
     left:calc(50% - 8rem);
     text-align: center;
