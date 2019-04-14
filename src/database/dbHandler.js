@@ -162,7 +162,13 @@ class DbHandler {
     /* update a particular message */
     try {
       const message = req.message || msg.message;
-      const receiverId = req.receiverId || msg.receiverid;
+      let receiverId;
+      if (req.email) {
+        const receiver = await this.find('users', { email: req.email }, ['email']);
+        receiverId = receiver.id;
+      } else {
+        receiverId = msg.receiverid;
+      }
       const subject = req.subject || msg.subject;
 
       const { rows } = await this.pool.query(`UPDATE messages SET message = $1, receiverid = $2, subject = $3

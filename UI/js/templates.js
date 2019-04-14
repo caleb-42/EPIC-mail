@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 
-const strangerEmailField = `<label for="email" class="email anim ">Receiver</label>
+const strangerEmailField = `<label for="email" class="email anim ">Email</label>
 <input required type="text" id="email" class="inputs" placeholder = "Email" name="email" />`;
 
 const failedResponse = `<div class="emptyResp waitdiv w-100 h-100 centercon">
@@ -75,7 +75,7 @@ const groupPost = (group, index) => {
 const groupPostBloated = (member, index, i) => {
   const str = `
     <div id = 'post-${i}-${index}' class="post wht block pointer anim" data-id = "${index}">
-        <div class="dp img-con mx-auto float-left" style = "background-image: url('../UI-elements/dp.png');"></div>
+        <div class="dp img-con mx-auto float-left" style = ""></div>
         <div class="details float-right">
             <h4 class="text-left">${member.firstname} ${member.lastname}</h4>
             <p class="subject text-left">${member.email}</p>

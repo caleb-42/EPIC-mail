@@ -30,13 +30,13 @@ const closeModal = (obj) => {
 };
 
 const alertServerCall = (method, endpoint, respMsg = null) => {
-  toggleLoader('.okbtn', '.alertModal .res', '.alertModal .loader');
+  toggleLoader('.alertModal .okbtn', '.alertModal .res', '.alertModal .loader');
   server(
     endpoint,
     method,
     {},
     (res) => {
-      toggleLoader('.okbtn', '.alertModal .res', '.alertModal .loader');
+      toggleLoader('.alertModal .okbtn', '.alertModal .res', '.alertModal .loader');
       try {
         dummyData.selected = [];
         resetPage(true);
@@ -49,7 +49,7 @@ const alertServerCall = (method, endpoint, respMsg = null) => {
     (err) => {
       console.log(err);
       document.querySelector('#alertModal .res').textContent = 'Something went wrong';
-      toggleLoader('.okbtn', '.alertModal .res', '.alertModal .loader');
+      toggleLoader('.alertModal .okbtn', '.alertModal .res', '.alertModal .loader');
     },
   );
 };
@@ -74,10 +74,13 @@ const activateAlerts = (obj, warning) => {
 };
 
 const refreshRightMenu = (data, action) => {
-  if (dummyData.menu.name === 'groups' && action !== 'create group') loadBloatedGroups(data, 0);
-  else if (dummyData.menu.name === 'groups' && action === 'create group') {
-    // eslint-disable-next-line no-use-before-define
-    actionModalServer(`groups/${dummyData.selected.id}/users`, 'GET', {}, '', 'add user');
+  if (dummyData.menu.name === 'groups') {
+    if (action === 'add user') loadBloatedGroups(data, 0);
+    else {
+      toggleLoader('.actionMail, .actionGroup, .actionGroupMember', '.res');
+      // eslint-disable-next-line no-use-before-define
+      actionModalServer(`groups/${dummyData.selected.id}/users`, 'GET', {}, '', 'add user');
+    }
   } else if (dummyData.menu.name !== 'groups' && dummyData.menu.name !== 'settings') loadBloatedMails(data[0]);
   modalActivate();
 };
@@ -103,15 +106,12 @@ const actionModalServer = (endpoint, method, payload, response, action) => {
     });
 };
 
-const actionModal = (obj) => {
-  let formObj = {};
-  document.querySelectorAll('.newMailModal .form-hd, .newGroupModal .form-hd, .newGroupMemberModal .form-hd').forEach((elem) => { formObj = Object.assign({}, formToJson(elem), formObj); });
+const newMailAction = (obj, formObj) => {
   let endpoint = 'messages';
   const { email, subject, message } = formObj;
   let payload = { email, subject, message };
   let response = 'messages sent successfully';
   let method = 'POST';
-  toggleLoader('.actionMail, .actionGroup, .actionGroupMember', '.res');
   switch (obj.textContent) {
     case 'save':
       delete formObj.msgto;
@@ -126,25 +126,6 @@ const actionModal = (obj) => {
       response = 'messages updated successfully';
       method = 'PATCH';
       break;
-    case 'create group':
-      endpoint = 'groups';
-      payload = { name: formObj.name };
-      response = 'group created successfully';
-      method = 'POST';
-      break;
-    case 'edit group':
-      endpoint = `groups/${dummyData.selected.id}/name`;
-      payload = { name: formObj.newname };
-      response = 'group name changed successfully';
-      method = 'PATCH';
-      break;
-    case 'add user':
-      endpoint = `groups/${dummyData.selected.id}/users`;
-      console.log(formObj);
-      payload = { email: formObj.memberemail };
-      response = 'user added successfully';
-      method = 'POST';
-      break;
     default:
       if (obj.textContent === 'send' && formObj.msgto === 'group') {
         console.log(formObj);
@@ -154,4 +135,36 @@ const actionModal = (obj) => {
       break;
   }
   actionModalServer(endpoint, method, payload, response, obj.textContent);
+};
+
+const groupAction = (obj, formObj) => {
+  let endpoint = `groups/${dummyData.selected.id}/name`;
+  let payload = { name: formObj.newname };
+  let response = 'group name changed successfully';
+  let method = 'PATCH';
+  if (obj.textContent === 'create group') {
+    endpoint = 'groups';
+    payload = { name: formObj.name };
+    response = 'group created successfully';
+    method = 'POST';
+  }
+  actionModalServer(endpoint, method, payload, response, obj.textContent);
+};
+
+const groupMemberAction = (obj, formObj) => {
+  endpoint = `groups/${dummyData.selected.id}/users`;
+  console.log(formObj);
+  payload = { email: formObj.email };
+  response = 'user added successfully';
+  method = 'POST';
+  actionModalServer(endpoint, method, payload, response, obj.textContent);
+};
+
+const actionModal = (obj) => {
+  const modalClass = obj.getAttribute('modal-class');
+  const formObj = formToJson(document.querySelector(`.${modalClass} .form-hd`));
+  toggleLoader(`.${modalClass} button`, `.${modalClass} .res`);
+  if (modalClass === 'newMailModal') newMailAction(obj, formObj);
+  if (modalClass === 'newGroupModal') groupAction(obj, formObj);
+  if (modalClass === 'newGroupMemberModal') groupMemberAction(obj, formObj);
 };

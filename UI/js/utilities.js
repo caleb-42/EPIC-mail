@@ -5,8 +5,8 @@ const dummyData = {
   selected: [],
   route: '',
   menu: {
-    type: '',
-    name: '',
+    type: 'submenu',
+    name: 'inbox',
   },
 };
 const switchClass = (target, toggleClass, type = 'toggle') => {
@@ -41,7 +41,6 @@ const switchTab = (nav, changeTab = true) => {
     switchClass(`.${nav}.gone`, 'block', 'add');
     switchClass(`.${nav}.gone.block`, 'gone', 'remove');
   }
-  /* fetchData(nav); */
 };
 const switchEvents = (target, arg) => {
   document.querySelector(target)
@@ -61,10 +60,14 @@ const labelShow = () => {
   const inputs = document.querySelectorAll('.input-group .inputs');
   inputs.forEach((input) => {
     input.addEventListener('focusin', (event) => {
-      event.target.parentNode.querySelector('label').classList.add('show');
+      try {
+        event.target.parentNode.querySelector('label').classList.add('show');
+      } catch (e) { console.log(e); }
     });
     input.addEventListener('focusout', (event) => {
-      event.target.parentNode.querySelector('label').classList.remove('show');
+      try {
+        event.target.parentNode.querySelector('label').classList.remove('show');
+      } catch (e) { console.log(e); }
     });
   });
 };
@@ -73,26 +76,21 @@ const getCookie = (name) => {
   const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
   if (match) return match[2];
 };
-const server = async (
-  url = '',
-  method = '',
-  body = {},
-  resolve = (res) => {},
-  reject = (err) => {}) => {
+const server = async (url = '', method = '', body = {}, resolve = (res) => {}, reject = (err) => {}, contentType = 'application/json') => {
   body = JSON.stringify(body);
   console.log(document.cookie);
   const payload = method !== 'GET' ? {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': contentType },
     credentials: 'include',
     body,
   } : {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': contentType },
     credentials: 'include',
   };
-  const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`;
-  /* const endpoint = `http://localhost:3000/api/v1/${url}`; */
+  /* const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`; */
+  const endpoint = `http://localhost:3000/api/v1/${url}`;
   // eslint-disable-next-line no-undef
   await fetch(endpoint, payload)
     .then(resp => resp.json())
@@ -104,16 +102,18 @@ const server = async (
 };
 
 const toggleLoader = (btn = '.submit', res = '.resp', loadr = '.loader') => {
-  const loader = document.querySelector(loadr);
+  const loaders = document.querySelectorAll(loadr);
   const resp = document.querySelectorAll(res);
-  if (loader.classList.contains('gone')) {
-    resp.forEach((elem) => { elem.textContent = ''; });
-    loader.classList.remove('gone');
-    switchClass(res, 'gone', 'add');
-    document.querySelectorAll(btn).forEach((elem) => { elem.disabled = true; });
-  } else {
-    loader.classList.add('gone');
-    switchClass(res, 'gone', 'remove');
-    document.querySelectorAll(btn).forEach((elem) => { elem.disabled = false; });
-  }
+  loaders.forEach((loader) => {
+    if (loader.classList.contains('gone')) {
+      resp.forEach((elem) => { elem.textContent = ''; });
+      loader.classList.remove('gone');
+      switchClass(res, 'gone', 'add');
+      document.querySelectorAll(btn).forEach((elem) => { elem.disabled = true; });
+    } else {
+      loader.classList.add('gone');
+      switchClass(res, 'gone', 'remove');
+      document.querySelectorAll(btn).forEach((elem) => { elem.disabled = false; });
+    }
+  });
 };

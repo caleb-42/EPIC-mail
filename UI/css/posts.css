@@ -1,17 +1,18 @@
 .post{
   padding: 1rem;
   border-radius: .5rem;
-  box-shadow: .2rem 0 1rem rgba(109, 109, 109, 0.2);
+  box-shadow: .2rem .2rem 1rem rgba(0, 0, 0, 0.15);
   margin: 1rem 0;
 }
 .post.active{
   transform: scale(1.05);
 }
 .post .dp{
+  background-image: url('../UI-elements/dp.png');
   height:4rem;
   width: 35%;
 }
-.group .post .dp{
+.groups .left-body .post .dp{
   background-image: url('../UI-elements/dpgroup.png');
 }
 .post .post-actions div{
@@ -99,7 +100,7 @@
   color: rgba(73, 192, 112, 0.9);
   font-size: 1.2rem;
   width: fit-content;
-  margin-top: .5rem; 
+  margin: .5rem auto 0; 
 }
 .post-bloated h5{
   color: rgba(0, 0, 0, 0.5);

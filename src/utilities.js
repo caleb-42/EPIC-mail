@@ -20,9 +20,9 @@ const helpers = {
 
   updateMsgValidate: (msg) => {
     const schema = {
-      email: joi.string().email().trim().required(),
-      subject: joi.string().trim().max(35).required(),
-      message: joi.string().trim().required(),
+      email: joi.string().email().trim().optional(),
+      subject: joi.string().trim().max(35).optional(),
+      message: joi.string().trim().optional(),
     };
     return joi.validate(msg, schema);
   },
