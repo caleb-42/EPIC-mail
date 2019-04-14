@@ -77,13 +77,21 @@
                                 <div class="dp-image mx-auto">
                                     <!-- <div class="dp mx-auto img-con"></div> -->
                                     <img class="text-center userdp" src="./UI-elements/dp.png" />
-                                    <input onchange= "displayImage(this)" type="file" class="gone uploaddp"/>
+                                    <form class="dpForm">
+                                        <input onchange= "displayImage(this)" type="file" name = "userDp" class="gone uploaddp"/>
+                                    </form>
                                     <div class="actionupload horizon-spread">
                                         <button class="btn uploader">Upload</button>
-                                        <button class="btn savedp">Save</button>
+                                        <button onclick="saveImage();" class="btn savedp">Save</button>
                                     </div>
-                                    <p class="opac-70 dpname">Upload photo here</p>
+                                    <p class="opac-70 dpname">Size: (512px x 512px) Limit: 5mb</p>
                                     <div class="loader gone"></div>
+                                    <div class="mx-auto userDetails">
+                                        <h2>Your Details</h2>
+                                        <p class="opac-70 userEmail"></p>
+                                        <p class="opac-70 userPhone"></p>
+                                        <p class="opac-70 userRecoveryEmail"></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

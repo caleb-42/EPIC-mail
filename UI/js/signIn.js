@@ -16,13 +16,16 @@
           // eslint-disable-next-line no-unused-vars
           const {
             firstName, lastName, email,
-            id,
+            id, dp, phoneNumber, recoveryEmail,
           } = res.data[0];
           document.querySelector('.resp').textContent = 'successfully signed in';
           localStorage.setItem('firstName', firstName);
           localStorage.setItem('lastName', lastName);
           localStorage.setItem('email', email);
           localStorage.setItem('id', id);
+          localStorage.setItem('dp', dp);
+          localStorage.setItem('phoneNumber', phoneNumber);
+          localStorage.setItem('recoveryEmail', recoveryEmail);
           window.location.href = './app.html';
         } catch (e) {
           document.querySelector('.resp').textContent = res.error;

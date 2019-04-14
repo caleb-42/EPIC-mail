@@ -38,7 +38,10 @@ router.post('/login', async (req, res, next) => {
         firstName: user.firstname,
         lastName: user.lastname,
         email: user.email,
+        phoneNumber: user.phonenumber,
+        recoveryEmail: user.recoveryemail,
         id: user.id,
+        dp: user.dp,
       },
     ],
   });
@@ -69,7 +72,10 @@ router.post('/signup', async (req, res, next) => {
       firstName: user.firstname,
       lastName: user.lastname,
       email: user.email,
+      phoneNumber: user.phonenumber,
+      recoveryEmail: user.recoveryemail,
       id: user.id,
+      dp: user.dp,
     }],
   });
 }, error);

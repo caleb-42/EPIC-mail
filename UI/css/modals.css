@@ -191,6 +191,16 @@
 .dp-image .actionupload button {
     margin: 1rem;
 }
+.dp-image .userDetails {
+    margin: 3rem auto 1rem;
+}
+.dp-image .userDetails h2 {
+    margin: 2rem auto 1rem;
+    color: rgba(199, 138, 97, 1);
+}
+.dp-image .userDetails p {
+    margin: 1rem auto .3rem;
+}
 .msgToCon{
     margin: 1rem auto .5rem;
 }

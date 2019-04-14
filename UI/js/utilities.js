@@ -76,21 +76,18 @@ const getCookie = (name) => {
   const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
   if (match) return match[2];
 };
-const server = async (url = '', method = '', body = {}, resolve = (res) => {}, reject = (err) => {}, contentType = 'application/json') => {
+const server = async (url = '', method = '', body = {}, resolve = (res) => {}, reject = (err) => {}, contentType = { 'Content-Type': 'application/json' }) => {
   body = JSON.stringify(body);
   console.log(document.cookie);
-  const payload = method !== 'GET' ? {
+  const payload = {
     method,
-    headers: { 'Content-Type': contentType },
-    credentials: 'include',
-    body,
-  } : {
-    method,
-    headers: { 'Content-Type': contentType },
+    headers: contentType,
     credentials: 'include',
   };
-  /* const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`; */
-  const endpoint = `http://localhost:3000/api/v1/${url}`;
+  if (method !== 'GET') payload.body = body;
+  if (contentType === null) delete payload.headers;
+  const endpoint = `https://epic-mail-application.herokuapp.com/api/v1/${url}`;
+  /* const endpoint = `http://localhost:3000/api/v1/${url}`; */
   // eslint-disable-next-line no-undef
   await fetch(endpoint, payload)
     .then(resp => resp.json())

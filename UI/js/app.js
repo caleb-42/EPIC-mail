@@ -115,7 +115,7 @@ const openCloseNav = () => {
   switchClass('.top-nav .mail-types', 'open');
   switchClass('.main', 'open-sub-nav');
 };
-
+let imageData;
 const displayImage = (input) => {
   switchClass('.dp-image .dpname', 'gone', 'add');
   switchClass('.dp-image .loader', 'gone', 'remove');
@@ -123,6 +123,7 @@ const displayImage = (input) => {
   fileName = fileName.split(/(\\|\/)/g).pop();
   document.querySelector('.dpname').innerHTML = fileName;
   if (input.files && input.files[0]) {
+    [imageData] = input.files;
     console.log(input.files);
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -132,6 +133,32 @@ const displayImage = (input) => {
     };
     reader.readAsDataURL(input.files[0]);
   }
+};
+/*  */
+const saveImage = () => {
+  if (!imageData) return;
+  switchClass('.dp-image .dpname', 'gone', 'add');
+  switchClass('.dp-image .loader', 'gone', 'remove');
+  const uploaddp = document.querySelector('form.dpForm');
+  const fdata = new FormData();
+  fdata.append('userDp', imageData, imageData.name);
+  /* fetch('http://localhost:3000/api/v1/users/save', */
+  fetch('https://epic-mail-application.herokuapp.com/api/v1/users/save',
+    {
+      method: 'PATCH',
+      body: fdata,
+    }).then(resp => resp.json())
+    .then((res) => {
+      switchClass('.dp-image .dpname', 'gone', 'remove');
+      switchClass('.dp-image .loader', 'gone', 'add');
+      console.log(res);
+      const { dp } = res.data[0];
+      document.querySelector('.userdp').setAttribute('src', dp);
+    }).catch((err) => {
+      switchClass('.dp-image .dpname', 'gone', 'remove');
+      switchClass('.dp-image .loader', 'gone', 'add');
+      console.log(err);
+    });
 };
 
 const contactOptions = (obj) => {
@@ -175,4 +202,8 @@ const contactOptions = (obj) => {
   switchEvents('.main .navicon', ['.main', 'open-nav', 'toggle']);
   switchEvents('.main-body', ['.main', 'open-nav', 'remove']);
   subNavig(document.querySelector('[data-nav="inbox"]'));
+  document.querySelector('.userdp').setAttribute('src', localStorage.getItem('dp'));
+  document.querySelector('.userEmail').textContent = localStorage.getItem('email');
+  document.querySelector('.userPhone').textContent = localStorage.getItem('phoneNumber');
+  document.querySelector('.userRecoveryEmail').textContent = localStorage.getItem('recoveryEmail');
 })();
