@@ -38,7 +38,7 @@ const groupIdField = (optionData = []) => {
 };
 
 const mailPost = (msg, index, datecreated, status) => {
-  console.log(dummyData.selected.id, msg.id);
+  /* console.log(dummyData.selected.id, msg.id); */
   let str = msg.createdon !== datecreated || index === 0 ? `<div class="w-100 datecreated"><hr class="w-20 inline-block"/><span class="w-20 text-center">${msg.createdon}</span><hr class="w-20 inline-block"/></div>` : '';
   str += `
     <div id = 'post-${index}' class="post ${dummyData.selected.id === msg.id ? 'active' : ''} wht block pointer anim" data-id = "${msg.id}">

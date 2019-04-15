@@ -17,7 +17,6 @@
     const phoneNumber = document.querySelector('input[name="phoneNumber"]').value;
     const password = document.querySelector('input[name="password"]').value;
     const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
-    console.log('sac');
     if (confirmPassword !== password) {
       document.querySelector('.submit').disabled = false;
       document.querySelector('.resp').textContent = 'password mismatch, confirm password';
@@ -44,7 +43,7 @@
       toggleLoader();
       document.querySelector('.resp').textContent = 'password reset successfull';
       document.querySelector('.submit').disabled = false;
-      console.log(email, password, phoneNumber);
+      /* console.log(email, password, phoneNumber); */
     }, 3000);
   });
   const inputs = document.querySelectorAll('.input-group input');

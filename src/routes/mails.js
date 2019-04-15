@@ -118,7 +118,7 @@ router.post('/save', auth, async (req, res, next) => {
   }
   req.body.email = req.body.email.toLowerCase();
   const user = await dbHandler.find('users', req.body, ['email']);
-  console.log(req.body, user);
+  /* console.log(req.body, user); */
   if (user === 500) return next();
   if (!user) {
     req.error = receiverNotfound;

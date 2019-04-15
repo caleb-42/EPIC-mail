@@ -3,7 +3,7 @@
 const activateModals = (obj) => {
   const actionType = obj.getAttribute('data-action');
   const modal = obj.getAttribute('data-modal');
-  console.log(actionType);
+  /* console.log(actionType); */
   switchClass(modal, 'target', 'add');
   document.querySelector(modal).setAttribute('data-action', actionType);
   if (actionType !== 'send' && modal === '#newMailModal') {
@@ -57,16 +57,15 @@ const alertServerCall = (method, endpoint, respMsg = null) => {
 const activateAlerts = (obj, warning) => {
   const actionType = obj.getAttribute('data-action');
   switchClass('#alertModal', 'target');
-  console.log('sccssc');
   if (actionType === 'send') {
     alertServerCall('POST', `messages/${dummyData.selected.id}`, 'Draft Message sent sucessfully');
   } else if (actionType === 'delete') {
     alertServerCall('DELETE', `messages/${dummyData.selected.id}`);
   } else if (actionType === 'deletegroup') {
-    console.log(actionType);
+    /* console.log(actionType); */
     alertServerCall('DELETE', `groups/${obj.getAttribute('data-post-id')}`);
   } else if (actionType === 'deletegroupmember') {
-    console.log(actionType);
+    /* console.log(actionType); */
     alertServerCall('DELETE', `groups/${obj.getAttribute('data-group-id')}/users/${obj.getAttribute('data-post-id')}`);
   } else if (actionType === 'warning') {
     alertServerCall('DELETE', `messages/${dummyData.selected.id}`);
@@ -133,7 +132,7 @@ const newMailAction = (obj, formObj) => {
       break;
     default:
       if (obj.textContent === 'send' && formObj.msgto === 'group') {
-        console.log(formObj);
+        /* console.log(formObj); */
         endpoint = `groups/${formObj.groupid}/messages`;
         payload = { subject: formObj.subject, message: formObj.message };
       } else if (obj.textContent === 'reply') payload.parentMessageId = dummyData.selected.id;
@@ -158,7 +157,7 @@ const groupAction = (obj, formObj) => {
 
 const groupMemberAction = (obj, formObj) => {
   endpoint = `groups/${dummyData.selected.id}/users`;
-  console.log(formObj);
+  /* console.log(formObj); */
   payload = { email: formObj.email };
   response = 'user added successfully';
   method = 'POST';
@@ -169,7 +168,7 @@ const actionModal = (obj) => {
   const modalClass = obj.getAttribute('modal-class');
   const formObj = formToJson(document.querySelector(`.${modalClass} .form-hd`));
   toggleLoader(`.${modalClass} button`, `.${modalClass} .res`);
-  console.log(formObj);
+  /* console.log(formObj); */
   if (modalClass === 'newMailModal') newMailAction(obj, formObj);
   if (modalClass === 'newGroupModal') groupAction(obj, formObj);
   if (modalClass === 'newGroupMemberModal') groupMemberAction(obj, formObj);
