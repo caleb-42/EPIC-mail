@@ -13,8 +13,8 @@
   width: 35%;
 }
 .groups .left-body .post .dp{
-  /* background-image: url('https://localhost:3000/uploads/dpgroup.png'); */
-  background-image: url('https://epic-mail-application.herokuapp.com/uploads/dpgroup.png');
+  background-image: url('https://localhost:3000/uploads/dpgroup.png');
+  /* background-image: url('https://epic-mail-application.herokuapp.com/uploads/dpgroup.png'); */
 }
 .post .post-actions div{
   display: inline-block;

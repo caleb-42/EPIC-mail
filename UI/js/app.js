@@ -20,7 +20,7 @@ const wipePage = (page, subpage = null, loadPage = true, wipeRightMenu = true) =
 };
 
 const generateTemplates = (page, subpage) => {
-  console.log(page);
+  /* console.log(page); */
   if (dummyData.data.length === 0) fillPage(htmlServerResponse(), page);
   else fillPage('');
   dummyData.data.forEach((dummy, index) => {
@@ -45,7 +45,7 @@ const getPageData = (route, page, subpage, wipeRightMenu) => {
   wipePage(page, subpage, true, wipeRightMenu);
   server(route, 'GET', {},
     (res) => {
-      console.log(res);
+      /* console.log(res); */
       if (res.error) fillPage(htmlServerResponse('Unauthorized Access'));
       dummyData.data = res.data;
       generateTemplates(page, subpage);
@@ -124,7 +124,7 @@ const displayImage = (input) => {
   document.querySelector('.dpname').innerHTML = fileName;
   if (input.files && input.files[0]) {
     [imageData] = input.files;
-    console.log(input.files);
+    /* console.log(input.files); */
     const reader = new FileReader();
     reader.onload = (e) => {
       switchClass('.dp-image .dpname', 'gone', 'remove');
@@ -147,11 +147,12 @@ const saveImage = () => {
     {
       method: 'PATCH',
       body: fdata,
+      credentials: 'include',
     }).then(resp => resp.json())
     .then((res) => {
       switchClass('.dp-image .dpname', 'gone', 'remove');
       switchClass('.dp-image .loader', 'gone', 'add');
-      console.log(res);
+      /* console.log(res); */
       const { dp } = res.data[0];
       document.querySelector('.userdp').setAttribute('src', dp);
     }).catch((err) => {
@@ -205,5 +206,5 @@ const contactOptions = (obj) => {
   document.querySelector('.userdp').setAttribute('src', localStorage.getItem('dp'));
   document.querySelector('.userEmail').textContent = localStorage.getItem('email');
   document.querySelector('.userPhone').textContent = localStorage.getItem('phoneNumber');
-  document.querySelector('.userRecoveryEmail').textContent = localStorage.getItem('recoveryEmail');
+  /* document.querySelector('.userRecoveryEmail').textContent = localStorage.getItem('recoveryEmail'); */
 })();

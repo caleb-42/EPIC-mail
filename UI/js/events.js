@@ -19,7 +19,7 @@ modalActivate = () => {
   document.querySelectorAll('.alertopen').forEach((alertopener) => {
     alertopener.addEventListener('click', (evt) => {
       activateAlerts(evt.target);
-      console.log(alertopener);
+      /* console.log(alertopener); */
     });
   });
   document.querySelectorAll('.custom-modal, .modal_close').forEach((elem) => {

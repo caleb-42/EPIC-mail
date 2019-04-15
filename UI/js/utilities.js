@@ -28,8 +28,8 @@ const formToJson = (form) => {
   const val = {};
   inputs.forEach((input) => {
     if (['checkbox', 'radio'].indexOf(input.type) !== -1 && input.name !== '') {
-      val[input.name] = val[input.name] || [];
-      if (input.checked) val[input.name] = input.type === 'radio' ? input.value : val[input.name].push(input.value);
+      val[input.name] = val[input.name] || false;
+      if (input.checked) val[input.name] = input.type === 'radio' ? input.value : true;
     } else if (input.name !== '') val[input.name] = input.value;
   });
   return val;
@@ -78,7 +78,7 @@ const getCookie = (name) => {
 };
 const server = async (url = '', method = '', body = {}, resolve = (res) => {}, reject = (err) => {}, contentType = { 'Content-Type': 'application/json' }) => {
   body = JSON.stringify(body);
-  console.log(document.cookie);
+  /* console.log(document.cookie); */
   const payload = {
     method,
     headers: contentType,
