@@ -78,6 +78,15 @@ const helpers = {
     return joi.validate(user, schema);
   },
 
+  validateUserUpdate: (user) => {
+    const schema = {
+      password: joi.string().trim().min(5).max(255)
+        .required(),
+      confirmPassword: joi.any().valid(joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match with password' } } }),
+    };
+    return joi.validate(user, schema);
+  },
+
   sendsms: async (phoneNumber, req) => {
     if (!naijaMobile.isValid(phoneNumber)) return false;
     const stripZero = phoneNumber.substring(1);
@@ -98,6 +107,7 @@ const helpers = {
       console.log(e);
     }
   },
+
 };
 
 export default helpers;

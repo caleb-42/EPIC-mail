@@ -94,6 +94,9 @@ body {
 .form-hd button:hover{
     background: rgba(0,0,0, .5);
 }
+.form-hd .reset, .form-hd .signin{
+    font-size: 1.1rem;
+}
 .form-hd p{
     color: rgb(214, 214, 214);
     margin-top: .9em;
