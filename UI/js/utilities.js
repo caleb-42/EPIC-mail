@@ -78,7 +78,7 @@ const getCookie = (name) => {
 };
 const server = async (url = '', method = '', body = {}, resolve = (res) => {}, reject = (err) => {}, contentType = { 'Content-Type': 'application/json' }) => {
   body = JSON.stringify(body);
-  console.log(document.cookie);
+  /* console.log(document.cookie); */
   const payload = {
     method,
     headers: contentType,

@@ -11,26 +11,28 @@
   "host": "epic-mail-application.herokuapp.com",
   "basePath": "/api/v1",
   "paths": {
-    "/users": {
-      "post": {
+    "/users/save": {
+      "patch": {
         "tags": [
           "users"
         ],
-        "summary": "Creates a User",
-        "description": "Adds a new user to the User list.",
+        "summary": "Update user credentials",
+        "description": "Upload User image",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
-            "name": "user",
-            "in": "body",
-            "description": "The person to create.",
-            "schema": {
-              "$ref": "#/definitions/SendNewUserData"
-            }
+            "name": "file",
+            "in": "formData",
+            "description": "file to upload",
+            "required": false,
+            "type": "file"
           }
         ],
         "responses": {
-          "201": {
-            "description": "User succesfully created and receives a token.",
+          "200": {
+            "description": "User succesfully updated and receives credential info.",
             "schema": {
               "$ref": "#/definitions/returnNewUserData"
             }
@@ -51,15 +53,6 @@
         ],
         "summary": "Gets all Contacts",
         "description": "Returns a list of contact users.",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "A list of contacts",
@@ -82,7 +75,7 @@
         }
       }
     },
-    "/auth": {
+    "/auth/login": {
       "post": {
         "tags": [
           "auth"
@@ -103,7 +96,40 @@
           "200": {
             "description": "User succesfully sign in and receives a token.",
             "schema": {
-              "$ref": "#/definitions/returnAuthData"
+              "$ref": "#/definitions/returnNewUserData"
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Gets Authorization",
+        "description": "Signs in User.",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "The user to Authorize.",
+            "schema": {
+              "$ref": "#/definitions/SendNewUserData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User succesfully sign in and receives a token.",
+            "schema": {
+              "$ref": "#/definitions/returnNewUserData"
             }
           },
           "400": {
@@ -122,15 +148,6 @@
         ],
         "summary": "Gets all Received messages",
         "description": "Returns a list of received messages.",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "A list of received messages",
@@ -197,7 +214,7 @@
             "in": "body",
             "description": "The message to save.",
             "schema": {
-              "$ref": "#/definitions/SaveMessage"
+              "$ref": "#/definitions/SendMessage"
             }
           }
         ],
@@ -205,7 +222,7 @@
           "201": {
             "description": "Draft message has been Created.",
             "schema": {
-              "$ref": "#/definitions/returnSaveMessageData"
+              "$ref": "#/definitions/returnMessageData"
             }
           },
           "400": {
@@ -224,15 +241,6 @@
         ],
         "summary": "Gets all messages",
         "description": "Returns a list of all messages.",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "A list of all messages",
@@ -262,20 +270,11 @@
         ],
         "summary": "Gets all Read messages",
         "description": "Returns a list of all Read messages.",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "A list of all Read messages",
             "schema": {
-              "$ref": "#/definitions/returnMessageTypeData"
+              "$ref": "#/definitions/returnMessageData"
             }
           },
           "400": {
@@ -300,20 +299,11 @@
         ],
         "summary": "Gets all Sent messages",
         "description": "Returns a list of all Sent messages.",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "A list of all Sent messages",
             "schema": {
-              "$ref": "#/definitions/returnMessageTypeData"
+              "$ref": "#/definitions/returnMessageData"
             }
           },
           "400": {
@@ -338,20 +328,11 @@
         ],
         "summary": "Gets all Unread messages",
         "description": "Returns a list of all Unread messages.",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "A list of all Unread messages",
             "schema": {
-              "$ref": "#/definitions/returnMessageTypeData"
+              "$ref": "#/definitions/returnMessageData"
             }
           },
           "400": {
@@ -376,20 +357,11 @@
         ],
         "summary": "Gets all Draft messages",
         "description": "Returns a list of all Draft messages.",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "A list of all Draft messages",
             "schema": {
-              "$ref": "#/definitions/returnMessageTypeData"
+              "$ref": "#/definitions/returnMessageData"
             }
           },
           "400": {
@@ -421,13 +393,6 @@
             "required": true,
             "description": "The message Id",
             "type": "integer"
-          },
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
           }
         ],
         "responses": {
@@ -470,13 +435,6 @@
             "required": true,
             "description": "The Draft message Id",
             "type": "integer"
-          },
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
           }
         ],
         "responses": {
@@ -500,7 +458,7 @@
           }
         }
       },
-      "put": {
+      "patch": {
         "tags": [
           "messages"
         ],
@@ -520,13 +478,6 @@
             "required": true,
             "description": "The message Id",
             "type": "integer"
-          },
-          {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "description": "user token for authorization",
-            "type": "string"
           },
           {
             "in": "body",
@@ -567,12 +518,6 @@
         "description": "Deletes a message by id",
         "parameters": [
           {
-            "name": "token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "id",
             "in": "path",
             "description": "Message id to delete",
@@ -607,9 +552,323 @@
           }
         }
       }
+    },
+    "/groups": {
+      "post": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "create a group",
+        "description": "Creates a group.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created new group",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GroupName"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns created group",
+            "schema": {
+              "$ref": "#/definitions/returnGroupData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Gets groups",
+        "description": "Returns groups created by a user.",
+        "responses": {
+          "200": {
+            "description": "returns all groups created by user",
+            "schema": {
+              "$ref": "#/definitions/returnGroupData"
+            }
+          },
+          "400": {
+            "description": "Invalid token, in an error key within a response object",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access, in an error key within a response object",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/groups/:id/users": {
+      "post": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Add user to a group",
+        "description": "adds a user to a group.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "new member",
+            "description": "user to be added to group",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewGroupMember"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "all group members get returned",
+            "schema": {
+              "$ref": "#/definitions/returnGroupMemberData"
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Get all group members",
+        "description": "Returns group members added by a user.",
+        "responses": {
+          "200": {
+            "description": "all group members get returned",
+            "schema": {
+              "$ref": "#/definitions/returnGroupMemberData"
+            }
+          },
+          "400": {
+            "description": "Invalid token, in an error key within a response object",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access, in an error key within a response object",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "404": {
+            "description": "group ID not found",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/groups/:id/name": {
+      "patch": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Update group name",
+        "description": "updates the name of a group by id",
+        "operationId": "patchgroup",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The message Id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated message object",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/GroupName"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns updated group",
+            "schema": {
+              "$ref": "#/definitions/returnMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid group name supplied",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "404": {
+            "description": "group ID not found",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/groups/:id": {
+      "delete": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "delete group by id",
+        "description": "delete group by id",
+        "operationId": "deletegroup",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "the group id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns message to confirm delete",
+            "schema": {
+              "$ref": "#/definitions/returnDeleteMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid id param supplied",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "404": {
+            "description": "group ID not found",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/groups/:id/users/:userid": {
+      "delete": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "delete groupmember by id",
+        "description": "delete group member from a group by id",
+        "operationId": "deletegroupmember",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "the group id",
+            "type": "integer"
+          },
+          {
+            "name": "userid",
+            "in": "path",
+            "description": "the user id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns message to confirm delete",
+            "schema": {
+              "$ref": "#/definitions/returnDeleteMessageData"
+            }
+          },
+          "400": {
+            "description": "Invalid id or userid param supplied",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          },
+          "404": {
+            "description": "group ID or user ID not found",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "GroupMemberData": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "dp": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Tag"
+      }
+    },
     "DeleteMessage": {
       "type": "object",
       "properties": {
@@ -621,10 +880,10 @@
         "name": "Tag"
       }
     },
-    "Token": {
+    "NewGroupMember": {
       "type": "object",
       "properties": {
-        "token": {
+        "email": {
           "type": "string"
         }
       },
@@ -632,13 +891,13 @@
         "name": "Tag"
       }
     },
-    "SaveMessage": {
+    "SendMessage": {
       "type": "object",
       "properties": {
         "subject": {
           "type": "string"
         },
-        "receiverId": {
+        "email": {
           "type": "string"
         },
         "message": {
@@ -652,19 +911,10 @@
         "name": "NewUserData"
       }
     },
-    "SendMessage": {
+    "GroupName": {
       "type": "object",
       "properties": {
-        "subject": {
-          "type": "string"
-        },
-        "receiverId": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        },
-        "parentMessageId": {
+        "name": {
           "type": "string"
         }
       },
@@ -691,13 +941,25 @@
         "senderId": {
           "type": "string"
         },
-        "mailerName": {
+        "firstname": {
           "type": "string"
         },
-        "message": {
+        "lastname": {
           "type": "string"
         },
         "parentMessageId": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "senttime": {
+          "type": "string"
+        },
+        "dp": {
           "type": "string"
         }
       },
@@ -705,33 +967,22 @@
         "name": "NewUserData"
       }
     },
-    "MessageSave": {
+    "Group": {
       "type": "object",
       "properties": {
         "id": {
           "type": "integer",
           "format": "int64"
         },
-        "createdOn": {
+        "name": {
           "type": "string"
         },
-        "subject": {
+        "role": {
           "type": "string"
         },
-        "receiverId": {
-          "type": "string"
-        },
-        "senderId": {
-          "type": "string"
-        },
-        "mailerName": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        },
-        "parentMessageId": {
-          "type": "string"
+        "userId": {
+          "type": "string",
+          "format": "int64"
         }
       },
       "xml": {
@@ -744,7 +995,7 @@
         "subject": {
           "type": "string"
         },
-        "receiverId": {
+        "email": {
           "type": "string"
         },
         "message": {
@@ -755,43 +1006,9 @@
         "name": "NewUserData"
       }
     },
-    "MessageType": {
-      "type": "object",
-      "properties": {
-        "messageId": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "createdOn": {
-          "type": "string"
-        },
-        "subject": {
-          "type": "string"
-        },
-        "receiverId": {
-          "type": "string"
-        },
-        "senderId": {
-          "type": "string"
-        },
-        "mailerName": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "NewUserData"
-      }
-    },
     "ContactType": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
         "lastName": {
           "type": "string"
         },
@@ -819,6 +1036,9 @@
           "type": "string"
         },
         "email": {
+          "type": "string"
+        },
+        "recoveryEmail": {
           "type": "string"
         },
         "password": {
@@ -849,6 +1069,25 @@
         "name": "Tag"
       }
     },
+    "returnGroupMemberData": {
+      "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GroupMemberData"
+          }
+        }
+      }
+    },
     "returnMessageData": {
       "type": "object",
       "required": [
@@ -868,7 +1107,7 @@
         }
       }
     },
-    "returnSaveMessageData": {
+    "returnGroupData": {
       "type": "object",
       "required": [
         "status",
@@ -882,7 +1121,7 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/MessageSave"
+            "$ref": "#/definitions/Group"
           }
         }
       }
@@ -902,44 +1141,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ContactType"
-          }
-        }
-      }
-    },
-    "returnMessageTypeData": {
-      "type": "object",
-      "required": [
-        "status",
-        "data"
-      ],
-      "properties": {
-        "status": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/MessageType"
-          }
-        }
-      }
-    },
-    "returnAuthData": {
-      "type": "object",
-      "required": [
-        "status",
-        "data"
-      ],
-      "properties": {
-        "status": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Token"
           }
         }
       }
@@ -983,6 +1184,27 @@
       "type": "object",
       "properties": {
         "token": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phonenumber": {
+          "type": "string"
+        },
+        "recoveryemail": {
+          "type": "string"
+        },
+        "id": {
+          "type": "number"
+        },
+        "dp": {
           "type": "string"
         }
       },

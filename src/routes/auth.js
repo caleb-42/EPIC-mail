@@ -29,7 +29,9 @@ router.post('/login', async (req, res, next) => {
     req.error = invalidMailPassword;
     return next();
   }
-  res.cookie('token', token);
+  res.cookie('token', token, {
+    httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000,
+  });
   return res.status(200).json({
     status: 200,
     data: [
@@ -64,7 +66,9 @@ router.post('/signup', async (req, res, next) => {
   const token = await dbHandler.createUser(req.body);
   if (token === 500) return next();
   const user = await dbHandler.find('users', req.body, ['email']);
-  res.cookie('token', token);
+  res.cookie('token', token, {
+    httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000,
+  });
   return res.status(201).json({
     status: 201,
     data: [{

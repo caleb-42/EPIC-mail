@@ -69,7 +69,7 @@ const helpers = {
       lastName: joi.string().trim().min(3).max(15)
         .required(),
       email: joi.string().trim().email().required(),
-      recoveryEmail: joi.string().trim().email().required(),
+      recoveryEmail: joi.string().trim().email().optional(),
       phoneNumber: joi.number().required(),
       password: joi.string().trim().min(5).max(255)
         .required(),
@@ -81,7 +81,7 @@ const helpers = {
   sendsms: async (phoneNumber, req) => {
     if (!naijaMobile.isValid(phoneNumber)) return false;
     const stripZero = phoneNumber.substring(1);
-    console.log(process.env.twilioAccountSid, process.env.twilioAuthToken);
+    /* console.log(process.env.twilioAccountSid, process.env.twilioAuthToken); */
     const accountSid = process.env.twilioAccountSid;
     const authToken = process.env.twilioAuthToken;
     const client = twilio(accountSid, authToken);
@@ -89,7 +89,7 @@ const helpers = {
       const msgRes = await client.messages
         .create({
           body: `${req.subject} - ${req.message}`,
-          from: '+12027592246',
+          from: '+16572075039',
           to: `+234${stripZero}`,
         });
       console.log(msgRes);

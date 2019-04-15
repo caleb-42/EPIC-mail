@@ -15,6 +15,14 @@ https://caleb-42.github.io/EPIC-mail/UI
 2. CSS
 3. Javascript
 
+# Features
+- Upload picture as user display image
+- Twilio messaging service capabilties
+- Cross platform view and responsiveness
+- Send message to multiple contacts using groups
+- Save Draft messages and send at convinience
+- Reply messages and create and view threaded messages
+
 # Api URL
 
 - https://epic-mail-application.herokuapp.com/

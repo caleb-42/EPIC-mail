@@ -48,13 +48,13 @@ class DbHandler {
     /* create user using in user table */
     newUser.dp = 'https://epic-mail-application.herokuapp.com/uploads/2019-04-14dp.png';
     /* newUser.dp = 'http://localhost:3000/uploads/2019-04-14dp.png'; */
-    const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'recoveryEmail', 'dp']);
+    const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'dp']);
     try {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(user.password, salt);
       const { rows } = await this.pool.query(`INSERT INTO users (
-        firstName, lastName, email, phoneNumber, password, recoveryEmail, dp) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`, Object.values(user));
+        firstName, lastName, email, phoneNumber, password, dp) 
+        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`, Object.values(user));
       const createdUser = rows[0];
       const token = helper.generateJWT(createdUser);
       return token;
@@ -81,7 +81,7 @@ class DbHandler {
     if (path) {
       try {
         const { rows } = await this.pool.query(`UPDATE users SET dp = $1
-        WHERE (id = $2) RETURNING users.firstname, users.lastname, users.email, users.phonenumber`,
+        WHERE (id = $2) RETURNING users.firstname, users.lastname, users.email, users.phonenumber, users.recoveryemail, users.id, users.dp`,
         [path, id]);
         /* delete rows[0].password; */
         return rows;
