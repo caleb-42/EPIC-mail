@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
-import winston from 'winston';
 import { Pool } from 'pg';
 import date from 'date-and-time';
 import helper from '../utilities';
@@ -39,7 +38,7 @@ class DbHandler {
       const { rows } = await this.pool.query(str, param);
       return rows[0];
     } catch (e) {
-      winston.error(e);
+      console.error(e);
       return 500;
     }
   }
@@ -64,6 +63,32 @@ class DbHandler {
     }
   }
 
+  async updateUser(id, query) {
+    if (query.password) {
+      const salt = await bcrypt.genSalt(10);
+      query.password = await bcrypt.hash(query.password, salt);
+    }
+    try {
+      const keys = Object.keys(query);
+      const param = [];
+      let str = 'UPDATE users SET ';
+      keys.forEach((elem, index) => {
+        str += ` ${elem} = $${index + 1}`;
+        if (keys.length - 1 > index) str += ' ,';
+        console.log(query[elem]);
+        param.push(query[elem]);
+      });
+      str += ` WHERE (id= $${param.length + 1}) RETURNING users.firstname, users.lastname, users.email, users.phonenumber, users.dp, users.recoveryemail`;
+      param.push(id);
+      const { rows } = await this.pool.query(str, param);
+
+      return rows;
+    } catch (err) {
+      console.error(err);
+      return 500;
+    }
+  }
+
   async getUsers(id) {
     /* get all contacts */
     try {
@@ -72,29 +97,7 @@ class DbHandler {
       const rows = _.unionBy(sender.rows, receiver.rows, 'email');
       return rows;
     } catch (err) {
-      winston.error(err);
-      return 500;
-    }
-  }
-
-  async storeUserDp(id, path) {
-    if (path) {
-      try {
-        const { rows } = await this.pool.query(`UPDATE users SET dp = $1
-        WHERE (id = $2) RETURNING users.firstname, users.lastname, users.email, users.phonenumber, users.recoveryemail, users.id, users.dp`,
-        [path, id]);
-        /* delete rows[0].password; */
-        return rows;
-      } catch (err) {
-        winston.error(err);
-        return 500;
-      }
-    }
-    try {
-      const { rows } = await this.pool.query('SELECT users.firstname, users.lastname, users.email, users.phonenumber FROM users WHERE  (id = $1)', [id]);
-      return rows;
-    } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -105,7 +108,7 @@ class DbHandler {
       const { rows } = await this.pool.query('SELECT * FROM groups WHERE userid = $1 ORDER BY id DESC', [id]);
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -119,7 +122,7 @@ class DbHandler {
 
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -134,7 +137,7 @@ class DbHandler {
       const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email, users.dp FROM messages INNER JOIN users ON (messages.senderid = users.id) WHERE receiverid = $1 AND status = $2 AND messages.visible != $3 ORDER BY id DESC', [id, type, 'sender']);
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -149,7 +152,7 @@ class DbHandler {
       const { rows } = await this.pool.query('SELECT messages.*, users.firstname, users.lastname, users.email, users.dp FROM messages INNER JOIN users ON (messages.receiverid = users.id) WHERE messages.senderId = $1 AND (messages.status = $2 OR messages.status = $3) AND messages.visible != $4 ORDER BY id DESC', [id, 'unread', 'read', 'receiver']);
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -177,7 +180,7 @@ class DbHandler {
       rows[0].thread = thread.rows;
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -203,7 +206,7 @@ class DbHandler {
 
       return msgId;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -236,7 +239,7 @@ class DbHandler {
       const sentMsg = rows[0];
       return [sentMsg];
     } catch (err) {
-      winston.error(err.stack);
+      console.error(err.stack);
       return 500;
     }
   }
@@ -251,7 +254,7 @@ class DbHandler {
       const sentMsg = rows[0];
       return [sentMsg];
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -276,7 +279,7 @@ class DbHandler {
       const draftMsg = rows[0];
       return [draftMsg];
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -317,7 +320,7 @@ class DbHandler {
       }
       return [{ message }];
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -331,7 +334,7 @@ class DbHandler {
 
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -345,7 +348,7 @@ class DbHandler {
       const rows = await this.getGroupMembers(payload.groupid);
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -357,7 +360,7 @@ class DbHandler {
         [member.userid, group.id]);
       return [{ message: `member has been deleted from ${group.name}` }];
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -374,7 +377,7 @@ class DbHandler {
       `, [id]);
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -386,7 +389,7 @@ class DbHandler {
         [group.id]);
       return [{ message: `${group.name} has been deleted` }];
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -416,7 +419,7 @@ class DbHandler {
       const message = _.pick(result.rows[0], ['id', 'createdOn', 'message', 'parentMessageId', 'subject', 'status']);
       return [message];
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -429,7 +432,7 @@ class DbHandler {
       [group.name, id]);
       return rows;
     } catch (err) {
-      winston.error(err);
+      console.error(err);
       return 500;
     }
   }
@@ -450,6 +453,8 @@ class DbHandler {
       recoveryemail VARCHAR(30),
       phonenumber VARCHAR(30),
       dp TEXT,
+      resettoken TEXT,
+      resetexpire TEXT,
       password TEXT
     );
     CREATE TYPE _status as enum('read', 'unread', 'draft');

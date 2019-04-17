@@ -1,59 +1,61 @@
+/* eslint-disable no-undef */
 (() => {
-  const toggleLoader = () => {
-    const loader = document.querySelector('.loader');
-    const resp = document.querySelector('.resp');
-    if (loader.classList.contains('gone')) {
-      loader.classList.remove('gone');
-      resp.classList.add('gone');
-    } else {
-      loader.classList.add('gone');
-      resp.classList.remove('gone');
-    }
+  localStorage.clear();
+  const validateToken = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    /* if (!token) return; */
+    server(
+      `auth/reset?token=${token}`,
+      'GET',
+      {},
+      (res) => {
+        try {
+          const { email, id } = res.data[0];
+          switchClass('.wrapper', 'gone', 'remove');
+          switchClass('.loader', 'gone', 'add');
+          switchClass('.loadmodal', 'gone', 'add');
+          console.log(email, id);
+        } catch (e) {
+          switchClass('.loader', 'gone', 'add');
+          document.querySelector('.loadMsg').textContent = res.error;
+        }
+      },
+      (err) => {
+        switchClass('.loader', 'gone', 'add');
+        document.querySelector('.loadMsg').textContent = 'Connection Failed';
+        console.log(err);
+      },
+    );
   };
+  validateToken();
   document.querySelector('button').addEventListener('click', () => {
-    document.querySelector('.submit').disabled = true;
     toggleLoader();
-    const email = document.querySelector('input[name="email"]').value;
-    const phoneNumber = document.querySelector('input[name="phoneNumber"]').value;
-    const password = document.querySelector('input[name="password"]').value;
-    const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
-    if (confirmPassword !== password) {
-      document.querySelector('.submit').disabled = false;
-      document.querySelector('.resp').textContent = 'password mismatch, confirm password';
-      toggleLoader();
-      return;
-    }
-    if (password === '') {
-      document.querySelector('.submit').disabled = false;
-      toggleLoader();
-      document.querySelector('.resp').textContent = 'empty password';
-      return;
-    }
-    /* fetch(endpoint{
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json"
-            },
-          body: JSON.stringify(data)
-        }).then((res)=>{
-            console.log(res);
-        }); */
-    window.setTimeout(() => { /* API call is digused with setTimer
-        function to view loader.gif and REST response message */
-      toggleLoader();
-      document.querySelector('.resp').textContent = 'password reset successfull';
-      document.querySelector('.submit').disabled = false;
-      /* console.log(email, password, phoneNumber); */
-    }, 3000);
-  });
-  const inputs = document.querySelectorAll('.input-group input');
+    const formObj = formToJson(document.querySelector('.form-hd'));
 
-  inputs.forEach((input) => {
-    input.addEventListener('focusin', (event) => {
-      event.target.parentNode.querySelector('label').classList.add('show');
-    });
-    input.addEventListener('focusout', (event) => {
-      event.target.parentNode.querySelector('label').classList.remove('show');
-    });
+    server(
+      'users/save',
+      'PATCH',
+      formObj,
+      (res) => {
+        try {
+          const { firstname } = res.data[0];
+          document.querySelector('.resp').textContent = 'Password successfully changed';
+          setTimeout(() => {
+            window.location.href = './signIn.html';
+          }, 2000);
+          console.log(firstname);
+        } catch (e) {
+          console.log(res);
+          document.querySelector('.resp').textContent = res.error;
+        }
+        toggleLoader();
+      },
+      (err) => {
+        toggleLoader();
+        document.querySelector('.resp').textContent = 'Failed to Fetch';
+        console.log(err);
+      },
+    );
   });
 })();

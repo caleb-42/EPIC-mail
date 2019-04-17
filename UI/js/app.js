@@ -206,5 +206,5 @@ const contactOptions = (obj) => {
   document.querySelector('.userdp').setAttribute('src', localStorage.getItem('dp'));
   document.querySelector('.userEmail').textContent = localStorage.getItem('email');
   document.querySelector('.userPhone').textContent = localStorage.getItem('phoneNumber');
-  /* document.querySelector('.userRecoveryEmail').textContent = localStorage.getItem('recoveryEmail'); */
+  document.querySelector('.userRecoveryEmail').textContent = localStorage.getItem('recoveryEmail');
 })();

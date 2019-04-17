@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(30),
   recoveryemail VARCHAR(30),
   phonenumber VARCHAR(30),
+  resettoken TEXT,
+  resetexpire TEXT,
   password TEXT
 );
 

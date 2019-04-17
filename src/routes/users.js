@@ -4,6 +4,7 @@ import date from 'date-and-time';
 import dbHandler from '../database/dbHandler';
 import error from '../middleware/error';
 import auth from '../middleware/auth';
+import utilities from '../utilities';
 
 const router = express.Router();
 const fileFilter = (req, file, cb) => {
@@ -28,10 +29,23 @@ router.get('/contacts', auth, async (req, res, next) => {
 }, error);
 
 router.patch('/save', auth, upload.single('userDp'), async (req, res, next) => {
-  console.log(req.file);
-  /* const path = `http://localhost:3000/${req.file.destination}${req.file.filename}`; */
-  const path = `https://epic-mail-application.herokuapp.com/${req.file.destination}${req.file.filename}`;
-  const users = await dbHandler.storeUserDp(req.user.id, path);
+  const newInfo = {};
+  if (req.body) {
+    const err = utilities.validateUserUpdate(req.body).error;
+    console.log(err);
+    if (err) {
+      req.error = { status: 400, error: err.details[0].message };
+      return next();
+    }
+    newInfo.password = req.body.password;
+  }
+  if (req.file) {
+    const path = `https://epic-mail-application.herokuapp.com/${req.file.destination}${req.file.filename}`;
+    /* const path = `http://localhost:3000/${req.file.destination}${req.file.filename}`; */
+    newInfo.dp = path;
+  }
+  const users = await dbHandler.updateUser(req.user.id, newInfo);
+  console.log(users);
   if (users === 500) return next();
   return res.status(200).json({ status: 200, data: users });
 }, error);
