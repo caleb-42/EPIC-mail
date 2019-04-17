@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+let reset = false;
 (() => {
   localStorage.clear();
   document.querySelector('button').addEventListener('click', () => {
@@ -6,13 +7,20 @@
     const emailAddress = document.querySelector('input[name="email"]').value;
     const password = document.querySelector('input[name="password"]').value;
 
+    const endpoint = reset ? 'auth/reset' : 'auth/login';
+    const payload = reset ? { email: emailAddress } : { email: emailAddress, password };
+
     server(
-      'auth/login',
+      endpoint,
       'POST',
-      { email: emailAddress, password },
+      payload,
       (res) => {
         toggleLoader();
         try {
+          if (reset) {
+            document.querySelector('.resp').textContent = res.data[0].message;
+            return;
+          }
           // eslint-disable-next-line no-unused-vars
           const {
             firstName, lastName, email,
@@ -47,5 +55,15 @@
     input.addEventListener('focusout', (event) => {
       event.target.parentNode.querySelector('label').classList.remove('show');
     });
+  });
+  document.querySelector('.reset').addEventListener('click', () => {
+    reset = !reset;
+    switchClass('.passInp', 'gone');
+    const resetmsg = document.querySelector('.resetmsg');
+    resetmsg.innerHTML = resetmsg.innerHTML === 'Forgot password ? ' ? '' : 'Forgot password ? ';
+    const dis = document.querySelector('.reset');
+    dis.innerHTML = dis.innerHTML === 'reset password' ? 'sign in' : 'reset password';
+    const submitBtn = document.querySelector('.submit');
+    submitBtn.innerHTML = submitBtn.innerHTML === 'sign in' ? 'reset link' : 'sign in';
   });
 })();

@@ -7,46 +7,47 @@
     <title>Epic mail</title>
     <link href="https://fonts.googleapis.com/css?family=Lato|Nunito" rel="stylesheet">
     <link rel="stylesheet" href="./css/reset.css">
-    <link rel="stylesheet" href="./css/utilities.css"> 
+    <link rel="stylesheet" href="./css/utilities.css">   
 </head>
     <body>
-        <div class="wrapper ovflo-y">
+        <div class="wrapper ws-100 hs-100 gone">
             <div class = "sidebar float-left">
                 <div class="logo"></div>
                 <div class="pic"></div>
             </div>
-            <div class="main float-right flexdiv flex-center">
+            <div class="main float-right flexdiv flex-center ovflo-y">
                 <div class="main-body">
-                    <div class="title"><p>RESET PASSWORD</p></div>
+                    <div class="title"><p>Reset Password</p></div>
                     <form class="form-hd text-center" action="" autocomplete="off">
-                        <div class="input-group">
-                            <label class="email anim">Registered Email</label>
-                            <input required id="email" class="inputs opac-70" name="email" />
-                        </div>
-                        <div class="input-group">
-                            <label class="phoneNumber anim">Registered Phone Number</label>
-                            <input required type="number" id="phoneNumber" onkeydown="javascript: return event.keyCode !=69 && event.keyCode !=189 && event.keyCode !=109 && event.keyCode !=190" class="inputs opac-70" name="phoneNumber" />
-                        </div>
                         <div class="input-group">
                             <span class="input-sub-group float-left">
                                 <label class="password anim">Password</label>
-                                <input required type = "password" id="password" class="inputs opac-70 w-100" name="password" />
+                                <input required type = "password" placeholder = "Password" id="password" class="inputs opac-70 w-100" name="password" />
                             </span>
                             <span class="input-sub-group float-right">
                                 <label class="confirm-password anim">Confirm Password</label>
-                                <input required type = "password" id="confirm_password" class="inputs opac-70 w-100" name="confirm_password" />
+                                <input required type = "password" placeholder = "Confirm Password" id="confirm_password" class="inputs opac-70 w-100" name="confirmPassword" />
                             </span>
                             <div class="clr"></div>
                         </div>
+                    </form>
+                    <div class="btnresp">
                         <button type="button" class="submit anim">reset</button>
-                        <p class="">Go back to sign in page? <a href="./signIn.html" class = "fw-600 pointer">sign&nbsp;in</a></p>
+                        <p class="">have an account? <a href="./signIn.html" class = "fw-600 pointer">sign&nbsp;in</a></p>
                         <h3 class="resp">&nbsp;</h3>
                         <div class="loader gone"></div>
-                    </form>
+                    </div>
                 </div>
             </div>
             <div class="clr"></div>
         </div> 
+        <div class="loadmodal ws-100 hs-100 centercon">
+            <div class="loadinfo center">
+            <div class="loader"></div>
+            <h4 class="mx-auto text-center loadMsg">Validating token</h4>
+            </div>
+        </div>
+        <script src="./js/utilities.js"></script> 
         <script src="./js/reset.js"></script> 
     </body>
 </html>
