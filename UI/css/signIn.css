@@ -57,7 +57,7 @@ body {
     font-weight: 600;
     padding-bottom: .8em;
 }
-.form-hd .input-group label.show{
+.form-hd .input-group.show , .form-hd .input-sub-group.show label{
     color: rgba(229, 255, 255, 1);
     font-weight: 600;
 }
@@ -65,7 +65,7 @@ body {
     margin:0 auto 2em;
     text-align: center;
 }
-.form-hd .input-group label.show{
+.form-hd .input-group.show label, .form-hd .input-sub-group.show label{
     color: rgba(229, 255, 255, 1);
     font-weight: 600;
 }

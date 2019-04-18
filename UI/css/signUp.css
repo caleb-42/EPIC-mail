@@ -80,14 +80,22 @@ body{
     height: 5%;
 }
 .form-hd .input-group{
-    margin:0 auto .8em;
+    margin:0 auto;
     text-align: center;
+    transition: .5s all ease-in;
+}
+.form-hd .input-group.show{
+    margin:0 auto .5em;
 }
 .form-hd .input-sub-group{
     width: 100%;
 }
 .form-hd .input-sub-group:nth-child(1), .form-hd .input-sub-group:nth-child(4){
-    margin-bottom: 1rem;
+    margin-bottom: 0;
+    transition: .5s all ease-in;
+}
+.form-hd .input-sub-group.show:nth-child(1), .form-hd .input-sub-group.show:nth-child(4){
+    margin-bottom: .5rem;
 }
 .form-hd .input-group label{
     font-size: .8rem;
@@ -98,8 +106,8 @@ body{
     opacity: 0;
     padding-bottom: -1.5em;
 }
-.form-hd .input-group label.show{
-    padding-bottom: .5em;
+.form-hd .input-group.show label, .form-hd .input-sub-group.show label{
+    padding: 1rem 0 .5em;
     opacity: 1;
     color: rgba(40, 202, 94, 0.9);
     font-weight: 600;
@@ -119,6 +127,7 @@ body{
     font-size: 1.1rem;
     border-radius: 1em;
     width:35%;
+    margin-top: .7rem; 
     padding:.5rem .7em;
 }
 .main-body .btnresp button:hover{
@@ -140,10 +149,20 @@ body{
 }
 @media (min-width: 576px) {
     .form-hd .input-group input{
-        font-size: 1rem;
+        font-size: .8rem;
+        padding: .7rem
     }
     .btnresp{
         height: 20%;
+    }
+    .form-hd .input-group.show, .form-hd .input-group {
+        margin-bottom: .8rem;
+    }
+    .form-hd .input-sub-group.show:nth-child(1), .form-hd .input-sub-group.show:nth-child(4){
+        margin-bottom: 0;
+    }
+    .form-hd .input-group.show label, .form-hd .input-sub-group.show label{
+        padding: 0;
     }
     .form-hd{
         width:100%;
@@ -163,7 +182,7 @@ body{
         padding-bottom: .8em;
         opacity: 1;
     }
-    .form-hd .input-group label.show{
+    .form-hd .input-group.show label, .form-hd .input-sub-group.show label{
         color: rgba(40, 202, 94, 0.9);
         padding-bottom: .8em;
     }

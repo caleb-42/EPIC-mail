@@ -30,9 +30,9 @@ router.get('/contacts', auth, async (req, res, next) => {
 
 router.patch('/save', auth, upload.single('userDp'), async (req, res, next) => {
   const newInfo = {};
-  if (req.body) {
+  if (!req.file) {
     const err = utilities.validateUserUpdate(req.body).error;
-    console.log(err);
+    /* console.log(err); */
     if (err) {
       req.error = { status: 400, error: err.details[0].message };
       return next();
@@ -45,7 +45,6 @@ router.patch('/save', auth, upload.single('userDp'), async (req, res, next) => {
     newInfo.dp = path;
   }
   const users = await dbHandler.updateUser(req.user.id, newInfo);
-  console.log(users);
   if (users === 500) return next();
   return res.status(200).json({ status: 200, data: users });
 }, error);

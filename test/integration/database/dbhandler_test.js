@@ -53,6 +53,21 @@ describe('DATABASE METHODS', () => {
       expect(decoded).to.have.property('id');
     });
   });
+  describe('Find User', () => {
+    it('should return user arguments are valid ', async () => {
+      const res = await dbHandler.find('users', user1, ['email']);
+      expect(res).to.be.an('object');
+      expect(res).to.have.any.keys('firstname', 'id', 'lastname');
+    });
+  });
+  describe('Update User', () => {
+    it('should return user info if user update infomation is valid ', async () => {
+      const res = await dbHandler.updateUser(1, { password: 'ewere' });
+      expect(res).to.be.an('array');
+      expect(res[0]).to.be.an('object');
+      expect(res[0]).to.have.any.keys('firstname', 'email', 'lastname', 'phonenumber');
+    });
+  });
   describe('Send Message', () => {
     it('should return mail sent if message is valid', async () => {
       const res = await dbHandler.sendMessage(msg);
@@ -222,7 +237,7 @@ describe('DATABASE METHODS', () => {
       expect(resp[0]).to.have.any.keys('id', 'name');
     });
   });
-  describe('Delete group name', () => {
+  describe('Delete group', () => {
     it('should Delete if id is valid', async () => {
       await dbHandler.resetDb();
       await dbHandler.createUser(user1);

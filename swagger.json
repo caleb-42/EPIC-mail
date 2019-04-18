@@ -28,6 +28,20 @@
             "description": "file to upload",
             "required": false,
             "type": "file"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "password to update",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "confirmPassword",
+            "in": "formData",
+            "description": "confirm password to update",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -81,15 +95,24 @@
           "auth"
         ],
         "summary": "Gets Authorization",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "description": "Signs in User.",
         "parameters": [
           {
-            "name": "user",
-            "in": "body",
-            "description": "The user to Authorize.",
-            "schema": {
-              "$ref": "#/definitions/SendAuthData"
-            }
+            "name": "email",
+            "in": "formData",
+            "description": "password to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "user password",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -130,6 +153,70 @@
             "description": "User succesfully sign in and receives a token.",
             "schema": {
               "$ref": "#/definitions/returnNewUserData"
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "send password reset message",
+        "description": "send password reset message to recovery mail",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "The email to reset password for.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User succesfully sign in and receives a token.",
+            "schema": {
+              "$ref": "#/definitions/returnResetSent"
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/returnError"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "validate password reset token",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "password reset token.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "token successfully validated.",
+            "schema": {
+              "$ref": "#/definitions/returnResetConfirm"
             }
           },
           "400": {
@@ -560,15 +647,16 @@
         ],
         "summary": "create a group",
         "description": "Creates a group.",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
+            "in": "formData",
+            "name": "name",
+            "type": "string",
             "description": "Created new group",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GroupName"
-            }
+            "required": true
           }
         ],
         "responses": {
@@ -627,15 +715,16 @@
         ],
         "summary": "Add user to a group",
         "description": "adds a user to a group.",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
-            "in": "body",
-            "name": "new member",
+            "in": "formData",
+            "name": "email",
+            "type": "string",
             "description": "user to be added to group",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/NewGroupMember"
-            }
+            "required": true
           }
         ],
         "responses": {
@@ -700,12 +789,12 @@
         ],
         "summary": "Update group name",
         "description": "updates the name of a group by id",
-        "operationId": "patchgroup",
-        "consumes": [
-          "application/json"
-        ],
+        "operationId": "patchgroupjson",
         "produces": [
           "application/json"
+        ],
+        "consumes": [
+          "multipart/form-data"
         ],
         "parameters": [
           {
@@ -716,13 +805,11 @@
             "type": "integer"
           },
           {
-            "in": "body",
-            "name": "body",
-            "description": "Updated message object",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/GroupName"
-            }
+            "in": "formData",
+            "name": "name",
+            "type": "string",
+            "description": "group name to change to",
+            "required": true
           }
         ],
         "responses": {
@@ -846,6 +933,34 @@
     }
   },
   "definitions": {
+    "ResetConfirm": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Tag"
+      }
+    },
+    "ResetSent": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Tag"
+      }
+    },
     "GroupMemberData": {
       "type": "object",
       "properties": {
@@ -880,17 +995,6 @@
         "name": "Tag"
       }
     },
-    "NewGroupMember": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "Tag"
-      }
-    },
     "SendMessage": {
       "type": "object",
       "properties": {
@@ -904,17 +1008,6 @@
           "type": "string"
         },
         "parentMessageId": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "NewUserData"
-      }
-    },
-    "GroupName": {
-      "type": "object",
-      "properties": {
-        "name": {
           "type": "string"
         }
       },
@@ -1055,18 +1148,42 @@
         "name": "Tag"
       }
     },
-    "SendAuthData": {
+    "returnResetConfirm": {
       "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
       "properties": {
-        "email": {
-          "type": "string"
+        "status": {
+          "type": "integer",
+          "format": "int64"
         },
-        "password": {
-          "type": "string"
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResetConfirm"
+          }
         }
-      },
-      "xml": {
-        "name": "Tag"
+      }
+    },
+    "returnResetSent": {
+      "type": "object",
+      "required": [
+        "status",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResetSent"
+          }
+        }
       }
     },
     "returnGroupMemberData": {

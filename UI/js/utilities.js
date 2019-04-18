@@ -61,12 +61,12 @@ const labelShow = () => {
   inputs.forEach((input) => {
     input.addEventListener('focusin', (event) => {
       try {
-        event.target.parentNode.querySelector('label').classList.add('show');
+        event.target.parentNode/* .querySelector('label') */.classList.add('show');
       } catch (e) { console.log(e); }
     });
     input.addEventListener('focusout', (event) => {
       try {
-        event.target.parentNode.querySelector('label').classList.remove('show');
+        event.target.parentNode/* .querySelector('label') */.classList.remove('show');
       } catch (e) { console.log(e); }
     });
   });
