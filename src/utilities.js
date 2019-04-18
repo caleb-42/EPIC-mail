@@ -101,7 +101,6 @@ const helpers = {
           from: '+16572075039',
           to: `+234${stripZero}`,
         });
-      console.log(msgRes);
       return true;
     } catch (e) {
       console.log(e);

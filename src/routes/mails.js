@@ -97,15 +97,15 @@ router.post('/', auth, async (req, res, next) => {
   }
   req.body.receiverId = user.id;
   req.body.senderId = req.user.id;
-  const msg = await dbHandler.sendMessage(req.body);
-  if (msg === 500) return next();
   if (req.body.sendsms) {
     const sms = await utility.sendsms(user.phonenumber, req.body);
     if (!sms) {
-      req.error = { status: 400, error: 'receiver has an invalid phone number' };
+      req.error = { status: 400, error: 'receiver phone number is not verified by twilio' };
       return next();
     }
   }
+  const msg = await dbHandler.sendMessage(req.body);
+  if (msg === 500) return next();
   res.status(201).json({ status: 201, data: msg });
 }, error);
 

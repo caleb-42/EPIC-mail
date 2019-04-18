@@ -1,9 +1,17 @@
 /* eslint-disable no-undef */
 (() => {
   localStorage.clear();
+  getUrlParameter = (name) => {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    const regex = new RegExp(`[\\?&]${name}=([^&#]*)`);
+    const results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+  };
   const validateToken = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
+    /* const urlParams = new URLSearchParams(window.location.search);
+    const token1 = urlParams.get('token'); */
+    const token = getUrlParameter('token');
+    console.log(token);
     /* if (!token) return; */
     server(
       `auth/reset?token=${token}`,

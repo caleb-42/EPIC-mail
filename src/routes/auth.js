@@ -34,7 +34,7 @@ router.post('/login', async (req, res, next) => {
     return next();
   }
   res.cookie('token', token, {
-    httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000,
+    maxAge: 2 * 60 * 60 * 1000,
   });
   return res.status(200).json({
     status: 200,
@@ -71,7 +71,7 @@ router.post('/signup', async (req, res, next) => {
   if (token === 500) return next();
   const user = await dbHandler.find('users', req.body, ['email']);
   res.cookie('token', token, {
-    httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000,
+    maxAge: 2 * 60 * 60 * 1000,
   });
   return res.status(201).json({
     status: 201,
@@ -99,7 +99,7 @@ router.post('/reset', async (req, res, next) => {
   if (userPresent === 500) return next();
   /* console.log(userPresent, req.body); */
   if (!userPresent) {
-    req.error = { status: 400, error: 'email not found' };
+    req.error = { status: 404, error: 'email not found' };
     return next();
   }
   const resettoken = crypto.randomBytes(20).toString('hex');
@@ -128,7 +128,6 @@ router.post('/reset', async (req, res, next) => {
       req.error = { status: 501, error: 'The message failed to send' };
       return next();
     }
-    console.log(`response ${resp}`);
     return res.status(200).json({
       status: 200,
       data: [{
