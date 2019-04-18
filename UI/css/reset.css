@@ -38,7 +38,7 @@ body{
     padding: .8rem;
     height: fit-content;
     /* background: rgba(180, 29, 87, .8); */
-    margin: 1em auto 0;
+    margin: 1em auto 2rem;
     width:fit-content;
     border-radius: .5em;
 }
@@ -90,7 +90,7 @@ body{
     height: 5%;
 }
 .form-hd .input-group{
-    margin:0 auto .8em;
+    margin:0 auto 1.7em;
     text-align: center;
 }
 .form-hd .input-sub-group{
@@ -108,7 +108,7 @@ body{
     opacity: 0;
     padding-bottom: -1.5em;
 }
-.form-hd .input-group label.show{
+.form-hd .input-group.show label, .form-hd .input-sub-group.show label{
     padding-bottom: .5em;
     opacity: 1;
     color: rgba(40, 202, 94, 0.9);
@@ -159,6 +159,9 @@ body{
         width:100%;
         margin: 1em auto;
     }
+    .form-hd .input-group{
+        width: 60%;
+    }
     .main-body button{
         width:25%;
         font-size: 1.2rem;
@@ -173,7 +176,7 @@ body{
         padding-bottom: .8em;
         opacity: 1;
     }
-    .form-hd .input-group label.show{
+    .form-hd .input-group.show label, .form-hd .input-sub-group.show label{
         color: rgba(40, 202, 94, 0.9);
         padding-bottom: .8em;
     }

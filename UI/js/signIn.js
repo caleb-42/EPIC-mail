@@ -60,7 +60,7 @@ let reset = false;
     reset = !reset;
     switchClass('.passInp', 'gone');
     const resetmsg = document.querySelector('.resetmsg');
-    resetmsg.innerHTML = resetmsg.innerHTML === 'Forgot password ? ' ? '' : 'Forgot password ? ';
+    resetmsg.innerHTML = resetmsg.innerHTML === 'Forgot password ? ' ? 'Go back to &nbsp;' : 'Forgot password ? ';
     const dis = document.querySelector('.reset');
     dis.innerHTML = dis.innerHTML === 'reset password' ? 'sign in' : 'reset password';
     const submitBtn = document.querySelector('.submit');

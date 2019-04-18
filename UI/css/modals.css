@@ -142,7 +142,7 @@
     opacity: 0;
     padding-bottom: -1.5em;
 }
-.form-hd .input-group label.show {
+.form-hd .input-group.show label, .form-hd .input-sub-group.show label {
     opacity: 1;
     padding: .5em 0;
     color: rgba(40, 202, 94, 0.9);

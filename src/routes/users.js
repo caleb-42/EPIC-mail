@@ -30,7 +30,7 @@ router.get('/contacts', auth, async (req, res, next) => {
 
 router.patch('/save', auth, upload.single('userDp'), async (req, res, next) => {
   const newInfo = {};
-  if (req.body) {
+  if (!req.file) {
     const err = utilities.validateUserUpdate(req.body).error;
     console.log(err);
     if (err) {

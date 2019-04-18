@@ -34,7 +34,7 @@ router.post('/login', async (req, res, next) => {
     return next();
   }
   res.cookie('token', token, {
-    httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000,
+    maxAge: 2 * 60 * 60 * 1000,
   });
   return res.status(200).json({
     status: 200,
@@ -71,7 +71,7 @@ router.post('/signup', async (req, res, next) => {
   if (token === 500) return next();
   const user = await dbHandler.find('users', req.body, ['email']);
   res.cookie('token', token, {
-    httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000,
+    maxAge: 2 * 60 * 60 * 1000,
   });
   return res.status(201).json({
     status: 201,
@@ -146,6 +146,7 @@ router.get('/reset', async (req, res, next) => {
   }
   const { token } = req.query;
   const userPresent = await dbHandler.find('users', { resettoken: token }, ['resettoken']);
+  console.log(userPresent);
   if (userPresent === 500) return next();
   if (!userPresent) {
     req.error = { status: 400, error: 'Password reset link is invalid or has expired' };
@@ -153,6 +154,7 @@ router.get('/reset', async (req, res, next) => {
   }
   const { resetexpire } = userPresent;
   const now = Date.now();
+  console.log(Number(resetexpire) < now, Number(resetexpire), now);
   if (Number(resetexpire) < now) {
     req.error = { status: 400, error: 'Password reset link is invalid or has expired' };
     return next();
