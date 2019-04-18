@@ -34,13 +34,13 @@ describe('USER API ENDPOINTS', () => {
       message: 'its so wonderful to be part of this app',
     };
   });
-  afterEach(async () => {
+  after(async () => {
     await dbHandler.resetDb();
     server.close();
   });
   describe('Get Contacts', () => {
     it('should not get contacts if user has no token', async () => {
-      const res = await request(server).get('/api/v1/messages/1').set('Cookie', ['token=""']);
+      const res = await request(server).get('/api/v1/users/contacts').set('Cookie', ['token=""']);
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(401);
       expect(res.body).to.have.property('error');
@@ -61,6 +61,18 @@ describe('USER API ENDPOINTS', () => {
       expect(res.body).to.not.have.property('error');
       expect(res.body.data).to.be.a('array');
       expect(res.body.data).to.have.lengthOf(1);
+    });
+  });
+  describe('Update User Info', () => {
+    it('should update user with valid token', async () => {
+      const signin = await request(server).post('/api/v1/auth/login').send({ email: 'ewere@epicmail.com', password: 'admin123' });
+      const { token } = signin.body.data[0];
+      const res = await request(server).patch('/api/v1/users/save').set('Cookie', [`token=${token}`]).send({ password: '12345', confirmPassword: '12345' });
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.be.equal(200);
+      expect(res.body).to.have.property('data');
+      expect(res.body).to.not.have.property('error');
+      expect(res.body.data).to.be.a('array');
     });
   });
 });

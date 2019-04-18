@@ -99,7 +99,7 @@ router.post('/reset', async (req, res, next) => {
   if (userPresent === 500) return next();
   /* console.log(userPresent, req.body); */
   if (!userPresent) {
-    req.error = { status: 400, error: 'email not found' };
+    req.error = { status: 404, error: 'email not found' };
     return next();
   }
   const resettoken = crypto.randomBytes(20).toString('hex');
@@ -128,7 +128,6 @@ router.post('/reset', async (req, res, next) => {
       req.error = { status: 501, error: 'The message failed to send' };
       return next();
     }
-    console.log(`response ${resp}`);
     return res.status(200).json({
       status: 200,
       data: [{
@@ -146,7 +145,6 @@ router.get('/reset', async (req, res, next) => {
   }
   const { token } = req.query;
   const userPresent = await dbHandler.find('users', { resettoken: token }, ['resettoken']);
-  console.log(userPresent);
   if (userPresent === 500) return next();
   if (!userPresent) {
     req.error = { status: 400, error: 'Password reset link is invalid or has expired' };
@@ -154,7 +152,6 @@ router.get('/reset', async (req, res, next) => {
   }
   const { resetexpire } = userPresent;
   const now = Date.now();
-  console.log(Number(resetexpire) < now, Number(resetexpire), now);
   if (Number(resetexpire) < now) {
     req.error = { status: 400, error: 'Password reset link is invalid or has expired' };
     return next();
