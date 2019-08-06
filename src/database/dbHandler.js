@@ -1,27 +1,15 @@
-import dotenv from 'dotenv';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import { Pool } from 'pg';
 import date from 'date-and-time';
+import { database } from '../vars';
 import helper from '../utilities';
-
-dotenv.config();
 
 class DbHandler {
   constructor() {
-    if (process.env.NODE_ENV === 'production') {
-      this.pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-      });
-    } else {
-      this.pool = new Pool({
-        user: process.env.DBUSERNAME,
-        host: 'localhost',
-        database: process.env.DBNAME,
-        password: process.env.DBPASS,
-        port: 5432,
-      });
-    }
+    this.pool = new Pool({
+      connectionString: database.uri,
+    });
   }
 
   async find(table, body, query, key = null) {
@@ -47,13 +35,13 @@ class DbHandler {
     /* create user using in user table */
     newUser.dp = 'https://epic-mail-application.herokuapp.com/uploads/2019-04-14dp.png';
     /* newUser.dp = 'http://localhost:3000/uploads/2019-04-14dp.png'; */
-    const user = _.pick(newUser, ['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'dp', 'recoveryEmail']);
+    const user = _.pick(newUser, ['email', 'password', 'dp', 'recoveryEmail', 'firstName', 'lastName']);
     try {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(user.password, salt);
       const { rows } = await this.pool.query(`INSERT INTO users (
-        firstName, lastName, email, phoneNumber, password, dp, recoveryEmail) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`, Object.values(user));
+        email, password, dp, recoveryEmail, firstName, lastName) 
+        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`, Object.values(user));
       const createdUser = rows[0];
       const token = helper.generateJWT(createdUser);
       return token;
@@ -166,7 +154,7 @@ class DbHandler {
         WHERE messages.id = $1
         AND ((messages.receiverid = $2 AND messages.visible != $3)
         OR (messages.senderid = $4 AND messages.visible != $5))`,
-      [findMsg.id, userId, 'sender', userId, 'receiver']);
+        [findMsg.id, userId, 'sender', userId, 'receiver']);
 
       if (rows.length === 0) return rows;
       if (rows[0].receiverid === userId) {
@@ -200,7 +188,7 @@ class DbHandler {
 
       const { rows } = await this.pool.query(`UPDATE messages SET message = $1, receiverid = $2, subject = $3
       WHERE (id = $4) RETURNING *`,
-      [message, receiverId, subject, msg.id]);
+        [message, receiverId, subject, msg.id]);
 
       const msgId = await this.getMessageById(rows[0], rows[0].senderid);
 
@@ -226,7 +214,7 @@ class DbHandler {
         createdOn, sentTime, message, parentMessageId,
         receiverid, subject, senderid, status, visible
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-      Object.values(message));
+        Object.values(message));
 
       if (msg.parentMessageId) {
         const parentMsgRes = await this.pool.query('UPDATE messages SET status = $1 WHERE (id = $2) RETURNING *',
@@ -275,7 +263,7 @@ class DbHandler {
         createdOn, sentTime, message, parentMessageId,
         receiverid, subject, senderid, status, visible
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-      Object.values(message));
+        Object.values(message));
       const draftMsg = rows[0];
       return [draftMsg];
     } catch (err) {
@@ -413,7 +401,7 @@ class DbHandler {
           createdOn, message, parentMessageId,
           receiverid, subject, senderid, status, senttime, visible
           ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-        [msg.createdOn, msg.message, msg.parentMessageId,
+          [msg.createdOn, msg.message, msg.parentMessageId,
           groupMembers[i].id, msg.subject, msg.senderid, msg.status, msg.sentTime, 'all']);
       }
       const message = _.pick(result.rows[0], ['id', 'createdOn', 'message', 'parentMessageId', 'subject', 'status']);
@@ -429,7 +417,7 @@ class DbHandler {
     try {
       const { rows } = await this.pool.query(`UPDATE groups SET name = $1
       WHERE (id = $2) RETURNING *`,
-      [group.name, id]);
+        [group.name, id]);
       return rows;
     } catch (err) {
       console.error(err);

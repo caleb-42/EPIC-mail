@@ -41,7 +41,7 @@ describe('MAILS API ENDPOINTS', () => {
   const validToken = async (endpoint) => {
     const res = await request(server).post('/api/v1/auth/signup').send(user1);
     const { token } = res.body.data[0];
-    const messages = await request(server).get(endpoint).set('Cookie', [`token=${token}`]);
+    const messages = await request(server).get(endpoint).set('x-auth-token', token);
     expect(messages.body).to.have.property('status');
     expect(messages.body.status).to.be.equal(200);
     expect(messages.body).to.have.property('data');
@@ -51,10 +51,10 @@ describe('MAILS API ENDPOINTS', () => {
   const noToken = async (endpoint, method = 'get') => {
     const token = '';
     let res;
-    if (method === 'get') res = await request(server).get(endpoint).set('Cookie', [`token=${token}`]);
-    if (method === 'post') res = await request(server).post(endpoint).send(sentMsg).set('Cookie', [`token=${token}`]);
-    if (method === 'delete') res = await request(server).delete(endpoint).set('Cookie', [`token=${token}`]);
-    if (method === 'update') res = await request(server).patch(endpoint).send(updateMsg).set('Cookie', [`token=${token}`]);
+    if (method === 'get') res = await request(server).get(endpoint).set('x-auth-token', token);
+    if (method === 'post') res = await request(server).post(endpoint).send(sentMsg).set('x-auth-token', token);
+    if (method === 'delete') res = await request(server).delete(endpoint).set('x-auth-token', token);
+    if (method === 'update') res = await request(server).patch(endpoint).send(updateMsg).set('x-auth-token', token);
     expect(res.body).to.have.property('status');
     expect(res.body.status).to.be.equal(401);
     expect(res.body).to.have.property('error');
@@ -150,7 +150,7 @@ describe('MAILS API ENDPOINTS', () => {
     it('should not get mail if id param is NaN', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
-      const resp = await request(server).get('/api/v1/messages/d').set('Cookie', [`token=${token}`]);
+      const resp = await request(server).get('/api/v1/messages/d').set('x-auth-token', token);
       error(resp, 400, 'param IDs must be numbers');
     });
     it('should not release single mails to user with no authorization', async () => {
@@ -159,25 +159,25 @@ describe('MAILS API ENDPOINTS', () => {
       const wrongUser = await request(server).post('/api/v1/auth/signup').send(user3);
       const wrongUserToken = wrongUser.body.data[0].token;
       const { token } = res.body.data[0];
-      const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       const mgs = sentMessage.body.data[0];
-      const singleMessage = await request(server).get(`/api/v1/messages/${mgs.id}`).set('Cookie', [`token=${wrongUserToken}`]);
+      const singleMessage = await request(server).get(`/api/v1/messages/${mgs.id}`).set('x-auth-token', wrongUserToken);
       error(singleMessage, 401, 'you are not authorized to access this message');
     });
     it('should release single mails for valid user', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       const mgs = sentMessage.body.data[0];
-      const singleMessage = await request(server).get(`/api/v1/messages/${mgs.id}`).set('Cookie', [`token=${token}`]);
+      const singleMessage = await request(server).get(`/api/v1/messages/${mgs.id}`).set('x-auth-token', token);
       success(singleMessage, 200);
     });
     it('should not get single mail with invalid id', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      const singleMessage = await request(server).get('/api/v1/messages/6').set('Cookie', [`token=${token}`]);
+      const singleMessage = await request(server).get('/api/v1/messages/6').set('x-auth-token', token);
       error(singleMessage, 404, 'message ID does not exist');
     });
   });
@@ -189,21 +189,21 @@ describe('MAILS API ENDPOINTS', () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
       sentMsg.email = 'ewere@epicmail.com';
-      const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       error(messages, 400, 'user cannot send message to self');
     });
     it('should not send mail if receiver id is non existent', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
       sentMsg.email = 'polo@epicmail.com';
-      const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       error(messages, 404, 'receiver not found');
     });
     it('should send mail if user has valid token', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const messages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       success(messages, 201);
     });
   });
@@ -215,21 +215,21 @@ describe('MAILS API ENDPOINTS', () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
       sentMsg.email = 'ewere@epicmail.com';
-      const messages = await request(server).post('/api/v1/messages/save').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const messages = await request(server).post('/api/v1/messages/save').send(sentMsg).set('x-auth-token', token);
       error(messages, 400, 'user cannot send message to self');
     });
     it('should not save mail if receiver id is non existent', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
       sentMsg.email = 'polo@epicmail.com';
-      const messages = await request(server).post('/api/v1/messages/save').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const messages = await request(server).post('/api/v1/messages/save').send(sentMsg).set('x-auth-token', token);
       error(messages, 404, 'receiver not found');
     });
     it('should save mail if user has valid token', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      const messages = await request(server).post('/api/v1/messages/save').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const messages = await request(server).post('/api/v1/messages/save').send(sentMsg).set('x-auth-token', token);
       success(messages, 201);
     });
   });
@@ -240,16 +240,16 @@ describe('MAILS API ENDPOINTS', () => {
     it('should not get draft mail if id param is NaN', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
-      const resp = await request(server).post('/api/v1/messages/d').send(user).set('Cookie', [`token=${token}`]);
+      const resp = await request(server).post('/api/v1/messages/d').send(user).set('x-auth-token', token);
       error(resp, 400, 'param IDs must be numbers');
     });
     it('should send draft mail if user has valid token', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      const draftMsg = await request(server).post('/api/v1/messages/save').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const draftMsg = await request(server).post('/api/v1/messages/save').send(sentMsg).set('x-auth-token', token);
       /* console.log(draftMsg.body); */
-      const sentDraftMsg = await request(server).post(`/api/v1/messages/${draftMsg.body.data[0].id}`).set('Cookie', [`token=${token}`]);
+      const sentDraftMsg = await request(server).post(`/api/v1/messages/${draftMsg.body.data[0].id}`).set('x-auth-token', token);
       success(sentDraftMsg, 200);
     });
   });
@@ -261,16 +261,16 @@ describe('MAILS API ENDPOINTS', () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      const updatedMessage = await request(server).patch('/api/v1/messages/3').send(updateMsg).set('Cookie', [`token=${token}`]);
+      const updatedMessage = await request(server).patch('/api/v1/messages/3').send(updateMsg).set('x-auth-token', token);
       error(updatedMessage, 404, 'message ID does not exist');
     });
     it('should update single mails for valid user', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const sentMessage = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       const mgs = sentMessage.body.data[0];
-      const updatedMessage = await request(server).patch(`/api/v1/messages/${mgs.id}`).send(updateMsg).set('Cookie', [`token=${token}`]);
+      const updatedMessage = await request(server).patch(`/api/v1/messages/${mgs.id}`).send(updateMsg).set('x-auth-token', token);
       success(updatedMessage, 200);
     });
   });
@@ -281,16 +281,16 @@ describe('MAILS API ENDPOINTS', () => {
     it('should not delete mail if id param is NaN', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       const { token } = res.body.data[0];
-      const resp = await request(server).post('/api/v1/messages/d').send(user).set('Cookie', [`token=${token}`]);
+      const resp = await request(server).post('/api/v1/messages/d').send(user).set('x-auth-token', token);
       error(resp, 400, 'param IDs must be numbers');
     });
     it('should delete mail if user has valid token', async () => {
       const res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      const sentMessages = await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
+      const sentMessages = await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
       const delMessage = sentMessages.body.data[0];
-      const deleteMessages = await request(server).delete(`/api/v1/messages/${delMessage.id}`).set('Cookie', [`token=${token}`]);
+      const deleteMessages = await request(server).delete(`/api/v1/messages/${delMessage.id}`).set('x-auth-token', token);
       success(deleteMessages, 200);
       expect(deleteMessages.body.data[0].message).to.include('message has been retracted');
     });
@@ -299,7 +299,7 @@ describe('MAILS API ENDPOINTS', () => {
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
       const deleteMessages = await request(server)
-        .delete('/api/v1/messages/4').set('Cookie', [`token=${token}`]);
+        .delete('/api/v1/messages/4').set('x-auth-token', token);
       error(deleteMessages, 404, 'message ID does not exist');
     });
   });

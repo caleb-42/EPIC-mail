@@ -1,14 +1,14 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import joi from 'joi';
 import twilio from 'twilio';
 import naijaMobile from 'naija-phone-number';
-
-dotenv.config();
+import { auth, twilioAccount } from './vars';
 
 const helpers = {
 
-  generateJWT: user => jwt.sign({ id: user.id }, process.env.jwtPrivateKey),
+  generateJWT: user => jwt.sign({ id: user.id }, auth.jwtKey, {
+    expiresIn: '5h',
+  }),
 
   validateMsg: (msg) => {
     const schema = {
@@ -69,8 +69,8 @@ const helpers = {
       lastName: joi.string().trim().min(3).max(15)
         .required(),
       email: joi.string().trim().email().required(),
-      recoveryEmail: joi.string().trim().email().optional(),
-      phoneNumber: joi.number().required(),
+      recoveryEmail: joi.string().trim().email().required(),
+      phoneNumber: joi.number().optional(),
       password: joi.string().trim().min(5).max(255)
         .required(),
       confirmPassword: joi.any().valid(joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match with password' } } }),
@@ -90,12 +90,11 @@ const helpers = {
   sendsms: async (phoneNumber, req) => {
     if (!naijaMobile.isValid(phoneNumber)) return false;
     const stripZero = phoneNumber.substring(1);
-    /* console.log(process.env.twilioAccountSid, process.env.twilioAuthToken); */
-    const accountSid = process.env.twilioAccountSid;
-    const authToken = process.env.twilioAuthToken;
+    const accountSid = twilioAccount.id;
+    const authToken = twilioAccount.token;
     const client = twilio(accountSid, authToken);
     try {
-      const msgRes = await client.messages
+      await client.messages
         .create({
           body: `${req.subject} - ${req.message}`,
           from: '+16572075039',

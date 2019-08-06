@@ -1,11 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import dotenv from 'dotenv';
 import _ from 'lodash';
 import jwt from 'jsonwebtoken';
+import { auth } from '../../../src/vars';
 import dbHandler from '../../../src/database/dbHandler';
-
-dotenv.config();
 
 let user1;
 let user2;
@@ -48,7 +46,7 @@ describe('DATABASE METHODS', () => {
       const res = await dbHandler.createUser(user1);
       await dbHandler.createUser(user2);
       expect(res).to.be.a('string');
-      const decoded = jwt.verify(res, process.env.jwtPrivateKey);
+      const decoded = jwt.verify(res, auth.jwtKey);
       expect(decoded).to.be.an('object');
       expect(decoded).to.have.property('id');
     });
@@ -170,7 +168,7 @@ describe('DATABASE METHODS', () => {
     it('should create group if group is valid', async () => {
       await dbHandler.resetDb();
       const res = await dbHandler.createUser(user1);
-      const userToken = jwt.verify(res, process.env.jwtPrivateKey);
+      const userToken = jwt.verify(res, auth.jwtKey);
       const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: userToken.id });
       expect(newGroup).to.be.an('array');
       expect(newGroup[0]).to.have.any.keys('id', 'name', 'userid', 'role');
@@ -181,7 +179,7 @@ describe('DATABASE METHODS', () => {
     it('should add user to group if user and group are valid', async () => {
       await dbHandler.resetDb();
       const res = await dbHandler.createUser(user1);
-      const userToken = jwt.verify(res, process.env.jwtPrivateKey);
+      const userToken = jwt.verify(res, auth.jwtKey);
       const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: userToken.id });
       const newGroupUser = await dbHandler
         .groupAddUser({ groupid: newGroup[0].id, id: newGroup[0].userid });
@@ -193,7 +191,7 @@ describe('DATABASE METHODS', () => {
     it('should delete user from group if user and group are valid', async () => {
       await dbHandler.resetDb();
       const res = await dbHandler.createUser(user1);
-      const userToken = jwt.verify(res, process.env.jwtPrivateKey);
+      const userToken = jwt.verify(res, auth.jwtKey);
       const newGroup = await dbHandler.createGroup({ name: 'caleb', role: 'admin', userid: userToken.id });
       await dbHandler.groupAddUser({ groupid: newGroup[0].id, id: newGroup[0].userid });
       const groupuser = await dbHandler.find('users', { id: userToken.id }, ['id']);

@@ -1,12 +1,10 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import { auth } from '../vars';
 import dbHandler from '../database/dbHandler';
 
-dotenv.config();
-
-const auth = async (req, res, next) => {
-  /* const token = req.header('x-auth-token'); */
-  const { token } = req.cookies;
+const Auth = async (req, res, next) => {
+  const token = req.header('x-auth-token');
+  /* const { token } = req.cookies; */
   /* console.log(req.cookies); */
   if (!token) {
     return res.status(401).send({
@@ -14,7 +12,7 @@ const auth = async (req, res, next) => {
       error: 'Access denied, no token provided',
     });
   }
-  const decoded = jwt.verify(token, process.env.jwtPrivateKey);
+  const decoded = jwt.verify(token, auth.jwtKey);
   const user = await dbHandler.find('users', { id: decoded.id }, ['id']);
   if (!user) {
     return res.status(404).send({
@@ -32,4 +30,4 @@ const auth = async (req, res, next) => {
     });
   }
 };
-module.exports = auth;
+module.exports = Auth;
