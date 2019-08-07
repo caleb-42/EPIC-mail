@@ -8,12 +8,12 @@ describe('AUTH MIDDLEWARE UNIT TEST', () => {
   it('should populate req.user with the payload of a valid json web token', async () => {
     const token = helper.generateJWT({ id: 1 });
     const mockReq = {
-      header() {},
+      header() { },
     };
     const headerstub = sinon.stub(mockReq, 'header').returns(token);
     const req = mockReq;
     const res = {};
-    const next = () => {};
+    const next = () => { };
 
     auth(req, res, next);
     expect(req.user).to.be.an('object');
@@ -25,7 +25,7 @@ describe('AUTH MIDDLEWARE UNIT TEST', () => {
   it('should call the next function if user is valid', async () => {
     const token = helper.generateJWT({ id: 1 });
     const mockReq = {
-      header() {},
+      header() { },
     };
     sinon.stub(mockReq, 'header').returns(token);
     const req = mockReq;
@@ -35,4 +35,5 @@ describe('AUTH MIDDLEWARE UNIT TEST', () => {
     auth(req, res, next);
     expect(next.calledOnce).to.be.true;
   });
-}); */
+});
+ */

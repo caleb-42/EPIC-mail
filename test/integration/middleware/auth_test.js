@@ -25,16 +25,18 @@ describe('AUTH MIDDLEWARE INTEGRATION TEST', () => {
   });
   const exec = token => request(server)
     .get('/api/v1/messages')
-    .set('Cookie', [`token=${token}`]);
+    .set('x-auth-token', token);
 
   it('should return 401 code if token is not provided', async () => {
     const token = '';
     const res = await exec(token);
+    console.log(res.body);
     expect(res.status).to.be.equal(401);
   });
 
   it('should return 200 code if token is valid', async () => {
     const tokenResp = await request(server).post('/api/v1/auth/signup').send(user);
+    console.log(tokenResp.body);
     const { token } = tokenResp.body.data[0];
     const res = await exec(token);
     expect(res.status).to.be.equal(200);

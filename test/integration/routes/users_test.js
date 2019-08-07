@@ -40,7 +40,7 @@ describe('USER API ENDPOINTS', () => {
   });
   describe('Get Contacts', () => {
     it('should not get contacts if user has no token', async () => {
-      const res = await request(server).get('/api/v1/users/contacts').set('Cookie', ['token=""']);
+      const res = await request(server).get('/api/v1/users/contacts').set('x-auth-token', '');
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(401);
       expect(res.body).to.have.property('error');
@@ -53,8 +53,8 @@ describe('USER API ENDPOINTS', () => {
       let res = await request(server).post('/api/v1/auth/signup').send(user1);
       await request(server).post('/api/v1/auth/signup').send(user2);
       const { token } = res.body.data[0];
-      await request(server).post('/api/v1/messages/').send(sentMsg).set('Cookie', [`token=${token}`]);
-      res = await request(server).get('/api/v1/users/contacts').set('Cookie', [`token=${token}`]);
+      await request(server).post('/api/v1/messages/').send(sentMsg).set('x-auth-token', token);
+      res = await request(server).get('/api/v1/users/contacts').set('x-auth-token', token);
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(200);
       expect(res.body).to.have.property('data');
@@ -67,7 +67,7 @@ describe('USER API ENDPOINTS', () => {
     it('should update user with valid token', async () => {
       const signin = await request(server).post('/api/v1/auth/login').send({ email: 'ewere@epicmail.com', password: 'admin123' });
       const { token } = signin.body.data[0];
-      const res = await request(server).patch('/api/v1/users/save').set('Cookie', [`token=${token}`]).send({ password: '12345', confirmPassword: '12345' });
+      const res = await request(server).patch('/api/v1/users/save').set('x-auth-token', token).send({ password: '12345', confirmPassword: '12345' });
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.be.equal(200);
       expect(res.body).to.have.property('data');
